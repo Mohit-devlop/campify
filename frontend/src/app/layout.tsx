@@ -5,6 +5,7 @@ import { Providers } from './providers';
 import Sidebar from '../components/Sidebar';
 import SearchDrawer from '../components/SearchDrawer';
 import CreatePostModal from '../components/CreatePostModal';
+import PwaInstallButton from '../components/PwaInstallButton';
 import './globals.css';
 
 export default function RootLayout({
@@ -69,6 +70,9 @@ export default function RootLayout({
             <main className={`flex-1 w-full pb-16 md:pb-0 min-h-screen transition-all duration-300 ${isSidebarCollapsed ? 'md:pl-20' : 'md:pl-64'}`}>
               {children}
             </main>
+
+            {/* PWA Floating Install Button */}
+            <PwaInstallButton />
           </div>
         </Providers>
       </body>
