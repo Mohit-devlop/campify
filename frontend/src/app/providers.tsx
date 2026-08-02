@@ -46,6 +46,22 @@ export function Providers({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  // Register PWA Service Worker
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').then(
+          (registration) => {
+            console.log('[PWA] Service Worker registered with scope:', registration.scope);
+          },
+          (error) => {
+            console.error('[PWA] Service Worker registration failed:', error);
+          }
+        );
+      });
+    }
+  }, []);
+
   const toggleTheme = () => {
     const newTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(newTheme);

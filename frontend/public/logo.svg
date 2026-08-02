@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Premium linear gradient matching Campify branding -->
+    <linearGradient id="campifyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF6B35" />
+      <stop offset="100%" stop-color="#00C2FF" />
+    </linearGradient>
+  </defs>
+
+  <!-- iOS-style Squircle background -->
+  <rect x="24" y="24" width="464" height="464" rx="108" fill="#121212" stroke="url(#campifyGradient)" stroke-width="12" />
+
+  <!-- Outer glowing rings -->
+  <circle cx="256" cy="256" r="160" fill="none" stroke="url(#campifyGradient)" stroke-width="6" stroke-dasharray="16 12" opacity="0.3" />
+  
+  <!-- Central Sparkle Icon -->
+  <path d="M256 128 C256 200 200 256 128 256 C200 256 256 312 256 384 C256 312 312 256 384 256 C312 256 256 200 256 128 Z" fill="url(#campifyGradient)" />
+  
+  <!-- Mini supporting sparkles for detail -->
+  <path d="M370 160 C370 180 355 195 335 195 C355 195 370 210 370 230 C370 210 385 195 405 195 C385 195 370 180 370 160 Z" fill="#00C2FF" />
+  <path d="M142 310 C142 330 127 345 107 345 C127 345 142 360 142 380 C142 360 157 345 177 345 C157 345 142 330 142 310 Z" fill="#FF6B35" />
+</svg>
