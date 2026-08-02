@@ -8,7 +8,7 @@ import { apiFetch } from '../../lib/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Sparkles, Mail, Lock, User, AtSign, Loader2, CheckCircle2,
-  MessageCircle, Heart, Film, ArrowRight, ArrowLeft, ShieldCheck, HelpCircle
+  MessageCircle, Heart, Film, ArrowRight, ArrowLeft, ShieldCheck, HelpCircle, Home
 } from 'lucide-react';
 
 type Tab = 'login' | 'register' | 'otp' | 'forgot' | 'reset';
@@ -237,13 +237,23 @@ function AuthPageContent() {
       <div className="hidden lg:flex lg:w-[58%] flex-col justify-between p-12 bg-gradient-to-br from-brand-bg via-brand-bg to-brand-card/40 border-r border-white/5 relative z-10">
         
         {/* Brand header */}
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-orange to-brand-cyan flex items-center justify-center shadow-lg shadow-brand-orange/20 flex-shrink-0">
-            <Sparkles className="w-5 h-5 text-black animate-pulse" />
+        <div className="flex items-center justify-between w-full">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-orange to-brand-cyan flex items-center justify-center shadow-lg shadow-brand-orange/20 flex-shrink-0">
+              <Sparkles className="w-5 h-5 text-black animate-pulse" />
+            </div>
+            <span className="font-extrabold text-xl tracking-wider bg-gradient-to-r from-white via-neutral-100 to-neutral-400 bg-clip-text text-transparent">
+              CAMPIFY
+            </span>
           </div>
-          <span className="font-extrabold text-xl tracking-wider bg-gradient-to-r from-white via-neutral-100 to-neutral-400 bg-clip-text text-transparent">
-            CAMPIFY
-          </span>
+
+          <Link 
+            href="/" 
+            className="flex items-center gap-2 text-xs font-bold text-neutral-400 hover:text-white border border-white/5 hover:border-white/10 px-4 py-2 rounded-xl bg-black/25 transition-all no-underline active-shrink"
+          >
+            <Home className="w-4 h-4 text-brand-cyan" />
+            Visit Homepage
+          </Link>
         </div>
 
         {/* Main Split Grid */}
@@ -339,10 +349,10 @@ function AuthPageContent() {
           {/* Back to Home Button */}
           <Link 
             href="/" 
-            className="flex items-center gap-2 text-xs font-bold text-neutral-400 hover:text-white no-underline group self-start transition-colors"
+            className="w-full bg-white/5 hover:bg-white/10 text-neutral-200 border border-white/5 hover:border-white/10 py-3.5 rounded-2xl flex items-center justify-center gap-2 text-xs font-bold active-shrink hover-scale no-underline transition-all"
           >
-            <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5 text-brand-orange" />
-            Back to Home
+            <Home className="w-4 h-4 text-brand-orange animate-pulse" />
+            Back to Home Page
           </Link>
           
           {/* Tabs header for Login/Register */}
