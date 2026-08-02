@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { useTheme } from './providers';
 import { motion, Variants } from 'framer-motion';
@@ -8,8 +9,119 @@ import {
   Lightbulb, Users, Award, Flame, Play, Terminal 
 } from 'lucide-react';
 
+// Scroll-triggered Auto-Counter Component for Statistics
+function AnimatedCounter({ value, duration = 2000 }: { value: string; duration?: number }) {
+  const [count, setCount] = useState(0);
+  const elementRef = useRef<HTMLSpanElement>(null);
+  
+  // Extract number and suffix (e.g., "45k+" -> 45, "k+")
+  const matches = value.match(/^([\d,]+)(.*)$/);
+  const numVal = matches ? parseInt(matches[1].replace(/,/g, ''), 10) : 0;
+  const suffix = matches ? matches[2] : '';
+
+  useEffect(() => {
+    let observer: IntersectionObserver;
+    let startTimestamp: number | null = null;
+
+    const step = (timestamp: number) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      setCount(Math.floor(progress * numVal));
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      }
+    };
+
+    if (elementRef.current) {
+      observer = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting) {
+            window.requestAnimationFrame(step);
+            observer.disconnect();
+          }
+        },
+        { threshold: 0.1 }
+      );
+      observer.observe(elementRef.current);
+    }
+
+    return () => {
+      if (observer) observer.disconnect();
+    };
+  }, [numVal, duration]);
+
+  return (
+    <span ref={elementRef} className="tabular-nums">
+      {count.toLocaleString()}{suffix}
+    </span>
+  );
+}
+
 export default function LandingPage() {
   const { theme, toggleTheme } = useTheme();
+  const [terminalText, setTerminalText] = useState('');
+
+  // Terminal text lines for dynamic typing effect
+  const terminalLines = [
+    '$ npx create-campify-app@latest',
+    '✔ Connected to Campus Server',
+    '✔ Hackathon Mode Enabled',
+    '🔥 Daily Streak: 12 Days (Level 5)',
+    '🚀 Active Team Recruitment matches found: 4'
+  ];
+
+  // Dynamic Terminal Typing Animation
+  useEffect(() => {
+    let currentLineIdx = 0;
+    let currentCharIdx = 0;
+    let output = '';
+    let isDeleting = false;
+    let timer: NodeJS.Timeout;
+
+    const type = () => {
+      if (currentLineIdx >= terminalLines.length) return;
+      const currentFullLine = terminalLines[currentLineIdx];
+      
+      if (!isDeleting) {
+        output += currentFullLine[currentCharIdx];
+        setTerminalText(output);
+        currentCharIdx++;
+
+        if (currentCharIdx === currentFullLine.length) {
+          timer = setTimeout(() => {
+            if (currentLineIdx < terminalLines.length - 1) {
+              output += '\n';
+              currentLineIdx++;
+              currentCharIdx = 0;
+              type();
+            } else {
+              // Finished all text, wait 6 seconds and then delete
+              timer = setTimeout(() => {
+                isDeleting = true;
+                type();
+              }, 6000);
+            }
+          }, 800);
+          return;
+        }
+        timer = setTimeout(type, currentLineIdx === 0 ? 55 : 30);
+      } else {
+        if (output.length > 0) {
+          output = output.substring(0, output.length - 1);
+          setTerminalText(output);
+          timer = setTimeout(type, 15);
+        } else {
+          isDeleting = false;
+          currentLineIdx = 0;
+          currentCharIdx = 0;
+          timer = setTimeout(type, 500);
+        }
+      }
+    };
+
+    timer = setTimeout(type, 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Framer Motion Animation Variants
   const navVariants: Variants = {
@@ -50,7 +162,7 @@ export default function LandingPage() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1
+        staggerChildren: 0.08
       }
     }
   };
@@ -72,6 +184,46 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen w-full bg-slate-50 dark:bg-neutral-950 text-neutral-800 dark:text-neutral-100 transition-colors duration-300 relative overflow-hidden select-none font-sans pb-16">
       
+      {/* Self-contained CSS Animations for Heading Gradient Flow */}
+      <style>{`
+        @keyframes gradient-flow {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        .gradient-text-animate {
+          background-size: 200% auto;
+          animation: gradient-flow 6s ease infinite;
+        }
+      `}</style>
+
+      {/* Drifting Floating Neon Particles */}
+      {typeof window !== 'undefined' && [...Array(15)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute rounded-full pointer-events-none"
+          style={{
+            width: (i % 3 === 0) ? 8 : (i % 2 === 0) ? 5 : 3,
+            height: (i % 3 === 0) ? 8 : (i % 2 === 0) ? 5 : 3,
+            background: i % 2 === 0 ? '#FF6B35' : '#00C2FF',
+            top: `${Math.random() * 100}%`,
+            left: `${Math.random() * 100}%`,
+            opacity: 0.12,
+            filter: 'blur(1px)',
+          }}
+          animate={{
+            x: [0, Math.random() * 120 - 60, 0],
+            y: [0, Math.random() * 120 - 60, 0],
+            scale: [1, 1.4, 1],
+          }}
+          transition={{
+            duration: Math.random() * 15 + 15,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+        />
+      ))}
+
       {/* Background Glowing Blobs */}
       <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-brand-orange/10 dark:bg-brand-orange/5 rounded-full blur-[120px] pointer-events-none animate-blob" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-brand-cyan/10 dark:bg-brand-cyan/5 rounded-full blur-[120px] pointer-events-none animate-blob-delayed" />
@@ -161,7 +313,7 @@ export default function LandingPage() {
           className="text-4xl sm:text-5xl md:text-6xl font-black font-outfit tracking-tight leading-tight max-w-4xl text-neutral-900 dark:text-white"
         >
           India&apos;s Premium Campus <br />
-          <span className="bg-gradient-to-r from-brand-orange via-purple-500 to-brand-cyan bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-brand-orange via-purple-500 to-brand-cyan bg-clip-text text-transparent gradient-text-animate">
             Social & Collaboration Hub
           </span>
         </motion.h1>
@@ -249,14 +401,11 @@ export default function LandingPage() {
                 </div>
               </div>
 
-              {/* Console preview */}
-              <div className="p-4 rounded-2xl bg-neutral-900 dark:bg-black/60 border border-white/5 font-mono">
-                <pre className="text-[10px] text-brand-cyan leading-relaxed font-bold">
-{`$ npx create-campify-app@latest
-✔ Connected to Campus Server
-✔ Hackathon Mode Enabled
-🔥 Daily Streak: 12 Days (Level 5)
-🚀 Active Team Recruitment matches found: 4`}
+              {/* Console preview with auto-typing text effect */}
+              <div className="p-4 rounded-2xl bg-neutral-900 dark:bg-black/60 border border-white/5 font-mono min-h-[92px] select-text">
+                <pre className="text-[10px] text-brand-cyan leading-relaxed font-bold font-mono whitespace-pre-wrap">
+                  {terminalText}
+                  <span className="animate-pulse bg-brand-cyan text-transparent w-1.5 h-3 inline-block ml-0.5">|</span>
                 </pre>
               </div>
 
@@ -413,7 +562,7 @@ export default function LandingPage() {
             whileHover={{ y: -8, scale: 1.015, boxShadow: '0 20px 30px -10px rgba(244, 63, 94, 0.08)' }}
             className="p-6 rounded-[24px] bg-white dark:bg-brand-card border border-neutral-200 dark:border-white/5 shadow-sm flex flex-col gap-4 transition-all duration-300"
           >
-            <div className="w-10 h-10 rounded-xl bg-rose-500/10 flex items-center justify-center text-rose-400">
+            <div className="w-10 h-10 rounded-xl bg-rose-500/10 flex items-center justify-center text-rose-450">
               <ShieldCheck className="w-5 h-5" />
             </div>
             <h3 className="font-extrabold text-base text-neutral-900 dark:text-white">Toxicity Moderation</h3>
@@ -426,7 +575,7 @@ export default function LandingPage() {
 
       </section>
 
-      {/* STATS BANNER */}
+      {/* STATS BANNER (With Scroll-Triggered Counter Animations) */}
       <section className="max-w-[1200px] mx-auto px-6 pt-24 md:pt-32 relative z-10">
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
@@ -439,22 +588,30 @@ export default function LandingPage() {
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-brand-cyan/10 rounded-full blur-3xl pointer-events-none" />
           
           <div className="text-center">
-            <span className="block text-3xl md:text-4xl font-black font-outfit tracking-tight">45k+</span>
+            <span className="block text-3xl md:text-4xl font-black font-outfit tracking-tight">
+              <AnimatedCounter value="45,000+" />
+            </span>
             <span className="text-[10px] text-neutral-400 uppercase font-bold tracking-wider mt-1 block">Active Students</span>
           </div>
 
           <div className="text-center">
-            <span className="block text-3xl md:text-4xl font-black font-outfit tracking-tight">250+</span>
+            <span className="block text-3xl md:text-4xl font-black font-outfit tracking-tight">
+              <AnimatedCounter value="250+" />
+            </span>
             <span className="text-[10px] text-neutral-400 uppercase font-bold tracking-wider mt-1 block">College Communities</span>
           </div>
 
           <div className="text-center">
-            <span className="block text-3xl md:text-4xl font-black font-outfit tracking-tight">1,800+</span>
+            <span className="block text-3xl md:text-4xl font-black font-outfit tracking-tight">
+              <AnimatedCounter value="1,800+" />
+            </span>
             <span className="text-[10px] text-neutral-400 uppercase font-bold tracking-wider mt-1 block">Projects Uploaded</span>
           </div>
 
           <div className="text-center">
-            <span className="block text-3xl md:text-4xl font-black font-outfit tracking-tight">80+</span>
+            <span className="block text-3xl md:text-4xl font-black font-outfit tracking-tight">
+              <AnimatedCounter value="80+" />
+            </span>
             <span className="text-[10px] text-neutral-400 uppercase font-bold tracking-wider mt-1 block">Hackathons Run</span>
           </div>
         </motion.div>
