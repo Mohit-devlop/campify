@@ -99,7 +99,9 @@ export default function SearchDrawer({ isOpen, onClose }: SearchDrawerProps) {
                   <span className="font-semibold text-sm flex items-center gap-1">
                     {creator.username}
                     {creator.verified && (
-                      <Award className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500 animate-pulse" title="Completed Learning Targets (Gold Medal)" />
+                      <span title="Completed Learning Targets (Gold Medal)">
+                        <Award className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500 animate-pulse" />
+                      </span>
                     )}
                   </span>
                   <span className="text-xs text-neutral-500">{creator.name || `@${creator.username}`}</span>

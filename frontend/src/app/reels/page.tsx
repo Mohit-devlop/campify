@@ -407,7 +407,9 @@ function ReelItem({ reel, isMuted, onLikeToggle, onOpenComments }: { reel: any; 
             <span className="font-bold text-xs flex items-center gap-1 filter drop-shadow-md hover:underline">
               {reel.user.username}
               {reel.user.verified && (
-                <Award className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500 animate-pulse" title="Completed Learning Targets (Gold Medal)" />
+                <span title="Completed Learning Targets (Gold Medal)">
+                  <Award className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500 animate-pulse" />
+                </span>
               )}
             </span>
           </div>

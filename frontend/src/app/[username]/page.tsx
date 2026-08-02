@@ -41,6 +41,7 @@ export default function UserProfile() {
   const [isCFModalLoading, setIsCFModalLoading] = useState(false);
 
   const openCloseFriendsModal = async () => {
+    if (!currentUser) return;
     setShowCloseFriendsModal(true);
     setIsCFModalLoading(true);
     try {
@@ -609,7 +610,9 @@ export default function UserProfile() {
             <h1 className="text-2xl font-black font-outfit tracking-tight flex items-center gap-1.5 text-white">
               {profileUser.name || profileUser.username}
               {profileUser.verified && (
-                <Award className="w-4.5 h-4.5 text-yellow-500 fill-yellow-500 animate-pulse" title="Completed Learning Targets (Gold Medal)" />
+                <span title="Completed Learning Targets (Gold Medal)">
+                  <Award className="w-4.5 h-4.5 text-yellow-500 fill-yellow-500 animate-pulse" />
+                </span>
               )}
             </h1>
             <span className="text-sm text-neutral-400 font-semibold">@{profileUser.username}</span>

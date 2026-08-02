@@ -895,7 +895,9 @@ export default function HomeFeed() {
                         <span className="font-bold text-sm text-white flex items-center gap-1 hover:underline">
                           {post.user.username}
                           {post.user.verified && (
-                            <Award className="w-3.5 h-3.5 text-brand-orange fill-brand-orange animate-pulse" title="Completed Learning Targets (Gold Medal)" />
+                            <span title="Completed Learning Targets (Gold Medal)">
+                              <Award className="w-3.5 h-3.5 text-brand-orange fill-brand-orange animate-pulse" />
+                            </span>
                           )}
                         </span>
                         {post.location && (
@@ -1025,7 +1027,9 @@ export default function HomeFeed() {
                           @{post.repost.user.username}
                         </span>
                         {post.repost.user.verified && (
-                          <Award className="w-3 h-3 text-brand-orange fill-brand-orange animate-pulse" title="Completed Learning Targets (Gold Medal)" />
+                          <span title="Completed Learning Targets (Gold Medal)">
+                            <Award className="w-3 h-3 text-brand-orange fill-brand-orange animate-pulse" />
+                          </span>
                         )}
                         <span className="text-[9px] text-neutral-500 ml-auto">
                           {new Date(post.repost.createdAt).toLocaleDateString([], { month: 'short', day: 'numeric' })}
@@ -1247,7 +1251,9 @@ export default function HomeFeed() {
               <span className="font-bold text-xs flex items-center gap-1 hover:underline">
                 {user.username}
                 {user.verified && (
-                  <Award className="w-3.5 h-3.5 text-brand-orange fill-brand-orange animate-pulse" title="Completed Learning Targets (Gold Medal)" />
+                  <span title="Completed Learning Targets (Gold Medal)">
+                    <Award className="w-3.5 h-3.5 text-brand-orange fill-brand-orange animate-pulse" />
+                  </span>
                 )}
               </span>
               <span className="text-[10px] text-neutral-500 font-medium">{user.name || `@${user.username}`}</span>

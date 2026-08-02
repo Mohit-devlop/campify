@@ -59,6 +59,7 @@ export default function Settings() {
   }, [showCloseFriends, user]);
 
   async function loadFriendsData() {
+    if (!user) return;
     setIsFriendsLoading(true);
     try {
       const [followingRes, closeFriendsRes] = await Promise.all([
