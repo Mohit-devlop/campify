@@ -1,0 +1,179 @@
+import { Request, Response } from 'express';
+import { prisma } from '../prisma/client';
+
+export async function getReelQuiz(req: Request, res: Response) {
+  try {
+    const { reelId } = req.params;
+
+    const quiz = await prisma.reelQuiz.findUnique({
+      where: { reelId },
+    });
+
+    if (!quiz) {
+      // Mock automatic seed generator for standard quiz questions if none exist
+      // Since it is educational, dynamically generate a mock quiz based on the reel ID
+      return res.status(200).json({
+        id: 'mock-quiz-' + reelId,
+        reelId,
+        question: 'Which of the following is correct regarding CSS Flexbox vs Grid?',
+        optionA: 'Flexbox is best for one-dimensional layouts, Grid for two-dimensional.',
+        optionB: 'Flexbox is exclusively for vertical lines, Grid for horizontal.',
+        optionC: 'Grid is older and less supported than Flexbox.',
+        optionD: 'There is no difference between them.',
+        correctAnswer: 'A',
+        explanation: 'Flexbox was designed for layout in one dimension (either row or column) while Grid was designed for two dimensions.',
+      });
+    }
+
+    return res.status(200).json(quiz);
+  } catch (error) {
+    console.error('Get quiz error:', error);
+    return res.status(500).json({ error: 'Failed to fetch quiz for reel' });
+  }
+}
+
+export async function submitQuizAnswer(req: Request, res: Response) {
+  try {
+    const userId = req.user?.id;
+    const { reelId } = req.params;
+    const { answer } = req.body; // 'A', 'B', 'C', 'D'
+
+    if (!userId) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    if (!answer) {
+      return res.status(400).json({ error: 'Option answer selection is required' });
+    }
+
+    // Retrieve quiz or fallback to mock details
+    let correctAnswer = 'A';
+    let explanation = '';
+    const quiz = await prisma.reelQuiz.findUnique({ where: { reelId } });
+    if (quiz) {
+      correctAnswer = quiz.correctAnswer;
+      explanation = quiz.explanation || '';
+    }
+
+    const isCorrect = answer.toUpperCase() === correctAnswer.toUpperCase();
+    const quizPoints = isCorrect ? 25 : 5; // 25 XP for correct, 5 XP for attempt
+
+    // Save attempt
+    await prisma.quizAttempt.upsert({
+      where: {
+        userId_reelId: { userId, reelId },
+      },
+      create: {
+        userId,
+        reelId,
+        answeredCorrectly: isCorrect,
+        score: quizPoints,
+      },
+      update: {
+        answeredCorrectly: isCorrect,
+        score: quizPoints,
+      },
+    });
+
+    if (isCorrect) {
+      await prisma.user.update({
+        where: { id: userId },
+        data: { verified: true },
+      });
+    }
+
+    // Update Category Progress (Mocking 'Programming' for simplicity or using hashtags mapping)
+    const category = 'Programming';
+    await prisma.learningProgress.upsert({
+      where: {
+        userId_category: { userId, category },
+      },
+      create: {
+        userId,
+        category,
+        score: quizPoints,
+        completedReelsCount: 1,
+      },
+      update: {
+        score: { increment: quizPoints },
+        completedReelsCount: { increment: 1 },
+      },
+    });
+
+    // Update Gamification XP
+    const gamification = await prisma.userGamification.upsert({
+      where: { userId },
+      create: {
+        userId,
+        xpPoints: quizPoints,
+        level: 1,
+        dailyStreak: 1,
+        lastActiveDate: new Date(),
+      },
+      update: {
+        xpPoints: { increment: quizPoints },
+        lastActiveDate: new Date(),
+      },
+    });
+
+    // Auto level-up checking (100 XP per level)
+    const newLevel = Math.floor(gamification.xpPoints / 100) + 1;
+    if (newLevel > gamification.level) {
+      await prisma.userGamification.update({
+        where: { userId },
+        data: { level: newLevel },
+      });
+      // Award Level Badge
+      await prisma.skillBadge.create({
+        data: {
+          userId,
+          type: 'XP_LEVEL',
+          name: `Level ${newLevel} Cadet`,
+          description: `Achieved Level ${newLevel} in learning network`,
+          icon: 'shield',
+        },
+      });
+    }
+
+    return res.status(200).json({
+      correct: isCorrect,
+      correctAnswer,
+      explanation,
+      xpAwarded: quizPoints,
+      newTotalXp: gamification.xpPoints,
+      currentLevel: newLevel,
+    });
+  } catch (error) {
+    console.error('Submit quiz answer error:', error);
+    return res.status(500).json({ error: 'Failed to submit quiz response' });
+  }
+}
+
+export async function getLearningProgress(req: Request, res: Response) {
+  try {
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const progress = await prisma.learningProgress.findMany({
+      where: { userId },
+    });
+
+    // Compute standard learning scores
+    const categories = ['Programming', 'AI', 'Business', 'Marketing', 'Design', 'Productivity'];
+    const formatted = categories.map((cat) => {
+      const prog = progress.find((p) => p.category === cat);
+      return {
+        category: cat,
+        score: prog ? prog.score : 0,
+        completedReelsCount: prog ? prog.completedReelsCount : 0,
+      };
+    });
+
+    return res.status(200).json(formatted);
+  } catch (error) {
+    console.error('Get learning progress error:', error);
+    return res.status(500).json({ error: 'Failed to fetch learning statistics' });
+  }
+}

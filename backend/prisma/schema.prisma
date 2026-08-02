@@ -1,0 +1,691 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./kilogram.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                   String            @id @default(uuid())
+  email                String            @unique
+  username             String            @unique
+  passwordHash         String
+  name                 String?
+  role                 String            @default("USER") // USER, MODERATOR, ADMIN
+  status               String            @default("ACTIVE") // ACTIVE, BANNED
+  verified             Boolean           @default(false)
+  emailVerified        Boolean           @default(false)
+  otp                  String?
+  otpExpires           DateTime?
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+  profile              Profile?
+  posts                Post[]
+  comments             Comment[]
+  likes                Like[]
+  saves                Save[]
+  collections          BookmarkCollection[]
+  stories              Story[]
+  seenStories          StorySeen[]
+  highlights           StoryHighlight[]
+  reels                Reel[]
+  chats                ChatMember[]
+  messages             Message[]
+  sentNotifications    Notification[]    @relation("Sender")
+  receivedNotifications Notification[]   @relation("Receiver")
+  reports              Report[]          @relation("Reporter")
+  targetedReports      Report[]          @relation("TargetedUser")
+  blockedBy            Block[]           @relation("BlockedBy")
+  blocking             Block[]           @relation("Blocking")
+  mutedBy              Mute[]            @relation("MutedBy")
+  muting               Mute[]            @relation("Muting")
+  followers            Follow[]          @relation("Following")
+  following            Follow[]          @relation("Follower")
+  analytics            UserAnalytics[]
+  postAnalytics        PostAnalytics[]
+
+  // --- SKILLS PORTFOLIO SYSTEM ---
+  skills               Skill[]
+  certifications       Certification[]
+  experiences          Experience[]
+  projects             Project[]
+  badges               SkillBadge[]
+
+  // --- PROJECT TEAM FINDER ---
+  teamMembers          TeamMember[]
+  teamInvitationsSent  TeamInvitation[]  @relation("InvitationSender")
+  teamInvitationsRecv  TeamInvitation[]  @relation("InvitationReceiver")
+
+  // --- LEARNING SYSTEM ---
+  learningProgress     LearningProgress[]
+  quizAttempts         QuizAttempt[]
+
+  // --- GAMIFICATION SYSTEM ---
+  gamification         UserGamification?
+  achievements         Achievement[]
+  streakHistory        StreakHistory[]
+
+  // --- COMMUNITY HUB ---
+  communityMembers     CommunityMember[]
+  eventsCreated        CommunityEvent[]  @relation("EventCreator")
+  eventAttendance      CommunityEventAttendee[]
+  pollsCreated         CommunityPoll[]   @relation("PollCreator")
+  pollVotes            CommunityPollVote[]
+
+  // --- CLOSE FRIENDS SYSTEM ---
+  closeFriends         CloseFriend[]     @relation("CloseFriendUser")
+  closeFriendOf        CloseFriend[]     @relation("CloseFriendMember")
+
+  // --- INSTAGRAM STATUS NOTES ---
+  note                 Note?
+
+  // --- INSTAGRAM INSTANTS ---
+  instants             Instant[]
+  receivedInstants     InstantRecipient[]
+}
+
+model Profile {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bio       String?
+  website   String?
+  avatarUrl String?
+  coverUrl  String?
+  location  String?
+  isPrivate Boolean  @default(false)
+}
+
+model Follow {
+  followerId  String
+  followingId String
+  createdAt   DateTime @default(now())
+  follower    User     @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
+  following   User     @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@id([followerId, followingId])
+}
+
+model Post {
+  id           String          @id @default(uuid())
+  userId       String
+  user         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type         String          // TEXT, IMAGE, VIDEO, CAROUSEL
+  content      String?
+  mediaUrls    String          @default("[]") // JSON string for SQLite/Postgres compatibility
+  hashtags     String          @default("")   // Comma separated
+  mentions     String          @default("")   // Comma separated
+  location     String?
+  isDraft      Boolean         @default(false)
+  isArchived   Boolean         @default(false)
+  scheduledFor DateTime?
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  comments     Comment[]
+  likes        Like[]
+  saves        Save[]
+  reports      Report[]
+  analytics    PostAnalytics[]
+
+  songName     String?
+  songArtist   String?
+  songUrl      String?
+
+  // Repost relations
+  repostId     String?
+  repost       Post?           @relation("Reposts", fields: [repostId], references: [id], onDelete: Cascade)
+  repostedBy   Post[]          @relation("Reposts")
+}
+
+model Comment {
+  id        String    @id @default(uuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postId    String?
+  post      Post?     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  reelId    String?
+  reel      Reel?     @relation(fields: [reelId], references: [id], onDelete: Cascade)
+  parentId  String?
+  parent    Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   Comment[] @relation("CommentReplies")
+  content   String
+  likes     Like[]
+  reports   Report[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Like {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postId    String?
+  post      Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  commentId String?
+  comment   Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  reelId    String?
+  reel      Reel?    @relation(fields: [reelId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, postId, commentId, reelId])
+}
+
+model Save {
+  id           String              @id @default(uuid())
+  userId       String
+  user         User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postId       String
+  post         Post                @relation(fields: [postId], references: [id], onDelete: Cascade)
+  collectionId String?
+  collection   BookmarkCollection? @relation(fields: [collectionId], references: [id], onDelete: SetNull)
+  createdAt    DateTime            @default(now())
+
+  @@unique([userId, postId])
+}
+
+model BookmarkCollection {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  saves     Save[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Story {
+  id         String          @id @default(uuid())
+  userId     String
+  user       User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mediaUrl       String
+  type           String          @default("IMAGE") // IMAGE, VIDEO
+  isCloseFriends Boolean         @default(false)
+  expiresAt      DateTime
+  createdAt  DateTime        @default(now())
+  seen       StorySeen[]
+  highlights StoryHighlight[]
+
+  songName   String?
+  songArtist String?
+  songUrl    String?
+}
+
+model StorySeen {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  storyId   String
+  story     Story    @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, storyId])
+}
+
+model StoryHighlight {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  coverUrl  String?
+  stories   Story[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Reel {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  videoUrl  String
+  caption   String?
+  hashtags  String   @default("") // Comma separated
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  likes     Like[]
+  reports   Report[]
+  comments  Comment[]
+}
+
+model Chat {
+  id        String       @id @default(uuid())
+  isGroup   Boolean      @default(false)
+  name      String?
+  avatarUrl String?
+  creatorId String?
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  members   ChatMember[]
+  messages  Message[]
+}
+
+model ChatMember {
+  chatId   String
+  userId   String
+  role     String         @default("MEMBER") // MEMBER, ADMIN
+  joinedAt DateTime       @default(now())
+  chat     Chat           @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  user     User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([chatId, userId])
+}
+
+model Message {
+  id        String      @id @default(uuid())
+  chatId    String
+  chat      Chat        @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  senderId  String
+  sender    User        @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  type      String      @default("TEXT") // TEXT, IMAGE, VIDEO, VOICE
+  content   String?
+  mediaUrl  String?
+  duration  Float?
+  readBy    String      @default("[]") // JSON array string
+  createdAt DateTime    @default(now())
+}
+
+model Notification {
+  id         String           @id @default(uuid())
+  receiverId String
+  receiver   User             @relation("Receiver", fields: [receiverId], references: [id], onDelete: Cascade)
+  senderId   String?
+  sender     User?            @relation("Sender", fields: [senderId], references: [id], onDelete: Cascade)
+  type       String           // FOLLOW, LIKE, COMMENT, MENTION, MESSAGE, STORY_REACTION, TEAM_INVITE, COMMUNITY_EVENT
+  postId     String?
+  commentId  String?
+  storyId    String?
+  messageId  String?
+  reelId     String?
+  read       Boolean          @default(false)
+  createdAt  DateTime         @default(now())
+}
+
+model Report {
+  id              String       @id @default(uuid())
+  reporterId      String
+  reporter        User         @relation("Reporter", fields: [reporterId], references: [id], onDelete: Cascade)
+  targetUserId    String?
+  targetUser      User?        @relation("TargetedUser", fields: [targetUserId], references: [id], onDelete: Cascade)
+  targetPostId    String?
+  targetPost      Post?        @relation(fields: [targetPostId], references: [id], onDelete: Cascade)
+  targetCommentId String?
+  targetComment   Comment?     @relation(fields: [targetCommentId], references: [id], onDelete: Cascade)
+  targetReelId    String?
+  targetReel      Reel?        @relation(fields: [targetReelId], references: [id], onDelete: Cascade)
+  reason          String
+  status          String       @default("PENDING") // PENDING, RESOLVED, DISMISSED
+  actionTaken     String?
+  createdAt       DateTime     @default(now())
+}
+
+model Block {
+  blockerId String
+  blockeeId String
+  createdAt DateTime @default(now())
+  blocker   User     @relation("Blocking", fields: [blockerId], references: [id], onDelete: Cascade)
+  blockee   User     @relation("BlockedBy", fields: [blockeeId], references: [id], onDelete: Cascade)
+
+  @@id([blockerId, blockeeId])
+}
+
+model Mute {
+  muterId   String
+  muteeId   String
+  createdAt DateTime @default(now())
+  muter     User     @relation("Muting", fields: [muterId], references: [id], onDelete: Cascade)
+  mutee     User     @relation("MutedBy", fields: [muteeId], references: [id], onDelete: Cascade)
+
+  @@id([muterId, muteeId])
+}
+
+model UserAnalytics {
+  id            String   @id @default(uuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date          DateTime @default(now())
+  profileViews  Int      @default(0)
+  reach         Int      @default(0)
+  impressions   Int      @default(0)
+}
+
+model PostAnalytics {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postId      String
+  post        Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  views       Int      @default(0)
+  reach       Int      @default(0)
+  impressions Int      @default(0)
+}
+
+// ==========================================
+// --- NEW SKILLS PORTFOLIO SYSTEM ---
+// ==========================================
+model Skill {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  category  String   @default("Technical") // Technical, Design, Creative, Business, SoftSkill
+  createdAt DateTime @default(now())
+
+  @@unique([userId, name])
+}
+
+model Certification {
+  id            String   @id @default(uuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name          String
+  issuingOrg    String
+  issueDate     DateTime
+  credentialUrl String?
+  createdAt     DateTime @default(now())
+}
+
+model Experience {
+  id          String    @id @default(uuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  company     String
+  location    String?
+  startDate   DateTime
+  endDate     DateTime?
+  description String?
+  createdAt   DateTime  @default(now())
+}
+
+model Project {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title        String
+  description  String
+  role         String
+  link         String?
+  technologies String   @default("") // Comma separated tags
+  createdAt    DateTime @default(now())
+}
+
+model SkillBadge {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type        String   // XP_LEVEL, POST_STREAK, TEAM_LEADER, LEARNER_STAR
+  name        String
+  description String
+  icon        String
+  createdAt   DateTime @default(now())
+}
+
+// ==========================================
+// --- NEW PROJECT TEAM FINDER ---
+// ==========================================
+model Team {
+  id           String           @id @default(uuid())
+  name         String
+  description  String
+  lookingFor   String           // Role e.g., Developer, Designer, Creator
+  skillsNeeded String           @default("") // Comma separated tags
+  creatorId    String
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  members      TeamMember[]
+  invitations  TeamInvitation[]
+}
+
+model TeamMember {
+  teamId   String
+  userId   String
+  role     String   @default("MEMBER") // CREATOR, ADMIN, MEMBER
+  joinedAt DateTime @default(now())
+  team     Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([teamId, userId])
+}
+
+model TeamInvitation {
+  id         String   @id @default(uuid())
+  teamId     String
+  senderId   String
+  receiverId String
+  role       String   @default("MEMBER")
+  status     String   @default("PENDING") // PENDING, ACCEPTED, DECLINED
+  message    String?
+  createdAt  DateTime @default(now())
+  team       Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  sender     User     @relation("InvitationSender", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver   User     @relation("InvitationReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+}
+
+// ==========================================
+// --- NEW LEARNING REELS SYSTEM ---
+// ==========================================
+model LearningProgress {
+  id                  String   @id @default(uuid())
+  userId              String
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category            String   // Programming, AI, Business, Marketing, Design, Productivity
+  score               Int      @default(0)
+  completedReelsCount Int      @default(0)
+  updatedAt           DateTime @updatedAt
+
+  @@unique([userId, category])
+}
+
+model ReelQuiz {
+  id            String   @id @default(uuid())
+  reelId        String   @unique
+  question      String
+  optionA       String
+  optionB       String
+  optionC       String
+  optionD       String
+  correctAnswer String   // A, B, C, D
+  explanation   String?
+  createdAt     DateTime @default(now())
+}
+
+model QuizAttempt {
+  id                String   @id @default(uuid())
+  userId            String
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reelId            String
+  answeredCorrectly Boolean
+  score             Int      @default(0)
+  createdAt         DateTime @default(now())
+
+  @@unique([userId, reelId])
+}
+
+// ==========================================
+// --- NEW GAMIFICATION SYSTEM ---
+// ==========================================
+model UserGamification {
+  id             String   @id @default(uuid())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  xpPoints       Int      @default(0)
+  level          Int      @default(1)
+  dailyStreak    Int      @default(0)
+  lastActiveDate DateTime @default(now())
+  streakFrozen   Boolean  @default(false)
+}
+
+model Achievement {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type        String   // FIRST_POST, QUIZ_MASTER, TEAM_FOUNDER, COMMUNITY_STAR
+  title       String
+  description String
+  unlockedAt  DateTime @default(now())
+}
+
+model StreakHistory {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date      DateTime @default(now())
+}
+
+// ==========================================
+// --- NEW COMMUNITY SYSTEM ---
+// ==========================================
+model Community {
+  id          String            @id @default(uuid())
+  name        String            @unique
+  description String
+  avatarUrl   String?
+  bannerUrl   String?
+  isPrivate   Boolean           @default(false)
+  creatorId   String
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  members     CommunityMember[]
+  events      CommunityEvent[]
+  polls       CommunityPoll[]
+}
+
+model CommunityMember {
+  communityId String
+  userId      String
+  role        String    @default("MEMBER") // CREATOR, ADMIN, MEMBER
+  joinedAt    DateTime  @default(now())
+  community   Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([communityId, userId])
+}
+
+model CommunityEvent {
+  id          String                   @id @default(uuid())
+  communityId String
+  title       String
+  description String
+  date        DateTime
+  location    String
+  creatorId   String
+  createdAt   DateTime                 @default(now())
+  community   Community                @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  creator     User                     @relation("EventCreator", fields: [creatorId], references: [id], onDelete: Cascade)
+  attendees   CommunityEventAttendee[]
+}
+
+model CommunityEventAttendee {
+  eventId  String
+  userId   String
+  status   String         @default("GOING") // GOING, INTERESTED, DECLINED
+  joinedAt DateTime       @default(now())
+  event    CommunityEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user     User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([eventId, userId])
+}
+
+model CommunityPoll {
+  id          String                @id @default(uuid())
+  communityId String
+  question    String
+  creatorId   String
+  createdAt   DateTime              @default(now())
+  community   Community             @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  creator     User                  @relation("PollCreator", fields: [creatorId], references: [id], onDelete: Cascade)
+  options     CommunityPollOption[]
+  votes       CommunityPollVote[]
+}
+
+model CommunityPollOption {
+  id         String              @id @default(uuid())
+  pollId     String
+  optionText String
+  poll       CommunityPoll       @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  votes      CommunityPollVote[]
+}
+
+model CommunityPollVote {
+  id           String              @id @default(uuid())
+  pollId       String
+  pollOptionId String
+  userId       String
+  poll         CommunityPoll       @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  option       CommunityPollOption @relation(fields: [pollOptionId], references: [id], onDelete: Cascade)
+  user         User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([pollId, userId])
+}
+
+// ==========================================
+// --- SECURITY & OTP RATE LIMITS ---
+// ==========================================
+model OtpRequest {
+  id        String   @id @default(uuid())
+  ipAddress String
+  email     String
+  action    String   // SIGNUP, LOGIN, PASSWORD_RESET
+  timestamp DateTime @default(now())
+}
+
+// ==========================================
+// --- CLOSE FRIENDS SYSTEM ---
+// ==========================================
+model CloseFriend {
+  id        String   @id @default(uuid())
+  userId    String
+  friendId  String
+  createdAt DateTime @default(now())
+
+  user      User     @relation("CloseFriendUser", fields: [userId], references: [id], onDelete: Cascade)
+  friend    User     @relation("CloseFriendMember", fields: [friendId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, friendId])
+}
+
+// ==========================================
+// --- INSTAGRAM STATUS NOTES ---
+// ==========================================
+model Note {
+  id             String   @id @default(uuid())
+  userId         String   @unique
+  content        String
+  createdAt      DateTime @default(now())
+  expiresAt      DateTime
+  isCloseFriends Boolean  @default(false)
+
+  songName   String?
+  songArtist String?
+  songUrl    String?
+  mediaUrl   String?
+  mediaType  String?
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ==========================================
+// --- INSTAGRAM INSTANTS ---
+// ==========================================
+model Instant {
+  id             String             @id @default(uuid())
+  userId         String
+  user           User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mediaUrl       String
+  caption        String?
+  createdAt      DateTime           @default(now())
+  expiresAt      DateTime
+  isPublic       Boolean            @default(true)
+  recipients     InstantRecipient[]
+}
+
+model InstantRecipient {
+  id             String             @id @default(uuid())
+  instantId      String
+  instant        Instant            @relation(fields: [instantId], references: [id], onDelete: Cascade)
+  recipientId    String
+  recipient      User               @relation(fields: [recipientId], references: [id], onDelete: Cascade)
+
+  @@unique([instantId, recipientId])
+}

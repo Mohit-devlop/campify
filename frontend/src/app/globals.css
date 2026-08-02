@@ -1,0 +1,245 @@
+@import "tailwindcss";
+@variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --color-brand-orange: #FF6B35;
+  --color-brand-cyan: #00C2FF;
+  --color-brand-bg: #121212;
+  --color-brand-card: #1E1E1E;
+  --color-brand-text: #F5F5F5;
+
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+}
+
+:root {
+  --background: 0 0% 7%;      /* #121212 Dark Graphite */
+  --foreground: 0 0% 96%;     /* #F5F5F5 Soft White */
+  
+  --card: 0 0% 12%;           /* #1E1E1E Charcoal */
+  --card-foreground: 0 0% 96%;
+  
+  --popover: 0 0% 10%;
+  --popover-foreground: 0 0% 96%;
+  
+  --primary: 16 100% 60%;     /* #FF6B35 Burnt Orange */
+  --primary-foreground: 0 0% 100%;
+  
+  --secondary: 195 100% 50%;  /* #00C2FF Electric Cyan */
+  --secondary-foreground: 0 0% 7%;
+  
+  --muted: 0 0% 16%;
+  --muted-foreground: 0 0% 65%;
+  
+  --accent: 195 100% 50%;     /* #00C2FF Electric Cyan */
+  --accent-foreground: 0 0% 100%;
+  
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 98%;
+  
+  --border: 0 0% 18%;         /* Charcoal border */
+  --input: 0 0% 18%;
+  --ring: 16 100% 60%;        /* Burnt Orange ring */
+  
+  --radius: 1.25rem;
+}
+
+.dark {
+  --background: 0 0% 7%;
+  --foreground: 0 0% 96%;
+  
+  --card: 0 0% 12%;
+  --card-foreground: 0 0% 96%;
+  
+  --popover: 0 0% 10%;
+  --popover-foreground: 0 0% 96%;
+  
+  --primary: 16 100% 60%;
+  --primary-foreground: 0 0% 100%;
+  
+  --secondary: 195 100% 50%;
+  --secondary-foreground: 0 0% 7%;
+  
+  --muted: 0 0% 16%;
+  --muted-foreground: 0 0% 65%;
+  
+  --accent: 195 100% 50%;
+  --accent-foreground: 0 0% 100%;
+  
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  
+  --border: 0 0% 18%;
+  --input: 0 0% 18%;
+  --ring: 16 100% 60%;
+  
+  --radius: 1.25rem;
+}
+
+* {
+  border-color: hsl(var(--border));
+}
+
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow-x: hidden;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* Premium Apple-style Glassmorphism */
+.glass {
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(25px) saturate(180%);
+  -webkit-backdrop-filter: blur(25px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.04);
+}
+
+.dark .glass {
+  background: rgba(8, 12, 20, 0.65);
+  backdrop-filter: blur(25px) saturate(180%);
+  -webkit-backdrop-filter: blur(25px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.45);
+}
+
+/* Scrollbar Customization */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 107, 53, 0.2);
+  border-radius: 99px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 194, 255, 0.4);
+}
+
+/* Animations & Transitions */
+.hover-scale {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+}
+.hover-scale:hover {
+  transform: translateY(-2px) scale(1.01);
+}
+
+.active-shrink {
+  transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.active-shrink:active {
+  transform: scale(0.96);
+}
+
+/* Reels Video snaps */
+.reels-container {
+  height: 100dvh;
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+}
+
+.reel-card {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  height: 100dvh;
+}
+
+/* Story Ring Gradient Spin */
+@keyframes spin-gradient {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-story-ring {
+  background: linear-gradient(to right, #FF6B35, #00C2FF, #FF6B35);
+  background-size: 200% 200%;
+  animation: gradient-flow 3s ease infinite;
+}
+
+.animate-story-ring-green {
+  background: linear-gradient(to right, #10b981, #059669, #10b981);
+  background-size: 200% 200%;
+  animation: gradient-flow 3s ease infinite;
+}
+
+@keyframes gradient-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Custom Floating Blob Animation */
+@keyframes blob-float {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.95);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+.animate-blob {
+  animation: blob-float 12s infinite ease-in-out;
+}
+
+.animate-blob-delayed {
+  animation: blob-float 12s infinite ease-in-out;
+  animation-delay: 4s;
+}
+
+.animate-blob-fast {
+  animation: blob-float 8s infinite ease-in-out;
+  animation-delay: 2s;
+}
