@@ -7,6 +7,7 @@ import { useAuthStore } from '../store/authStore';
 import { useSocketStore } from '../store/socketStore';
 import { apiFetch } from '../lib/api';
 import { motion, AnimatePresence } from 'framer-motion';
+import LandingPage from './LandingPage';
 import { 
   Heart, MessageCircle, Bookmark, Send, Sparkles, MapPin, 
   ChevronLeft, ChevronRight, Loader2, PlayCircle, Plus, X, Award,
@@ -256,14 +257,7 @@ export default function HomeFeed() {
   const [isAiLoading, setIsAiLoading] = useState(false);
   const [aiTool, setAiTool] = useState<'caption' | 'hashtags' | 'reels'>('caption');
 
-  // Redirect to Auth if not logged in
-  useEffect(() => {
-    if (!isInitialized) return;
-
-    if (!isAuthenticated) {
-      router.push('/auth');
-    }
-  }, [isAuthenticated, isInitialized, router]);
+  // Unauthenticated users are shown the Landing Page inline instead of redirecting
 
   // Load Feed, Stories, and Recommendations
   useEffect(() => {
@@ -597,7 +591,17 @@ export default function HomeFeed() {
     }
   };
 
-  if (!user) return null;
+  if (!isInitialized) {
+    return (
+      <div className="h-screen w-full flex justify-center items-center bg-neutral-950">
+        <Loader2 className="w-8 h-8 text-brand-orange animate-spin" />
+      </div>
+    );
+  }
+
+  if (!isAuthenticated || !user) {
+    return <LandingPage />;
+  }
 
   return (
     <div className="max-w-[1200px] mx-auto px-4 md:px-6 py-6 flex gap-6 relative select-none bg-brand-bg text-brand-text">

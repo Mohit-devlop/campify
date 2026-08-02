@@ -2,12 +2,13 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import { useAuthStore } from '../../store/authStore';
 import { apiFetch } from '../../lib/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Sparkles, Mail, Lock, User, AtSign, Loader2, CheckCircle2,
-  MessageCircle, Heart, Film, ArrowRight, ShieldCheck, HelpCircle
+  MessageCircle, Heart, Film, ArrowRight, ArrowLeft, ShieldCheck, HelpCircle
 } from 'lucide-react';
 
 type Tab = 'login' | 'register' | 'otp' | 'forgot' | 'reset';
@@ -334,6 +335,15 @@ function AuthPageContent() {
       <div className="w-full lg:w-[42%] flex items-center justify-center p-6 relative z-10 bg-brand-bg/40">
         
         <div className="w-full max-w-[430px] bg-brand-card/65 border border-white/10 backdrop-blur-2xl rounded-[32px] p-8 flex flex-col gap-6 shadow-2xl relative z-20 glass">
+          
+          {/* Back to Home Button */}
+          <Link 
+            href="/" 
+            className="flex items-center gap-2 text-xs font-bold text-neutral-400 hover:text-white no-underline group self-start transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5 text-brand-orange" />
+            Back to Home
+          </Link>
           
           {/* Tabs header for Login/Register */}
           {(activeTab === 'login' || activeTab === 'register') && (
