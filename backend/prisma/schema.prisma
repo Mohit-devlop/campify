@@ -87,15 +87,16 @@ model User {
 }
 
 model Profile {
-  id        String   @id @default(uuid())
-  userId    String   @unique
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  bio       String?
-  website   String?
-  avatarUrl String?
-  coverUrl  String?
-  location  String?
-  isPrivate Boolean  @default(false)
+  id                  String   @id @default(uuid())
+  userId              String   @unique
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bio                 String?
+  website             String?
+  avatarUrl           String?
+  coverUrl            String?
+  location            String?
+  isPrivate           Boolean  @default(false)
+  disappearingSetting String   @default("OFF") // OFF, 24H, 7D, AFTER_VIEW
 }
 
 model Follow {

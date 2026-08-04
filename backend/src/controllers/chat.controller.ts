@@ -122,6 +122,18 @@ export async function getChats(req: Request, res: Response) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
+    // Apply disappearing messages cleanup dynamically
+    const userChats = await prisma.chat.findMany({
+      where: {
+        members: { some: { userId } },
+      },
+      select: { id: true },
+    });
+
+    for (const chat of userChats) {
+      await applyDisappearingMessages(chat.id);
+    }
+
     const chats = await prisma.chat.findMany({
       where: {
         members: { some: { userId } },
@@ -183,6 +195,8 @@ export async function getMessages(req: Request, res: Response) {
     if (!membership) {
       return res.status(403).json({ error: 'Access denied: You are not a member of this chat' });
     }
+
+    await applyDisappearingMessages(chatId);
 
     const messages = await prisma.message.findMany({
       where: { chatId },
@@ -349,6 +363,8 @@ export async function markChatRead(req: Request, res: Response) {
       }
     }
 
+    await applyDisappearingMessages(chatId);
+
     return res.status(200).json({ message: 'Chat marked as read' });
   } catch (error) {
     console.error('Mark read error:', error);
@@ -389,5 +405,70 @@ export async function deleteMessage(req: Request, res: Response) {
   } catch (error) {
     console.error('Delete message error:', error);
     return res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+async function applyDisappearingMessages(chatId: string) {
+  try {
+    const members = await prisma.chatMember.findMany({
+      where: { chatId },
+      include: {
+        user: {
+          include: { profile: true },
+        },
+      },
+    });
+
+    const memberIds = members.map((m) => m.userId);
+    const profiles = members.map((m) => m.user.profile).filter(Boolean);
+
+    const settings = profiles.map((p) => p?.disappearingSetting || 'OFF');
+
+    let hasAfterView = settings.includes('AFTER_VIEW');
+    let has24H = settings.includes('24H');
+    let has7D = settings.includes('7D');
+
+    if (hasAfterView) {
+      const messages = await prisma.message.findMany({
+        where: { chatId },
+      });
+
+      const toDelete = messages.filter((msg) => {
+        try {
+          const readByArray = JSON.parse(msg.readBy || '[]');
+          return memberIds.every((id) => readByArray.includes(id));
+        } catch {
+          return false;
+        }
+      });
+
+      if (toDelete.length > 0) {
+        await prisma.message.deleteMany({
+          where: { id: { in: toDelete.map((m) => m.id) } },
+        });
+      }
+    }
+
+    if (has24H) {
+      const cutOff = new Date(Date.now() - 24 * 60 * 60 * 1000);
+      await prisma.message.deleteMany({
+        where: {
+          chatId,
+          createdAt: { lt: cutOff },
+        },
+      });
+    }
+
+    if (has7D) {
+      const cutOff = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+      await prisma.message.deleteMany({
+        where: {
+          chatId,
+          createdAt: { lt: cutOff },
+        },
+      });
+    }
+  } catch (error) {
+    console.error('Error applying disappearing messages:', error);
   }
 }

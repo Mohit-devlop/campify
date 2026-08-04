@@ -106,7 +106,7 @@ export async function getProfile(req: Request, res: Response) {
 export async function updateProfile(req: Request, res: Response) {
   try {
     const userId = req.user?.id;
-    const { name, username, bio, website, avatarUrl, coverUrl, location, isPrivate } = req.body;
+    const { name, username, bio, website, avatarUrl, coverUrl, location, isPrivate, disappearingSetting } = req.body;
 
     if (!userId) {
       return res.status(401).json({ error: 'Unauthorized' });
@@ -161,6 +161,7 @@ export async function updateProfile(req: Request, res: Response) {
         coverUrl: coverUrl !== undefined ? coverUrl : undefined,
         location: location !== undefined ? location : undefined,
         isPrivate: isPrivate !== undefined ? isPrivate : undefined,
+        disappearingSetting: disappearingSetting !== undefined ? disappearingSetting : undefined,
       },
     });
 

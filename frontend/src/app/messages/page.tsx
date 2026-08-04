@@ -11,7 +11,7 @@ import {
   MessageCircle, Send, ImageIcon, Mic, Sparkles, Plus, 
   Circle, CheckCircle2, User, Loader2, Phone, Video, Info, Camera,
   Compass, Grid, ShieldAlert, X, Hash, Volume2, Search, Star, Pause, Play, Music,
-  Users, Check
+  Users, Check, Zap, Trash2, Edit2
 } from 'lucide-react';
 import { PRESET_SONGS } from '../../lib/music';
 
@@ -785,7 +785,7 @@ export default function Messages() {
                 >
                   {ownNote.isCloseFriends && (
                     <span className="text-[6px] text-green-400 font-bold uppercase tracking-wider flex items-center gap-0.5 select-none scale-90 mb-0.5">
-                      ★ Close Friends
+                      <Star className="w-2 h-2 text-green-500 fill-green-500" /> Close Friends
                     </span>
                   )}
                   {ownNote.mediaUrl && (
@@ -794,7 +794,7 @@ export default function Messages() {
                   <span className="truncate max-w-[76px] font-bold leading-normal">{ownNote.content}</span>
                   {ownNote.songName && (
                     <span className="text-[7px] text-purple-305 truncate max-w-[76px] flex items-center gap-0.5 mt-0.5 select-none font-bold">
-                      🎵 {ownNote.songName}
+                      <Music className="w-2 h-2 text-purple-400" /> {ownNote.songName}
                     </span>
                   )}
                 </div>
@@ -811,7 +811,7 @@ export default function Messages() {
               >
                 {ownInstant && (
                   <div className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-indigo-500 flex items-center justify-center text-white font-extrabold text-[7px] border border-neutral-900 shadow z-15">
-                    ⚡
+                    <Zap className="w-2 h-2 text-yellow-500 fill-yellow-500" />
                   </div>
                 )}
                 {!ownNote && !ownInstant && (
@@ -855,7 +855,7 @@ export default function Messages() {
                   >
                     {note.isCloseFriends && (
                       <span className="text-[6px] text-green-400 font-bold uppercase tracking-wider flex items-center gap-0.5 select-none scale-90 mb-0.5">
-                        ★ Close Friends
+                        <Star className="w-2 h-2 text-green-500 fill-green-500" /> Close Friends
                       </span>
                     )}
                     {note.mediaUrl && (
@@ -864,7 +864,7 @@ export default function Messages() {
                     <span className="truncate max-w-[76px] font-semibold leading-normal">{note.content}</span>
                     {note.songName && (
                       <span className="text-[7px] text-purple-400 dark:text-purple-305 truncate max-w-[76px] flex items-center gap-0.5 mt-0.5 select-none font-bold">
-                        🎵 {note.songName}
+                        <Music className="w-2 h-2 text-purple-455" /> {note.songName}
                       </span>
                     )}
                   </div>
@@ -887,7 +887,7 @@ export default function Messages() {
                 >
                   {instant && (
                     <div className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-indigo-500 flex items-center justify-center text-white font-extrabold text-[7px] border border-neutral-900 shadow z-15">
-                      ⚡
+                      <Zap className="w-2 h-2 text-yellow-500 fill-yellow-500" />
                     </div>
                   )}
                   {user?.profile?.avatarUrl ? (
@@ -1332,7 +1332,8 @@ export default function Messages() {
                     }}
                     className="w-full py-2.5 px-4 bg-white/5 hover:bg-white/10 rounded-xl text-left text-xs font-bold transition-all border-0 text-white cursor-pointer"
                   >
-                    📝 Edit Status Note
+                    <Edit2 className="w-4 h-4 text-cyan-400 mr-2 inline-block align-middle" />
+                    <span className="align-middle">Edit Status Note</span>
                   </button>
                   <button
                     onClick={() => {
@@ -1341,7 +1342,8 @@ export default function Messages() {
                     }}
                     className="w-full py-2.5 px-4 bg-red-500/10 hover:bg-red-500/20 rounded-xl text-left text-xs font-bold transition-all border-0 text-red-450 cursor-pointer"
                   >
-                    🗑️ Delete Status Note
+                    <Trash2 className="w-4 h-4 text-red-500 mr-2 inline-block align-middle" />
+                    <span className="align-middle">Delete Status Note</span>
                   </button>
                 </>
               ) : (
@@ -1352,7 +1354,8 @@ export default function Messages() {
                   }}
                   className="w-full py-2.5 px-4 bg-white/5 hover:bg-white/10 rounded-xl text-left text-xs font-bold transition-all border-0 text-white cursor-pointer"
                 >
-                  📝 Share a Status Note
+                  <Edit2 className="w-4 h-4 text-cyan-400 mr-2 inline-block align-middle" />
+                  <span className="align-middle">Share a Status Note</span>
                 </button>
               )}
 
@@ -1368,7 +1371,8 @@ export default function Messages() {
                   }}
                   className="w-full py-2.5 px-4 bg-white/5 hover:bg-white/10 rounded-xl text-left text-xs font-bold transition-all border-0 text-white cursor-pointer"
                 >
-                  ⚡ View Your Instant
+                  <Zap className="w-4 h-4 text-yellow-500 fill-yellow-500 mr-2 inline-block align-middle" />
+                  <span className="align-middle">View Your Instant</span>
                 </button>
               )}
               
@@ -1379,7 +1383,7 @@ export default function Messages() {
                 }}
                 className="w-full py-2.5 px-4 bg-gradient-to-r from-pink-500 to-purple-650 hover:opacity-90 rounded-xl text-left text-xs font-bold transition-all border-0 text-white cursor-pointer flex items-center justify-between"
               >
-                <span>📸 Post Spontaneous Instant</span>
+                <span className="flex items-center gap-2"><Camera className="w-4 h-4" /> Post Spontaneous Instant</span>
                 <span className="text-[9px] bg-white/20 px-1.5 py-0.5 rounded-full">New</span>
               </button>
 
@@ -1391,7 +1395,8 @@ export default function Messages() {
                   }}
                   className="w-full py-2.5 px-4 bg-red-500/10 hover:bg-red-500/20 rounded-xl text-left text-xs font-bold transition-all border-0 text-red-450 cursor-pointer"
                 >
-                  🗑️ Delete Your Instant
+                  <Trash2 className="w-4 h-4 text-red-500 mr-2 inline-block align-middle" />
+                  <span className="align-middle">Delete Your Instant</span>
                 </button>
               )}
             </div>
@@ -2056,8 +2061,8 @@ export default function Messages() {
             <div className="relative aspect-[3/4] w-full rounded-3xl overflow-hidden bg-neutral-900 border border-white/10 shadow-2xl flex items-center justify-center">
               <img src={selectedInstant.mediaUrl} className="w-full h-full object-cover" alt="Instant" />
               
-              <div className="absolute top-3 left-3 bg-indigo-600/90 text-white font-extrabold text-[8px] px-2 py-0.5 rounded-full uppercase tracking-wider shadow">
-                ⚡ Instant
+              <div className="absolute top-3 left-3 bg-indigo-600/90 text-white font-extrabold text-[8px] px-2 py-0.5 rounded-full uppercase tracking-wider shadow flex items-center gap-1">
+                <Zap className="w-2.5 h-2.5 text-yellow-500 fill-yellow-500" /> Instant
               </div>
               
               {selectedInstant.caption && (

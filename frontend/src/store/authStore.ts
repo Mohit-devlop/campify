@@ -7,6 +7,7 @@ interface UserProfile {
   website: string | null;
   location: string | null;
   isPrivate: boolean;
+  disappearingSetting?: string;
 }
 
 export interface User {

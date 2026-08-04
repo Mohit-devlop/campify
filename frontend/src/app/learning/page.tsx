@@ -104,7 +104,7 @@ export default function LearningReelsPage() {
     try {
       const res = await apiFetch(`/learning/quiz/${activeQuizReelId}/submit`, {
         method: 'POST',
-        body: JSON.stringify({ answer })
+        body: JSON.stringify({ answer, category: activeCategory })
       });
 
       if (res.ok) {

@@ -36,7 +36,7 @@ export async function submitQuizAnswer(req: Request, res: Response) {
   try {
     const userId = req.user?.id;
     const { reelId } = req.params;
-    const { answer } = req.body; // 'A', 'B', 'C', 'D'
+    const { answer, category } = req.body; // 'A', 'B', 'C', 'D'
 
     if (!userId) {
       return res.status(401).json({ error: 'Unauthorized' });
@@ -45,6 +45,10 @@ export async function submitQuizAnswer(req: Request, res: Response) {
     if (!answer) {
       return res.status(400).json({ error: 'Option answer selection is required' });
     }
+
+    // Validate category
+    const categories = ['Programming', 'AI', 'Business', 'Marketing', 'Design', 'Productivity'];
+    const targetCategory = categories.includes(category) ? category : 'Programming';
 
     // Retrieve quiz or fallback to mock details
     let correctAnswer = 'A';
@@ -57,6 +61,31 @@ export async function submitQuizAnswer(req: Request, res: Response) {
 
     const isCorrect = answer.toUpperCase() === correctAnswer.toUpperCase();
     const quizPoints = isCorrect ? 25 : 5; // 25 XP for correct, 5 XP for attempt
+
+    // Retrieve existing attempt to prevent infinite XP farming
+    const existingAttempt = await prisma.quizAttempt.findUnique({
+      where: {
+        userId_reelId: { userId, reelId },
+      },
+    });
+
+    let xpToAward = quizPoints;
+    let completedIncrement = 1;
+
+    if (existingAttempt) {
+      completedIncrement = 0; // Already counted towards completed reels count
+      if (existingAttempt.answeredCorrectly) {
+        // If they already got it correct in the past, they shouldn't get more points
+        xpToAward = 0;
+      } else if (isCorrect) {
+        // If they previously got it wrong (received 5 XP) and now got it correct (25 XP)
+        // Award the difference
+        xpToAward = 20;
+      } else {
+        // Previously incorrect and still incorrect, no new points
+        xpToAward = 0;
+      }
+    }
 
     // Save attempt
     await prisma.quizAttempt.upsert({
@@ -82,36 +111,37 @@ export async function submitQuizAnswer(req: Request, res: Response) {
       });
     }
 
-    // Update Category Progress (Mocking 'Programming' for simplicity or using hashtags mapping)
-    const category = 'Programming';
-    await prisma.learningProgress.upsert({
-      where: {
-        userId_category: { userId, category },
-      },
-      create: {
-        userId,
-        category,
-        score: quizPoints,
-        completedReelsCount: 1,
-      },
-      update: {
-        score: { increment: quizPoints },
-        completedReelsCount: { increment: 1 },
-      },
-    });
+    // Update Category Progress
+    if (xpToAward > 0 || completedIncrement > 0) {
+      await prisma.learningProgress.upsert({
+        where: {
+          userId_category: { userId, category: targetCategory },
+        },
+        create: {
+          userId,
+          category: targetCategory,
+          score: xpToAward,
+          completedReelsCount: completedIncrement,
+        },
+        update: {
+          score: { increment: xpToAward },
+          completedReelsCount: { increment: completedIncrement },
+        },
+      });
+    }
 
     // Update Gamification XP
     const gamification = await prisma.userGamification.upsert({
       where: { userId },
       create: {
         userId,
-        xpPoints: quizPoints,
+        xpPoints: xpToAward,
         level: 1,
         dailyStreak: 1,
         lastActiveDate: new Date(),
       },
       update: {
-        xpPoints: { increment: quizPoints },
+        xpPoints: { increment: xpToAward },
         lastActiveDate: new Date(),
       },
     });
