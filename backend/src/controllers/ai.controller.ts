@@ -38,17 +38,17 @@ async function queryGemini(prompt: string, fallbackResponse: string): Promise<st
 function getFallbackCaption(topic: string, tone: string): string {
   const topicLower = topic.toLowerCase();
   
+  if (topicLower.includes('launch') || topicLower.includes('live') || topicLower.includes('deploy') || topicLower.includes('start')) {
+    return `🚀 Big news! Our latest release is officially live. Built this to solve a real campus pain point, making student collaboration smoother than ever. Check it out and let us know your thoughts!`;
+  }
+  if (topicLower.includes('hackathon') || topicLower.includes('team') || topicLower.includes('partner') || topicLower.includes('collaboration')) {
+    return `🏆 Teamwork makes the dream work! Prepped and ready for the upcoming campus hackathon. Looking for passionate developers and designers to join forces and build something revolutionary. Let's connect!`;
+  }
   if (topicLower.includes('ai') || topicLower.includes('intelligence') || topicLower.includes('ml') || topicLower.includes('bot') || topicLower.includes('model')) {
     return `🧠 The future is here! Just built an advanced AI feature. It's incredibly fast and opens up so many new possibilities for smart automation. Can't wait to show you all how it works!`;
   }
   if (topicLower.includes('design') || topicLower.includes('ui') || topicLower.includes('ux') || topicLower.includes('theme') || topicLower.includes('color') || topicLower.includes('look')) {
     return `✨ Visuals matter. Spent the last few days refining the user experience, theme palettes, and micro-interactions. The result is a smooth, premium feel that makes the platform a joy to use!`;
-  }
-  if (topicLower.includes('hackathon') || topicLower.includes('team') || topicLower.includes('partner') || topicLower.includes('collaboration')) {
-    return `🏆 Teamwork makes the dream work! Prepped and ready for the upcoming campus hackathon. Looking for passionate developers and designers to join forces and build something revolutionary. Let's connect!`;
-  }
-  if (topicLower.includes('launch') || topicLower.includes('live') || topicLower.includes('deploy') || topicLower.includes('start')) {
-    return `🚀 Big news! Our latest release is officially live. Built this to solve a real campus pain point, making student collaboration smoother than ever. Check it out and let us know your thoughts!`;
   }
   if (topicLower.includes('learning') || topicLower.includes('tutorial') || topicLower.includes('learn') || topicLower.includes('course') || topicLower.includes('class')) {
     return `📚 Continuous learning is key. Just published a quick guide on mastering modern stack development. Perfect for beginners and advanced developers looking to brush up on their skills!`;
