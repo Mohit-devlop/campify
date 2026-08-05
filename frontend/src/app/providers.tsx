@@ -51,6 +51,7 @@ document.documentElement.classList.remove('dark');
 // Register PWA Service Worker
 useEffect(() => {
 if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+if (process.env.NODE_ENV === 'production') {
 window.addEventListener('load', () => {
 navigator.serviceWorker.register('/sw.js').then(
 (registration) => {
@@ -61,6 +62,15 @@ console.error('[PWA] Service Worker registration failed:', error);
 }
 );
 });
+} else {
+// Unregister service worker in development to prevent HMR and reload loops
+navigator.serviceWorker.getRegistrations().then((registrations) => {
+for (const registration of registrations) {
+registration.unregister();
+console.log('[PWA] Service Worker unregistered in development mode');
+}
+});
+}
 }
 }, []);
 
