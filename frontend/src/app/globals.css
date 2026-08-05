@@ -1,4 +1,10 @@
 @import "tailwindcss";
+@source "./src/**/*.{ts,tsx}";
+@source "../**/*.{ts,tsx}";
+@source "./components/**/*.tsx";
+@source "../components/**/*.tsx";
+@source "./app/**/*.tsx";
+@source "../app/**/*.tsx";
 @variant dark (&:where(.dark, .dark *));
 
 @theme inline {

@@ -60,6 +60,23 @@ function AnimatedCounter({ value, duration = 2000 }: { value: string; duration?:
 export default function LandingPage() {
   const { theme, toggleTheme } = useTheme();
   const [terminalText, setTerminalText] = useState('');
+  const [particles, setParticles] = useState<any[]>([]);
+
+  useEffect(() => {
+    // Generate floating particle metrics once on mount to prevent loop/hydration issues
+    const generated = [...Array(15)].map((_, i) => ({
+      width: (i % 3 === 0) ? 8 : (i % 2 === 0) ? 5 : 3,
+      height: (i % 3 === 0) ? 8 : (i % 2 === 0) ? 5 : 3,
+      background: i % 2 === 0 ? '#FF6B35' : '#00C2FF',
+      top: `${Math.random() * 100}%`,
+      left: `${Math.random() * 100}%`,
+      x: [0, Math.random() * 120 - 60, 0],
+      y: [0, Math.random() * 120 - 60, 0],
+      scale: [1, 1.4, 1],
+      duration: Math.random() * 15 + 15,
+    }));
+    setParticles(generated);
+  }, []);
 
   // Terminal text lines for dynamic typing effect
   const terminalLines = [
@@ -198,26 +215,26 @@ export default function LandingPage() {
       `}</style>
 
       {/* Drifting Floating Neon Particles */}
-      {typeof window !== 'undefined' && [...Array(15)].map((_, i) => (
+      {particles.map((p, i) => (
         <motion.div
           key={i}
           className="absolute rounded-full pointer-events-none"
           style={{
-            width: (i % 3 === 0) ? 8 : (i % 2 === 0) ? 5 : 3,
-            height: (i % 3 === 0) ? 8 : (i % 2 === 0) ? 5 : 3,
-            background: i % 2 === 0 ? '#FF6B35' : '#00C2FF',
-            top: `${Math.random() * 100}%`,
-            left: `${Math.random() * 100}%`,
+            width: p.width,
+            height: p.height,
+            background: p.background,
+            top: p.top,
+            left: p.left,
             opacity: 0.12,
             filter: 'blur(1px)',
           }}
           animate={{
-            x: [0, Math.random() * 120 - 60, 0],
-            y: [0, Math.random() * 120 - 60, 0],
-            scale: [1, 1.4, 1],
+            x: p.x,
+            y: p.y,
+            scale: p.scale,
           }}
           transition={{
-            duration: Math.random() * 15 + 15,
+            duration: p.duration,
             repeat: Infinity,
             ease: 'easeInOut',
           }}
