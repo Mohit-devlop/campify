@@ -593,7 +593,7 @@ setIsAiLoading(false);
 
 if (!isInitialized) {
 return (
-<div className="h-screen w-full flex justify-center items-center bg-neutral-950">
+<div className="h-screen w-full flex justify-center items-center bg-brand-bg">
 <Loader2 className="w-8 h-8 text-brand-orange animate-spin" />
 </div>
 );

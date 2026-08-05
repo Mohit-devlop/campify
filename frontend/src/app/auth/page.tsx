@@ -663,7 +663,7 @@ function AuthPageContent() {
 export default function AuthPage() {
   return (
     <Suspense fallback={
-      <div className="h-screen w-full flex justify-center items-center bg-neutral-950">
+      <div className="h-screen w-full flex justify-center items-center bg-brand-bg">
         <Loader2 className="w-8 h-8 text-cyan-500 animate-spin" />
       </div>
     }>

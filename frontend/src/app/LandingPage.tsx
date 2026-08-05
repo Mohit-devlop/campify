@@ -199,7 +199,7 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-slate-50 dark:bg-neutral-950 text-neutral-800 dark:text-neutral-100 transition-colors duration-300 relative overflow-hidden select-none font-sans pb-16">
+    <div className="min-h-screen w-full bg-brand-bg text-brand-text transition-colors duration-300 relative overflow-hidden select-none font-sans pb-16">
       
       {/* Self-contained CSS Animations for Heading Gradient Flow */}
       <style>{`
@@ -251,7 +251,7 @@ export default function LandingPage() {
         variants={navVariants}
         initial="hidden"
         animate="visible"
-        className="sticky top-0 z-50 w-full border-b border-neutral-200/50 dark:border-white/5 bg-slate-50/80 dark:bg-neutral-950/80 backdrop-blur-md transition-colors duration-300"
+        className="sticky top-0 z-50 w-full border-b border-neutral-200/50 dark:border-white/5 bg-brand-bg/80 backdrop-blur-md transition-colors duration-300"
       >
         <div className="max-w-[1200px] mx-auto px-6 h-16 flex items-center justify-between">
           
@@ -599,7 +599,7 @@ export default function LandingPage() {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.7 }}
-          className="p-8 md:p-12 rounded-[32px] bg-neutral-900 text-white flex flex-wrap gap-8 items-center justify-around shadow-2xl relative overflow-hidden"
+          className="p-8 md:p-12 rounded-[32px] bg-brand-card border border-neutral-200/50 dark:border-white/5 text-brand-text flex flex-wrap gap-8 items-center justify-around shadow-2xl relative overflow-hidden"
         >
           <div className="absolute top-0 right-0 w-48 h-48 bg-brand-orange/10 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-brand-cyan/10 rounded-full blur-3xl pointer-events-none" />
@@ -608,28 +608,28 @@ export default function LandingPage() {
             <span className="block text-3xl md:text-4xl font-black font-outfit tracking-tight">
               <AnimatedCounter value="45,000+" />
             </span>
-            <span className="text-[10px] text-neutral-400 uppercase font-bold tracking-wider mt-1 block">Active Students</span>
+            <span className="text-[10px] text-slate-500 dark:text-neutral-450 uppercase font-bold tracking-wider mt-1 block">Active Students</span>
           </div>
 
           <div className="text-center">
             <span className="block text-3xl md:text-4xl font-black font-outfit tracking-tight">
               <AnimatedCounter value="250+" />
             </span>
-            <span className="text-[10px] text-neutral-400 uppercase font-bold tracking-wider mt-1 block">College Communities</span>
+            <span className="text-[10px] text-slate-500 dark:text-neutral-450 uppercase font-bold tracking-wider mt-1 block">College Communities</span>
           </div>
 
           <div className="text-center">
             <span className="block text-3xl md:text-4xl font-black font-outfit tracking-tight">
               <AnimatedCounter value="1,800+" />
             </span>
-            <span className="text-[10px] text-neutral-400 uppercase font-bold tracking-wider mt-1 block">Projects Uploaded</span>
+            <span className="text-[10px] text-slate-500 dark:text-neutral-450 uppercase font-bold tracking-wider mt-1 block">Projects Uploaded</span>
           </div>
 
           <div className="text-center">
             <span className="block text-3xl md:text-4xl font-black font-outfit tracking-tight">
               <AnimatedCounter value="80+" />
             </span>
-            <span className="text-[10px] text-neutral-400 uppercase font-bold tracking-wider mt-1 block">Hackathons Run</span>
+            <span className="text-[10px] text-slate-500 dark:text-neutral-450 uppercase font-bold tracking-wider mt-1 block">Hackathons Run</span>
           </div>
         </motion.div>
       </section>
