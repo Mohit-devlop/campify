@@ -35,6 +35,67 @@ async function queryGemini(prompt: string, fallbackResponse: string): Promise<st
   }
 }
 
+function getFallbackCaption(topic: string, tone: string): string {
+  const topicLower = topic.toLowerCase();
+  
+  if (topicLower.includes('ai') || topicLower.includes('intelligence') || topicLower.includes('ml') || topicLower.includes('bot') || topicLower.includes('model')) {
+    return `🧠 The future is here! Just built an advanced AI feature. It's incredibly fast and opens up so many new possibilities for smart automation. Can't wait to show you all how it works!`;
+  }
+  if (topicLower.includes('design') || topicLower.includes('ui') || topicLower.includes('ux') || topicLower.includes('theme') || topicLower.includes('color') || topicLower.includes('look')) {
+    return `✨ Visuals matter. Spent the last few days refining the user experience, theme palettes, and micro-interactions. The result is a smooth, premium feel that makes the platform a joy to use!`;
+  }
+  if (topicLower.includes('hackathon') || topicLower.includes('team') || topicLower.includes('partner') || topicLower.includes('collaboration')) {
+    return `🏆 Teamwork makes the dream work! Prepped and ready for the upcoming campus hackathon. Looking for passionate developers and designers to join forces and build something revolutionary. Let's connect!`;
+  }
+  if (topicLower.includes('launch') || topicLower.includes('live') || topicLower.includes('deploy') || topicLower.includes('start')) {
+    return `🚀 Big news! Our latest release is officially live. Built this to solve a real campus pain point, making student collaboration smoother than ever. Check it out and let us know your thoughts!`;
+  }
+  if (topicLower.includes('learning') || topicLower.includes('tutorial') || topicLower.includes('learn') || topicLower.includes('course') || topicLower.includes('class')) {
+    return `📚 Continuous learning is key. Just published a quick guide on mastering modern stack development. Perfect for beginners and advanced developers looking to brush up on their skills!`;
+  }
+  return `🚀 Thrilled to share my latest work about: "${topic}". Spent some intense coding sessions to make this smooth and production-ready. Check out the flow and drop your feedback below!`;
+}
+
+function getFallbackHashtags(content: string): string {
+  const contentLower = content.toLowerCase();
+  let tags = ['buildinpublic', 'indiehackers', 'campify', 'webdev', 'coding'];
+  
+  if (contentLower.includes('ai') || contentLower.includes('intelligence') || contentLower.includes('ml')) {
+    tags = ['ai', 'machinelearning', 'artificialintelligence', 'techinnovation', 'deeplearning', 'openai', 'buildinpublic', 'smarttech'];
+  } else if (contentLower.includes('design') || contentLower.includes('ui') || contentLower.includes('ux') || contentLower.includes('theme')) {
+    tags = ['uiux', 'uidesign', 'webdesign', 'figma', 'css', 'frontend', 'userexperience', 'developer', 'creative'];
+  } else if (contentLower.includes('hackathon') || contentLower.includes('team')) {
+    tags = ['hackathon', 'teamfinder', 'collab', 'codingchallenge', 'innovation', 'developer', 'students', 'builders'];
+  } else if (contentLower.includes('react') || contentLower.includes('next') || contentLower.includes('js') || contentLower.includes('ts')) {
+    tags = ['nextjs', 'reactjs', 'typescript', 'javascript', 'webdevelopment', 'programming', 'softwareengineer'];
+  } else {
+    const words = contentLower
+      .replace(/[^\w\s]/g, '')
+      .split(/\s+/)
+      .filter(w => w.length > 4 && !['about', 'would', 'their', 'there', 'which', 'about', 'build'].includes(w));
+    
+    if (words.length > 0) {
+      tags = [...new Set([...words.slice(0, 6), ...tags])];
+    }
+  }
+  return tags.map(t => `#${t}`).join(' ');
+}
+
+function getFallbackReelIdeas(category: string): string {
+  const catLower = (category || 'General Tech').toLowerCase();
+  
+  if (catLower.includes('programming') || catLower.includes('code') || catLower.includes('dev') || catLower.includes('web')) {
+    return `1. **The 3-Second Debugging Rule**\n*Hook:* "Stop scrolling if your code failed to compile!"\n*Flow:* Quick view of red compiler errors, then zoom in on the specific solution. Ends with a tip on using terminal shortcuts.\n\n2. **Clean Code Tips**\n*Hook:* "Does your code look like a spaghetti recipe?"\n*Flow:* Compare a messy nested loop with a clean modular function. Zoom in on clean naming conventions.\n\n3. **My VS Code Extensions**\n*Hook:* "These extensions feel illegal to know."\n*Flow:* Showcase 3 extensions (Prettier, GitLens, Tailwind IntelliSense) and show their live usage in code.`;
+  }
+  if (catLower.includes('ai') || catLower.includes('ml') || catLower.includes('intelligence')) {
+    return `1. **Next-Gen AI Tools**\n*Hook:* "This AI tool is going to replace your search engine."\n*Flow:* Screen recording of an AI coding agent or design generator. Side-by-side prompt and output speed.\n\n2. **Gemini API Integration**\n*Hook:* "Integrate AI in under 5 minutes!"\n*Flow:* Fast-paced walk-through of importing Gemini client library and making a completion call in Node.js.\n\n3. **AI Design Tricks**\n*Hook:* "Create UI illustrations using AI."\n*Flow:* Showcase prompts to generate vector art, then drag it directly into a Figma frame.`;
+  }
+  if (catLower.includes('design') || catLower.includes('ui') || catLower.includes('ux') || catLower.includes('figma')) {
+    return `1. **Figma Shortcuts You Don't Use**\n*Hook:* "Save 2 hours of design work daily."\n*Flow:* Quick keys mapping demonstration (Auto Layout, Components, and renaming layers). Ends with smooth drag-and-drop.\n\n2. **Perfect Color Palette Secrets**\n*Hook:* "Stop choosing random colors for your site."\n*Flow:* Show a clean 60-30-10 color rule diagram, then apply it to a mockup wireframe.\n\n3. **Modern Glassmorphic UI**\n*Hook:* "How to design a premium glass card."\n*Flow:* Show solid colors, add background blur, overlay border with thin gradients, and toggle light/dark theme.`;
+  }
+  return `1. **Top Tech Stack of 2026**\n*Hook:* "What tech stack are you building with?"\n*Flow:* Showcase logos (Next.js, Prisma, Tailwind v4). Show a quick terminal compilation build speed.\n\n2. **Student Startup Ideas**\n*Hook:* "Build a SaaS inside your college dorm."\n*Flow:* List 3 campus problems (canteen queue, notes sharing, team finder). Highlight how easy it is to deploy.\n\n3. **Productivity Hacks for Builders**\n*Hook:* "How to build apps while maintaining a 9.0 GPA."\n*Flow:* Show calendar planning blocks, Pomodoro timers, and GitHub streak badges.`;
+}
+
 export async function generateCaption(req: Request, res: Response) {
   try {
     const { topic, tone } = req.body; // e.g. topic: "launching a tech project", tone: "witty"
@@ -44,7 +105,7 @@ export async function generateCaption(req: Request, res: Response) {
 
     const prompt = `Write a social media post caption about: "${topic}". Tone: ${tone || 'professional and engaging'}. Keep it concise, engaging, and under 150 words. Do not include hashtags.`;
     
-    const fallbackText = `🚀 Code, collaborate, scale. Thrilled to share that my latest project is finally live! Built this to solve a real developer pain point. Check out the link and let me know your thoughts! #Campify #BuildInPublic`;
+    const fallbackText = getFallbackCaption(topic, tone);
     
     const caption = await queryGemini(prompt, fallbackText);
     return res.status(200).json({ caption });
@@ -63,7 +124,7 @@ export async function generateHashtags(req: Request, res: Response) {
 
     const prompt = `Generate 10 trending, high-engagement hashtags for a social post with the content: "${content}". Output only the hashtags separated by spaces, no other text.`;
     
-    const fallbackText = `#buildinpublic #indiehackers #nextjs #webdev #softwareengineering #creators #gamified #techstartup #coding #coder`;
+    const fallbackText = getFallbackHashtags(content);
 
     const hashtags = await queryGemini(prompt, fallbackText);
     return res.status(200).json({ hashtags: hashtags.split(/\s+/) });
@@ -78,7 +139,7 @@ export async function getReelIdeas(req: Request, res: Response) {
     const { category } = req.body; // e.g. Programming, AI, Design
     const prompt = `Generate 3 creative vertical Reel ideas for creators in the category: "${category || 'General Tech'}". For each idea, provide a Catchy Title, Hook, and a short 2-sentence description of the visual flow.`;
 
-    const fallbackText = `1. **The 3-Second Debugging Rule**\n*Hook:* "Stop scrolling if your code failed to compile!"\n*Flow:* Quick view of red compiler errors, then zoom in on the specific solution. Ends with a tip on using terminal shortcuts.\n\n2. **AI Tools Every Designer Needs**\n*Hook:* "This AI tool feels illegal to know."\n*Flow:* Showcase screen recording of an image-upscaling web tool. Zoom in on before/after comparison slider.\n\n3. **How I Organize My VS Code Workspace**\n*Hook:* "Is your IDE workspace messy?"\n*Flow:* Showcase a clean UI palette, customized sidebar on the left, and explain why dark matte layouts improve productivity.`;
+    const fallbackText = getFallbackReelIdeas(category);
 
     const ideas = await queryGemini(prompt, fallbackText);
     return res.status(200).json({ ideas });
