@@ -22,12 +22,30 @@ function AuthPageContent() {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [name, setName] = useState('');
+  const [password, setPassword] = useState('');
   const [otpValues, setOtpValues] = useState<string[]>(['', '', '', '', '', '']);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [resendTimer, setResendTimer] = useState(60);
   const [canResend, setCanResend] = useState(false);
+
+  // Password strength logic
+  const getPasswordStrength = (pass: string) => {
+    if (!pass) return { score: 0, label: '', color: 'bg-neutral-800' };
+    let score = 0;
+    if (pass.length > 5) score++;
+    if (/[A-Z]/.test(pass)) score++;
+    if (/[0-9]/.test(pass)) score++;
+    if (/[^A-Za-z0-9]/.test(pass)) score++;
+
+    if (score <= 1) return { score, label: 'Weak', color: 'bg-red-500' };
+    if (score === 2) return { score, label: 'Fair', color: 'bg-yellow-500' };
+    if (score === 3) return { score, label: 'Good', color: 'bg-blue-500' };
+    return { score, label: 'Strong', color: 'bg-green-500' };
+  };
+
+  const strength = getPasswordStrength(password);
 
   // Request native OS notification permissions on page load
   useEffect(() => {
@@ -118,6 +136,7 @@ function AuthPageContent() {
         method: 'POST',
         body: JSON.stringify({
           email,
+          password,
           username: targetFlow === 'register' ? username : undefined,
           name: targetFlow === 'register' ? name : undefined,
           flow: targetFlow,
@@ -509,6 +528,38 @@ function AuthPageContent() {
                   </div>
                 </>
               )}
+
+              {/* Password field */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold text-slate-500 dark:text-neutral-400 uppercase tracking-wider px-1">Password</label>
+                <div className="relative group">
+                  <Lock className="w-4.5 h-4.5 text-neutral-550 group-focus-within:text-brand-cyan absolute left-4 top-3.5 transition-colors" />
+                  <input
+                    type="password"
+                    required
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/5 focus:border-brand-cyan/40 focus:ring-1 focus:ring-brand-cyan/20 rounded-2xl pl-12 pr-4 py-3.5 text-sm outline-none text-slate-800 dark:text-white transition-all placeholder:text-slate-400 dark:placeholder:text-neutral-600 focus:bg-white dark:focus:bg-black/60"
+                  />
+                </div>
+
+                {/* Password strength meter for registration */}
+                {activeTab === 'register' && password.length > 0 && (
+                  <div className="flex flex-col gap-1 px-1 mt-1">
+                    <div className="flex justify-between items-center text-[9px] font-bold text-slate-500">
+                      <span>Security Strength</span>
+                      <span className="uppercase">{strength.label}</span>
+                    </div>
+                    <div className="h-1 w-full bg-slate-200 dark:bg-black/60 rounded-full overflow-hidden flex gap-0.5">
+                      <div className={`h-full flex-1 transition-all ${strength.score >= 1 ? strength.color : 'bg-transparent'}`} />
+                      <div className={`h-full flex-1 transition-all ${strength.score >= 2 ? strength.color : 'bg-transparent'}`} />
+                      <div className={`h-full flex-1 transition-all ${strength.score >= 3 ? strength.color : 'bg-transparent'}`} />
+                      <div className={`h-full flex-1 transition-all ${strength.score >= 4 ? strength.color : 'bg-transparent'}`} />
+                    </div>
+                  </div>
+                )}
+              </div>
 
               <button
                 type="submit"

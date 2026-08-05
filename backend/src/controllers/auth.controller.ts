@@ -491,7 +491,7 @@ export async function changePassword(req: Request, res: Response) {
 
 export async function sendOtp(req: Request, res: Response) {
   try {
-    const { email, username, name, flow } = req.body;
+    const { email, password, username, name, flow } = req.body;
 
     if (!email) {
       return res.status(400).json({ error: 'Email is required' });
@@ -516,6 +516,13 @@ export async function sendOtp(req: Request, res: Response) {
         return res.status(400).json({ error: 'Username must be at least 3 characters long' });
       }
 
+      if (!password) {
+        return res.status(400).json({ error: 'Password is required' });
+      }
+      if (password.length < 6) {
+        return res.status(400).json({ error: 'Password must be at least 6 characters long' });
+      }
+
       // Check if username/email is already in use
       const existingUser = await prisma.user.findFirst({
         where: {
@@ -534,13 +541,14 @@ export async function sendOtp(req: Request, res: Response) {
         }
       }
 
-      // Create unverified user profile directly to reserve the username/email during verification
-      const placeholderPasswordHash = await bcrypt.hash(Math.random().toString(36), 10);
+      // Create unverified user profile with password hash
+      const salt = await bcrypt.genSalt(10);
+      const passwordHash = await bcrypt.hash(password, salt);
       await prisma.user.create({
         data: {
           email: lowercaseEmail,
           username: cleanUsername,
-          passwordHash: placeholderPasswordHash,
+          passwordHash,
           name: name || cleanUsername,
           emailVerified: false,
           verified: false,
@@ -552,13 +560,22 @@ export async function sendOtp(req: Request, res: Response) {
         },
       });
     } else {
-      // Flow is 'login': check if verified user exists
+      // Flow is 'login': check if verified user exists and password is correct
+      if (!password) {
+        return res.status(400).json({ error: 'Password is required' });
+      }
+
       const existingUser = await prisma.user.findUnique({
         where: { email: lowercaseEmail },
       });
 
       if (!existingUser) {
-        return res.status(404).json({ error: 'Account not found. Please click Sign Up to create an account first!' });
+        return res.status(401).json({ error: 'Invalid email or password' });
+      }
+
+      const isMatch = await bcrypt.compare(password, existingUser.passwordHash);
+      if (!isMatch) {
+        return res.status(401).json({ error: 'Invalid email or password' });
       }
     }
 
