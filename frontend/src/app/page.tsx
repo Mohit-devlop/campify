@@ -656,46 +656,46 @@ className="bg-transparent border-0 cursor-pointer p-1"
 {user.username[0].toUpperCase()}
 </div>
 )}
-<div className="flex flex-col">
-<h2 className="text-sm font-black text-slate-800 dark:text-white leading-tight">Welcome, {user.name || user.username}! 🚀</h2>
-<p className="text-[10px] text-slate-500 dark:text-neutral-500 mt-0.5">Let&apos;s build some awesome projects today.</p>
-</div>
-</div>
+    <div className="flex flex-col">
+      <h2 className="text-sm font-black text-slate-800 dark:text-white leading-tight">Welcome, {user.name || user.username}!</h2>
+      <p className="text-[10px] text-slate-500 dark:text-neutral-500 mt-0.5">Let&apos;s build some awesome projects today.</p>
+    </div>
+  </div>
 
-{/* Right Stats Widgets */}
-<div className="flex items-center gap-4 flex-wrap md:flex-nowrap w-full md:w-auto justify-between md:justify-end">
-{/* Level + XP Progress */}
-<div className="flex flex-col gap-1 p-2.5 bg-black/40 border border-white/5 rounded-xl w-[105px] flex-shrink-0">
-<div className="flex items-center justify-between text-[8px] uppercase font-bold text-neutral-500">
-<span>LVL {gamification?.stats?.level || 1}</span>
-<span className="text-brand-cyan">{gamification?.stats?.xpPoints || 0} XP</span>
-</div>
-<div className="h-1 w-full bg-neutral-800 rounded-full overflow-hidden">
-<div
-className="h-full bg-brand-cyan transition-all"
-style={{ width: `${Math.min(100, ((gamification?.stats?.xpPoints || 0) % 100))}%` }}
-/>
-</div>
-</div>
+  {/* Right Stats Widgets */}
+  <div className="flex items-center gap-4 flex-wrap md:flex-nowrap w-full md:w-auto justify-between md:justify-end">
+    {/* Level + XP Progress */}
+    <div className="flex flex-col gap-1 p-2.5 bg-black/40 border border-white/5 rounded-xl w-[105px] flex-shrink-0">
+      <div className="flex items-center justify-between text-[8px] uppercase font-bold text-neutral-500">
+        <span>LVL {gamification?.stats?.level || 1}</span>
+        <span className="text-brand-cyan">{gamification?.stats?.xpPoints || 0} XP</span>
+      </div>
+      <div className="h-1 w-full bg-neutral-800 rounded-full overflow-hidden">
+        <div
+          className="h-full bg-brand-cyan transition-all"
+          style={{ width: `${Math.min(100, ((gamification?.stats?.xpPoints || 0) % 100))}%` }}
+        />
+      </div>
+    </div>
 
-{/* Streak count */}
-<div className="flex items-center gap-2 p-2.5 bg-black/40 border border-white/5 rounded-xl w-[95px] flex-shrink-0">
-<span className="text-sm">🔥</span>
-<div className="flex flex-col">
-<span className="text-[8px] uppercase font-bold text-slate-500 dark:text-neutral-550">Streak</span>
-<span className="text-[10px] font-black text-slate-850 dark:text-white">{gamification?.stats?.dailyStreak || 0} Days</span>
-</div>
-</div>
+    {/* Streak count */}
+    <div className="flex items-center gap-2 p-2.5 bg-black/40 border border-white/5 rounded-xl w-[95px] flex-shrink-0">
+      <Flame className="w-4 h-4 text-brand-orange animate-pulse" />
+      <div className="flex flex-col">
+        <span className="text-[8px] uppercase font-bold text-slate-500 dark:text-neutral-550">Streak</span>
+        <span className="text-[10px] font-black text-slate-850 dark:text-white">{gamification?.stats?.dailyStreak || 0} Days</span>
+      </div>
+    </div>
 
-{/* Communities stats */}
-<div className="flex items-center gap-2 p-2.5 bg-black/40 border border-white/5 rounded-xl w-[95px] flex-shrink-0">
-<span className="text-sm">⚡</span>
-<div className="flex flex-col">
-<span className="text-[8px] uppercase font-bold text-slate-500 dark:text-neutral-555">Activity</span>
-<span className="text-[10px] font-black text-slate-850 dark:text-white">{gamification?.badges?.length || 0} Badges</span>
-</div>
-</div>
-</div>
+    {/* Communities stats */}
+    <div className="flex items-center gap-2 p-2.5 bg-black/40 border border-white/5 rounded-xl w-[95px] flex-shrink-0">
+      <Sparkles className="w-4 h-4 text-brand-cyan animate-pulse" />
+      <div className="flex flex-col">
+        <span className="text-[8px] uppercase font-bold text-slate-500 dark:text-neutral-555">Activity</span>
+        <span className="text-[10px] font-black text-slate-850 dark:text-white">{gamification?.badges?.length || 0} Badges</span>
+      </div>
+    </div>
+  </div>
 </div>
 
 {/* Stories Horizontal Container */}

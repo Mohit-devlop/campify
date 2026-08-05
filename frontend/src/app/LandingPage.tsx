@@ -83,8 +83,8 @@ export default function LandingPage() {
     '$ npx create-campify-app@latest',
     '✔ Connected to Campus Server',
     '✔ Hackathon Mode Enabled',
-    '🔥 Daily Streak: 12 Days (Level 5)',
-    '🚀 Active Team Recruitment matches found: 4'
+    '✔ Daily Streak: 12 Days (Level 5)',
+    '✔ Active Team Recruitment matches found: 4'
   ];
 
   // Dynamic Terminal Typing Animation
@@ -409,7 +409,7 @@ export default function LandingPage() {
                   </div>
                 </div>
                 <p className="text-xs text-neutral-700 dark:text-neutral-300 leading-normal font-medium">
-                  Just uploaded the source code of Campify! Implemented Next.js 15, Tailwind v4, Express, and local DB integration. Let&apos;s hack! 🚀
+                  Just uploaded the source code of Campify! Implemented Next.js 15, Tailwind v4, Express, and local DB integration. Let&apos;s hack!
                 </p>
                 <div className="flex items-center gap-4 text-[10px] text-neutral-500 font-semibold mt-1 select-none">
                   <span className="flex items-center gap-1 text-red-500"><Flame className="w-3.5 h-3.5" /> 42 Likes</span>

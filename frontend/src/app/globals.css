@@ -47,8 +47,8 @@
 }
 
 :root {
---brand-orange: #FF7A00;
---brand-cyan: #00B8D9;
+--brand-orange: #8B5CF6;
+--brand-cyan: #10B981;
 --brand-bg: #F8FAFC;
 --brand-card: #FFFFFF;
 --brand-text: #1E293B;
@@ -62,16 +62,16 @@
 --popover: 0 0% 100%;
 --popover-foreground: 215 28% 17%;
 
---primary: 29 100% 50%;         /* #FF7A00 Vibrant Orange */
+--primary: 263 90% 66%;         /* #8B5CF6 Sleek Royal Purple */
 --primary-foreground: 0 0% 100%;
 
---secondary: 189 100% 42%;     /* #00B8D9 Electric Cyan */
+--secondary: 162 76% 46%;     /* #10B981 Sleek Mint Green */
 --secondary-foreground: 0 0% 100%;
 
 --muted: 210 40% 96.1%;
 --muted-foreground: 215.4 16.3% 46.9%;
 
---accent: 189 100% 42%;         /* #00B8D9 Electric Cyan */
+--accent: 162 76% 46%;         /* #10B981 Sleek Mint Green */
 --accent-foreground: 0 0% 100%;
 
 --destructive: 0 84.2% 60.2%;
@@ -79,7 +79,7 @@
 
 --border: 214.3 31.8% 91.4%;    /* #E2E8F0 */
 --input: 214.3 31.8% 91.4%;
---ring: 29 100% 50%;            /* Vibrant Orange ring */
+--ring: 263 90% 66%;            /* Sleek Royal Purple ring */
 
 --radius: 1.25rem;
 
@@ -91,8 +91,8 @@
 }
 
 .dark {
---brand-orange: #FF7A00;
---brand-cyan: #00B8D9;
+--brand-orange: #8B5CF6;
+--brand-cyan: #10B981;
 --brand-bg: #0F172A;
 --brand-card: #1E293B;
 --brand-text: #F8FAFC;
@@ -106,16 +106,16 @@
 --popover: 222.2 47.4% 11.2%;
 --popover-foreground: 210 40% 98%;
 
---primary: 29 100% 50%;
+--primary: 263 90% 66%;
 --primary-foreground: 0 0% 100%;
 
---secondary: 189 100% 42%;
+--secondary: 162 76% 46%;
 --secondary-foreground: 222.2 47.4% 11.2%;
 
 --muted: 217.2 32.6% 17.5%;
 --muted-foreground: 215 20.2% 65.1%;
 
---accent: 189 100% 42%;
+--accent: 162 76% 46%;
 --accent-foreground: 0 0% 100%;
 
 --destructive: 0 62.8% 30.6%;
@@ -123,7 +123,7 @@
 
 --border: 217.2 32.6% 25%;      /* Slate border */
 --input: 217.2 32.6% 25%;
---ring: 29 100% 50%;
+--ring: 263 90% 66%;
 
 --radius: 1.25rem;
 

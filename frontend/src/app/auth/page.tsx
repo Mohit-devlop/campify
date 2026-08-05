@@ -311,8 +311,8 @@ className="p-4 rounded-2xl bg-slate-900 border border-slate-800 backdrop-blur-md
 {`$ npx create-campify-app@latest
 ✔ Connected to CampusHub
 ✔ Hackathon Mode Enabled
-🔥 Streak: Active 12 Days
-🚀 Project matches found: 4`}
+✔ Streak: Active 12 Days
+✔ Project matches found: 4`}
 </pre>
 </motion.div>
 
