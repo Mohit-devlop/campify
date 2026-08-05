@@ -5,8 +5,16 @@ const ASSETS_TO_CACHE = [
   '/favicon.ico',
 ];
 
+// Get environment from URL query parameter
+const urlParams = new URL(self.location.href).searchParams;
+const isDev = urlParams.get('env') === 'development';
+
 // Install Service Worker
 self.addEventListener('install', (event) => {
+  if (isDev) {
+    self.skipWaiting();
+    return;
+  }
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       console.log('[Service Worker] Caching app shell');
@@ -35,6 +43,10 @@ self.addEventListener('activate', (event) => {
 
 // Fetch Interception
 self.addEventListener('fetch', (event) => {
+  if (isDev) {
+    return; // Bypass caching and interception in development to prevent HMR and reload loops
+  }
+
   // Avoid intercepting API routes, WebSockets, or Next.js development hot reloads
   if (
     event.request.url.includes('/api/') ||
