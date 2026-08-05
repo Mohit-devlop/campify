@@ -491,7 +491,7 @@ export async function changePassword(req: Request, res: Response) {
 
 export async function sendOtp(req: Request, res: Response) {
   try {
-    const { email } = req.body;
+    const { email, username, name, flow } = req.body;
 
     if (!email) {
       return res.status(400).json({ error: 'Email is required' });
@@ -503,6 +503,63 @@ export async function sendOtp(req: Request, res: Response) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(lowercaseEmail)) {
       return res.status(400).json({ error: 'Invalid email address format' });
+    }
+
+    const activeFlow = flow || 'login';
+
+    if (activeFlow === 'register') {
+      if (!username) {
+        return res.status(400).json({ error: 'Username is required for registration' });
+      }
+      const cleanUsername = username.toLowerCase().trim();
+      if (cleanUsername.length < 3) {
+        return res.status(400).json({ error: 'Username must be at least 3 characters long' });
+      }
+
+      // Check if username/email is already in use
+      const existingUser = await prisma.user.findFirst({
+        where: {
+          OR: [{ email: lowercaseEmail }, { username: cleanUsername }],
+        },
+      });
+
+      if (existingUser) {
+        if (existingUser.emailVerified) {
+          return res.status(409).json({ error: 'Username or email already in use' });
+        } else {
+          // Clean up the unverified user registration to avoid duplicate key conflicts
+          await prisma.user.delete({
+            where: { id: existingUser.id },
+          });
+        }
+      }
+
+      // Create unverified user profile directly to reserve the username/email during verification
+      const placeholderPasswordHash = await bcrypt.hash(Math.random().toString(36), 10);
+      await prisma.user.create({
+        data: {
+          email: lowercaseEmail,
+          username: cleanUsername,
+          passwordHash: placeholderPasswordHash,
+          name: name || cleanUsername,
+          emailVerified: false,
+          verified: false,
+          profile: {
+            create: {
+              bio: `Hello! I'm ${name || cleanUsername} on Campify.`,
+            },
+          },
+        },
+      });
+    } else {
+      // Flow is 'login': check if verified user exists
+      const existingUser = await prisma.user.findUnique({
+        where: { email: lowercaseEmail },
+      });
+
+      if (!existingUser) {
+        return res.status(404).json({ error: 'Account not found. Please click Sign Up to create an account first!' });
+      }
     }
 
     // Rate Limiting: Max 1 OTP per minute
@@ -606,54 +663,26 @@ export async function verifyOtpNew(req: Request, res: Response) {
       },
     });
 
-    // Find or Auto-Create User (Passwordless login/signup)
+    // Find User
     let user = await prisma.user.findUnique({
       where: { email: lowercaseEmail },
       include: { profile: true },
     });
 
     if (!user) {
-      // Auto-register user
-      // Derive a unique username
-      const localPart = lowercaseEmail.split('@')[0].replace(/[^a-zA-Z0-9_]/g, '');
-      let baseUsername = localPart || 'user';
-      let uniqueUsername = baseUsername;
-      
-      while (true) {
-        const existingUsername = await prisma.user.findUnique({
-          where: { username: uniqueUsername },
-        });
-        if (!existingUsername) break;
-        uniqueUsername = `${baseUsername}_${Math.floor(1000 + Math.random() * 9000)}`;
-      }
+      return res.status(404).json({ error: 'User registration not found. Please register again.' });
+    }
 
-      // Hashed placeholder password since database field is required
-      const placeholderPasswordHash = await bcrypt.hash(Math.random().toString(36), 10);
-
-      user = await prisma.user.create({
+    // Verify user account
+    if (!user.emailVerified) {
+      user = await prisma.user.update({
+        where: { id: user.id },
         data: {
-          email: lowercaseEmail,
-          username: uniqueUsername,
-          passwordHash: placeholderPasswordHash,
-          name: baseUsername,
           emailVerified: true,
           verified: true,
-          profile: {
-            create: {
-              bio: `Hello! I'm ${baseUsername} on Campify.`,
-            },
-          },
         },
         include: { profile: true },
       });
-    } else {
-      // Update emailVerified to true if not already
-      if (!user.emailVerified) {
-        await prisma.user.update({
-          where: { id: user.id },
-          data: { emailVerified: true },
-        });
-      }
     }
 
     if (user.status === 'BANNED') {

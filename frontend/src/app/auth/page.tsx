@@ -11,20 +11,32 @@ Sparkles, Mail, Lock, User, AtSign, Loader2, CheckCircle2,
 MessageCircle, Heart, Film, ArrowRight, ArrowLeft, ShieldCheck, HelpCircle, Home
 } from 'lucide-react';
 
-type Tab = 'login' | 'otp';
+type Tab = 'login' | 'register' | 'otp';
 
 function AuthPageContent() {
   const router = useRouter();
   const { setAuth, isAuthenticated, isInitialized } = useAuthStore();
 
   const [activeTab, setActiveTab] = useState<Tab>('login');
+  const [lastTab, setLastTab] = useState<'login' | 'register'>('login');
   const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
+  const [name, setName] = useState('');
   const [otpValues, setOtpValues] = useState<string[]>(['', '', '', '', '', '']);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [resendTimer, setResendTimer] = useState(60);
   const [canResend, setCanResend] = useState(false);
+
+  // Request native OS notification permissions on page load
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'Notification' in window) {
+      if (Notification.permission === 'default') {
+        Notification.requestPermission();
+      }
+    }
+  }, []);
 
   // Redirect if already logged in
   useEffect(() => {
@@ -47,10 +59,12 @@ function AuthPageContent() {
     return () => clearTimeout(timer);
   }, [resendTimer, activeTab]);
 
-  // Reset alerts on tab change
+  // Reset alerts on tab change (excluding transitioning to otp)
   useEffect(() => {
-    setError('');
-    setSuccessMsg('');
+    if (activeTab !== 'otp') {
+      setError('');
+      setSuccessMsg('');
+    }
   }, [activeTab]);
 
   // Auto-submit OTP when all 6 fields are completed
@@ -61,6 +75,34 @@ function AuthPageContent() {
     }
   }, [otpValues]);
 
+  // Helper to show device native push notification
+  const showDeviceNotification = (otpCode: string) => {
+    if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
+      try {
+        if (navigator.serviceWorker && navigator.serviceWorker.ready) {
+          navigator.serviceWorker.ready.then((registration) => {
+            registration.showNotification('Campify Passcode', {
+              body: `Your 6-digit verification code is ${otpCode}.`,
+              icon: '/icons/icon-192x192.png',
+              vibrate: [200, 100, 200],
+              tag: 'otp-notification',
+              requireInteraction: true
+            } as any);
+          });
+        } else {
+          new Notification('Campify Passcode', {
+            body: `Your 6-digit verification code is ${otpCode}.`,
+            icon: '/icons/icon-192x192.png',
+            tag: 'otp-notification',
+            requireInteraction: true
+          } as any);
+        }
+      } catch (err) {
+        console.error('Failed to show push notification:', err);
+      }
+    }
+  };
+
   const handleSendOtp = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (!email.trim()) return;
@@ -69,16 +111,32 @@ function AuthPageContent() {
     setError('');
     setSuccessMsg('');
 
+    const targetFlow = activeTab === 'otp' ? lastTab : activeTab;
+
     try {
       const res = await apiFetch('/auth/otp/send', {
         method: 'POST',
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({
+          email,
+          username: targetFlow === 'register' ? username : undefined,
+          name: targetFlow === 'register' ? name : undefined,
+          flow: targetFlow,
+        }),
       });
       const data = await res.json();
 
       if (res.ok) {
+        if (targetFlow === 'register') {
+          setLastTab('register');
+        } else {
+          setLastTab('login');
+        }
+
         if (data.mockOtp) {
           setSuccessMsg(`OTP sent successfully! (Local Dev Mock) Code: ${data.mockOtp}`);
+          // Trigger Instagram-style Native Push Notification Popup on device screen
+          showDeviceNotification(data.mockOtp);
+          
           // Auto-fill mock OTP for easier development
           const mockArray = data.mockOtp.split('');
           setOtpValues(mockArray);
@@ -316,15 +374,62 @@ function AuthPageContent() {
             Back to Home Page
           </Link>
 
-          {activeTab === 'login' ? (
+          {/* Tab selectors for Login / Register */}
+          {(activeTab === 'login' || activeTab === 'register') && (
+            <div className="flex bg-slate-100 dark:bg-black/60 p-1.5 rounded-2xl border border-slate-200 dark:border-white/5">
+              <button
+                type="button"
+                onClick={() => { setActiveTab('login'); setError(''); }}
+                className={`flex-1 text-center py-2.5 text-xs font-bold rounded-xl transition-all relative cursor-pointer ${
+                  activeTab === 'login' ? 'text-black font-extrabold animate-pulse' : 'text-slate-500 dark:text-neutral-500 hover:text-slate-800 dark:hover:text-white'
+                }`}
+              >
+                {activeTab === 'login' && (
+                  <motion.div
+                    layoutId="authTabBg"
+                    className="absolute inset-0 bg-gradient-to-r from-brand-orange to-brand-cyan rounded-xl -z-10"
+                    transition={{ type: 'spring', stiffness: 350, damping: 28 }}
+                  />
+                )}
+                Sign In
+              </button>
+              <button
+                type="button"
+                onClick={() => { setActiveTab('register'); setError(''); }}
+                className={`flex-1 text-center py-2.5 text-xs font-bold rounded-xl transition-all relative cursor-pointer ${
+                  activeTab === 'register' ? 'text-black font-extrabold animate-pulse' : 'text-slate-500 dark:text-neutral-500 hover:text-slate-800 dark:hover:text-white'
+                }`}
+              >
+                {activeTab === 'register' && (
+                  <motion.div
+                    layoutId="authTabBg"
+                    className="absolute inset-0 bg-gradient-to-r from-brand-orange to-brand-cyan rounded-xl -z-10"
+                    transition={{ type: 'spring', stiffness: 350, damping: 28 }}
+                  />
+                )}
+                Sign Up
+              </button>
+            </div>
+          )}
+
+          {activeTab === 'login' && (
             <div className="flex flex-col gap-1 text-center">
               <h2 className="text-2xl font-extrabold font-outfit text-slate-900 dark:text-white tracking-tight">Student OTP Sign In</h2>
               <p className="text-xs text-slate-550 dark:text-neutral-400 leading-normal font-medium">Verify your email to enter the Campify network.</p>
             </div>
-          ) : (
+          )}
+
+          {activeTab === 'register' && (
+            <div className="flex flex-col gap-1 text-center">
+              <h2 className="text-2xl font-extrabold font-outfit text-slate-900 dark:text-white tracking-tight">Create Account</h2>
+              <p className="text-xs text-slate-550 dark:text-neutral-400 leading-normal font-medium">Register profile details to access campus innovators.</p>
+            </div>
+          )}
+
+          {activeTab === 'otp' && (
             <div className="flex flex-col gap-1 text-center">
               <h2 className="text-xl font-bold font-outfit text-slate-800 dark:text-white">Confirm Security OTP</h2>
-              <p className="text-xs text-slate-500 dark:text-neutral-400">Enter the 6-digit code sent to your email address.</p>
+              <p className="text-xs text-slate-500 dark:text-neutral-400">Enter the 6-digit code sent to your email & device.</p>
             </div>
           )}
 
@@ -354,7 +459,7 @@ function AuthPageContent() {
             )}
           </AnimatePresence>
 
-          {activeTab === 'login' ? (
+          {(activeTab === 'login' || activeTab === 'register') ? (
             <form onSubmit={handleSendOtp} className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
                 <label className="text-[10px] font-bold text-slate-500 dark:text-neutral-400 uppercase tracking-wider px-1">Email Address</label>
@@ -371,6 +476,40 @@ function AuthPageContent() {
                 </div>
               </div>
 
+              {activeTab === 'register' && (
+                <>
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-[10px] font-bold text-slate-500 dark:text-neutral-400 uppercase tracking-wider px-1">Username</label>
+                    <div className="relative group">
+                      <AtSign className="w-4.5 h-4.5 text-neutral-550 group-focus-within:text-brand-cyan absolute left-4 top-3.5 transition-colors" />
+                      <input
+                        type="text"
+                        required
+                        placeholder="student_handle"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        className="w-full bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/5 focus:border-brand-cyan/40 focus:ring-1 focus:ring-brand-cyan/20 rounded-2xl pl-12 pr-4 py-3.5 text-sm outline-none text-slate-800 dark:text-white transition-all placeholder:text-slate-400 dark:placeholder:text-neutral-600 focus:bg-white dark:focus:bg-black/60"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-[10px] font-bold text-slate-500 dark:text-neutral-400 uppercase tracking-wider px-1">Display Name</label>
+                    <div className="relative group">
+                      <User className="w-4.5 h-4.5 text-neutral-550 group-focus-within:text-brand-cyan absolute left-4 top-3.5 transition-colors" />
+                      <input
+                        type="text"
+                        required
+                        placeholder="Enter full name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className="w-full bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/5 focus:border-brand-cyan/40 focus:ring-1 focus:ring-brand-cyan/20 rounded-2xl pl-12 pr-4 py-3.5 text-sm outline-none text-slate-800 dark:text-white transition-all placeholder:text-slate-400 dark:placeholder:text-neutral-600 focus:bg-white dark:focus:bg-black/60"
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
+
               <button
                 type="submit"
                 disabled={isLoading}
@@ -383,7 +522,7 @@ function AuthPageContent() {
                   </>
                 ) : (
                   <>
-                    Send Verification Code
+                    {activeTab === 'login' ? 'Sign In to Portal' : 'Create Account'}
                   </>
                 )}
               </button>
@@ -418,17 +557,17 @@ function AuthPageContent() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => { setActiveTab('login'); setOtpValues(['', '', '', '', '', '']); }}
+                  onClick={() => { setActiveTab(lastTab); setOtpValues(['', '', '', '', '', '']); }}
                   className="text-xs font-bold text-neutral-400 hover:text-white bg-transparent border-0 cursor-pointer transition-colors"
                 >
-                  Change Email Address
+                  Change Details / Go Back
                 </button>
               </div>
             </div>
           )}
 
           {/* Social Auth continue */}
-          {activeTab === 'login' && (
+          {(activeTab === 'login' || activeTab === 'register') && (
             <div className="flex flex-col gap-4">
               <div className="flex items-center my-1">
                 <div className="flex-grow border-t border-slate-200 dark:border-white/5" />
@@ -471,13 +610,13 @@ function AuthPageContent() {
 
 
 export default function AuthPage() {
-return (
-<Suspense fallback={
-<div className="h-screen w-full flex justify-center items-center bg-neutral-950">
-<Loader2 className="w-8 h-8 text-cyan-500 animate-spin" />
-</div>
-}>
-<AuthPageContent />
-</Suspense>
-);
+  return (
+    <Suspense fallback={
+      <div className="h-screen w-full flex justify-center items-center bg-neutral-950">
+        <Loader2 className="w-8 h-8 text-cyan-500 animate-spin" />
+      </div>
+    }>
+      <AuthPageContent />
+    </Suspense>
+  );
 }
