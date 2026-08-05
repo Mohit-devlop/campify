@@ -488,3 +488,204 @@ export async function changePassword(req: Request, res: Response) {
     return res.status(500).json({ error: 'Internal server error' });
   }
 }
+
+export async function sendOtp(req: Request, res: Response) {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ error: 'Email is required' });
+    }
+
+    const lowercaseEmail = email.toLowerCase().trim();
+
+    // Basic email validation regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(lowercaseEmail)) {
+      return res.status(400).json({ error: 'Invalid email address format' });
+    }
+
+    // Rate Limiting: Max 1 OTP per minute
+    const existingVerif = await prisma.otpVerification.findUnique({
+      where: { email: lowercaseEmail },
+    });
+
+    if (existingVerif && Date.now() - new Date(existingVerif.lastSentAt).getTime() < 60 * 1000) {
+      return res.status(429).json({ error: 'Please wait 1 minute before requesting another OTP.' });
+    }
+
+    // Generate secure 6-digit random OTP
+    const otp = generateOtp();
+    const otpHash = await bcrypt.hash(otp, 10);
+    const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes expiry
+
+    // Save/Upsert OTP verification record
+    await prisma.otpVerification.upsert({
+      where: { email: lowercaseEmail },
+      update: {
+        otpHash,
+        expiresAt,
+        attempts: 0,
+        verified: false,
+        lastSentAt: new Date(),
+      },
+      create: {
+        email: lowercaseEmail,
+        otpHash,
+        expiresAt,
+        attempts: 0,
+        verified: false,
+        lastSentAt: new Date(),
+      },
+    });
+
+    // Send OTP via Resend / NodeMailer / Console
+    await sendOtpEmail(lowercaseEmail, otp);
+
+    const hasResend = !!(process.env.RESEND_API_KEY && process.env.RESEND_API_KEY !== 'mock');
+    const hasSmtp = !!(process.env.SMTP_HOST && process.env.SMTP_PORT && process.env.SMTP_USER && process.env.SMTP_PASS);
+
+    return res.status(200).json({
+      message: 'OTP verification code sent successfully',
+      email: lowercaseEmail,
+      mockOtp: (!hasResend && !hasSmtp) ? otp : undefined,
+    });
+  } catch (error) {
+    console.error('Send OTP error:', error);
+    return res.status(500).json({ error: 'Internal server error while sending OTP' });
+  }
+}
+
+export async function verifyOtpNew(req: Request, res: Response) {
+  try {
+    const { email, otp } = req.body;
+
+    if (!email || !otp) {
+      return res.status(400).json({ error: 'Email and OTP code are required' });
+    }
+
+    const lowercaseEmail = email.toLowerCase().trim();
+
+    // Find the OTP verification record
+    const verif = await prisma.otpVerification.findUnique({
+      where: { email: lowercaseEmail },
+    });
+
+    if (!verif) {
+      return res.status(404).json({ error: 'No OTP request found for this email.' });
+    }
+
+    // Check expiry (5 minutes)
+    if (new Date() > new Date(verif.expiresAt)) {
+      return res.status(400).json({ error: 'OTP code has expired. Please request a new one.' });
+    }
+
+    // Check attempts (max 3 attempts)
+    if (verif.attempts >= 3) {
+      return res.status(400).json({ error: 'Maximum verification attempts exceeded. Please request a new OTP.' });
+    }
+
+    // Increment attempt count
+    await prisma.otpVerification.update({
+      where: { email: lowercaseEmail },
+      data: { attempts: { increment: 1 } },
+    });
+
+    // Check match
+    const isMatch = await bcrypt.compare(otp, verif.otpHash);
+    if (!isMatch) {
+      return res.status(400).json({ error: 'Invalid OTP code. Please try again.' });
+    }
+
+    // Mark as verified and reset attempts (prevent OTP reuse)
+    await prisma.otpVerification.update({
+      where: { email: lowercaseEmail },
+      data: {
+        verified: true,
+        otpHash: 'invalidated', // prevent reuse
+      },
+    });
+
+    // Find or Auto-Create User (Passwordless login/signup)
+    let user = await prisma.user.findUnique({
+      where: { email: lowercaseEmail },
+      include: { profile: true },
+    });
+
+    if (!user) {
+      // Auto-register user
+      // Derive a unique username
+      const localPart = lowercaseEmail.split('@')[0].replace(/[^a-zA-Z0-9_]/g, '');
+      let baseUsername = localPart || 'user';
+      let uniqueUsername = baseUsername;
+      
+      while (true) {
+        const existingUsername = await prisma.user.findUnique({
+          where: { username: uniqueUsername },
+        });
+        if (!existingUsername) break;
+        uniqueUsername = `${baseUsername}_${Math.floor(1000 + Math.random() * 9000)}`;
+      }
+
+      // Hashed placeholder password since database field is required
+      const placeholderPasswordHash = await bcrypt.hash(Math.random().toString(36), 10);
+
+      user = await prisma.user.create({
+        data: {
+          email: lowercaseEmail,
+          username: uniqueUsername,
+          passwordHash: placeholderPasswordHash,
+          name: baseUsername,
+          emailVerified: true,
+          verified: true,
+          profile: {
+            create: {
+              bio: `Hello! I'm ${baseUsername} on Campify.`,
+            },
+          },
+        },
+        include: { profile: true },
+      });
+    } else {
+      // Update emailVerified to true if not already
+      if (!user.emailVerified) {
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { emailVerified: true },
+        });
+      }
+    }
+
+    if (user.status === 'BANNED') {
+      return res.status(403).json({ error: 'Access denied: This account has been banned by administrators' });
+    }
+
+    const authUser: AuthUser = {
+      id: user.id,
+      email: user.email,
+      username: user.username,
+      role: user.role,
+    };
+
+    const accessToken = generateAccessToken(authUser);
+    const refreshToken = generateRefreshToken(authUser);
+
+    return res.status(200).json({
+      message: 'Authentication successful',
+      accessToken,
+      refreshToken,
+      user: {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        name: user.name,
+        role: user.role,
+        verified: user.verified,
+        profile: user.profile,
+      },
+    });
+  } catch (error) {
+    console.error('Verify OTP error:', error);
+    return res.status(500).json({ error: 'Internal server error during verification' });
+  }
+}

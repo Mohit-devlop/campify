@@ -30,6 +30,8 @@ router.post('/auth/register', authCtrl.register);
 router.post('/auth/verify-otp', authCtrl.verifyOtp);
 router.post('/auth/resend-otp', authCtrl.resendOtp);
 router.post('/auth/login', authCtrl.login);
+router.post('/auth/otp/send', authCtrl.sendOtp);
+router.post('/auth/otp/verify', authCtrl.verifyOtpNew);
 router.post('/auth/refresh', authCtrl.refreshToken);
 router.post('/auth/google', authCtrl.googleLogin);
 router.post('/auth/forgot-password', authCtrl.forgotPassword);
