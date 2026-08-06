@@ -692,8 +692,8 @@ export default function Messages() {
       <div className="hidden sm:flex w-[72px] flex-col items-center py-4 bg-neutral-950/80 border-r border-white/5 gap-3 relative z-10 flex-shrink-0">
         
         {/* Sphere branding circular icon */}
-        <div className="w-12 h-12 rounded-[24px] hover:rounded-[16px] bg-gradient-to-tr from-pink-500 via-purple-600 to-indigo-500 flex items-center justify-center cursor-pointer transition-all duration-300 shadow-md">
-          <Sparkles className="w-5 h-5 text-white animate-pulse" />
+        <div className="w-12 h-12 rounded-[24px] hover:rounded-[16px] btn-primary-gradient flex items-center justify-center cursor-pointer transition-all duration-300 shadow-md">
+          <Sparkles className="w-5 h-5 text-black animate-pulse" />
         </div>
         
         <div className="w-8 border-t border-white/10 my-1" />
@@ -1124,7 +1124,7 @@ export default function Messages() {
                       </div>
                       <span className="text-[9px] text-neutral-500 mt-1 font-semibold flex items-center gap-1">
                         {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                        {isOwn && <CheckCircle2 className="w-3.5 h-3.5 text-purple-400" />}
+                        {isOwn && <CheckCircle2 className="w-3.5 h-3.5 text-brand-cyan" />}
                       </span>
                     </div>
                   );
@@ -1139,7 +1139,7 @@ export default function Messages() {
                       <div
                         className={`px-4 py-2.5 rounded-2xl text-xs font-semibold leading-relaxed ${
                           isOwn
-                            ? 'bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 text-white rounded-tr-none shadow-md shadow-purple-950/15'
+                            ? 'bg-brand-cyan/25 text-white border border-brand-cyan/35 rounded-tr-none shadow-md shadow-brand-cyan/5'
                             : 'bg-neutral-900 text-neutral-200 border border-white/5 rounded-tl-none'
                         }`}
                       >
@@ -1158,7 +1158,7 @@ export default function Messages() {
                     </div>
                     <span className="text-[9px] text-neutral-500 mt-1 font-semibold flex items-center gap-1">
                       {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                      {isOwn && <CheckCircle2 className="w-3.5 h-3.5 text-purple-400" />}
+                      {isOwn && <CheckCircle2 className="w-3.5 h-3.5 text-brand-cyan" />}
                     </span>
                   </div>
                 );
@@ -1198,7 +1198,7 @@ export default function Messages() {
               <button
                 type="submit"
                 disabled={!inputText.trim()}
-                className="p-3 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white rounded-2xl active-shrink hover-scale disabled:opacity-40 border-0 outline-none cursor-pointer shadow-md shadow-purple-500/10"
+                className="p-3 bg-brand-cyan hover:bg-brand-cyan/85 text-black rounded-2xl active-shrink hover-scale disabled:opacity-40 border-0 outline-none cursor-pointer shadow-md shadow-brand-cyan/10"
               >
                 <Send className="w-4 h-4" />
               </button>
@@ -1207,7 +1207,7 @@ export default function Messages() {
         ) : (
           <div className="flex-grow flex flex-col justify-center items-center gap-4 p-8">
             <div className="w-16 h-16 rounded-[20px] bg-white/5 border border-white/5 flex items-center justify-center animate-pulse">
-              <MessageCircle className="w-7 h-7 text-purple-400" />
+              <MessageCircle className="w-7 h-7 text-brand-cyan" />
             </div>
             <h3 className="font-extrabold text-sm text-neutral-400 font-outfit">Chat Room Selector</h3>
             <p className="text-neutral-500 text-xs text-center max-w-xs leading-relaxed">
@@ -1239,7 +1239,7 @@ export default function Messages() {
                   type="checkbox"
                   checked={isGroup}
                   onChange={(e) => { setIsGroup(e.target.checked); setSelectedMembers([]); }}
-                  className="rounded border-white/15 bg-transparent text-purple-600 focus:ring-purple-500/20"
+                  className="rounded border-white/15 bg-transparent text-brand-orange focus:ring-brand-orange/20"
                 />
                 <span className="text-xs text-neutral-400 font-bold uppercase tracking-wider">Create Group Chat</span>
               </label>
@@ -1381,10 +1381,10 @@ export default function Messages() {
                   setShowOwnStatusMenu(false);
                   setShowCreateInstantModal(true);
                 }}
-                className="w-full py-2.5 px-4 bg-gradient-to-r from-pink-500 to-purple-650 hover:opacity-90 rounded-xl text-left text-xs font-bold transition-all border-0 text-white cursor-pointer flex items-center justify-between"
+                className="w-full py-2.5 px-4 btn-primary-gradient text-black font-extrabold rounded-xl text-left text-xs transition-all border-0 cursor-pointer flex items-center justify-between"
               >
-                <span className="flex items-center gap-2"><Camera className="w-4 h-4" /> Post Spontaneous Instant</span>
-                <span className="text-[9px] bg-white/20 px-1.5 py-0.5 rounded-full">New</span>
+                <span className="flex items-center gap-2 text-black"><Camera className="w-4 h-4 text-black" /> Post Spontaneous Instant</span>
+                <span className="text-[9px] bg-black/20 text-black px-1.5 py-0.5 rounded-full font-bold">New</span>
               </button>
 
               {ownInstant && (
@@ -1425,8 +1425,8 @@ export default function Messages() {
                 onClick={() => setComposerTab('text')}
                 className={`pb-1 px-2 font-bold text-[10px] uppercase tracking-wider transition-all bg-transparent border-0 cursor-pointer ${
                   composerTab === 'text' 
-                    ? 'text-white border-b-2 border-purple-500' 
-                    : 'text-neutral-450 hover:text-neutral-200'
+                    ? 'text-white border-b-2 border-brand-cyan' 
+                    : 'text-neutral-455 hover:text-neutral-200'
                 }`}
               >
                 Thought
@@ -1436,8 +1436,8 @@ export default function Messages() {
                 onClick={() => setComposerTab('music')}
                 className={`pb-1 px-2 font-bold text-[10px] uppercase tracking-wider transition-all bg-transparent border-0 cursor-pointer ${
                   composerTab === 'music' 
-                    ? 'text-white border-b-2 border-purple-500' 
-                    : 'text-neutral-450 hover:text-neutral-200'
+                    ? 'text-white border-b-2 border-brand-cyan' 
+                    : 'text-neutral-455 hover:text-neutral-200'
                 }`}
               >
                 Music
@@ -1447,8 +1447,8 @@ export default function Messages() {
                 onClick={() => setComposerTab('media')}
                 className={`pb-1 px-2 font-bold text-[10px] uppercase tracking-wider transition-all bg-transparent border-0 cursor-pointer ${
                   composerTab === 'media' 
-                    ? 'text-white border-b-2 border-purple-500' 
-                    : 'text-neutral-450 hover:text-neutral-200'
+                    ? 'text-white border-b-2 border-brand-cyan' 
+                    : 'text-neutral-455 hover:text-neutral-200'
                 }`}
               >
                 GIFs & Images
@@ -1497,7 +1497,7 @@ export default function Messages() {
                           className="p-1.5 rounded-full hover:bg-white/10 border-0 bg-transparent text-white cursor-pointer flex items-center justify-center"
                         >
                           {previewingSongId === selectedSong.id ? (
-                            <Pause className="w-4 h-4 text-purple-400" />
+                            <Pause className="w-4 h-4 text-brand-orange" />
                           ) : (
                             <Play className="w-4 h-4 text-white" />
                           )}
@@ -1538,7 +1538,7 @@ export default function Messages() {
                               className="p-1 rounded-full hover:bg-white/5 border-0 bg-transparent text-neutral-400 cursor-pointer flex-shrink-0"
                             >
                               {previewingSongId === song.id ? (
-                                <Pause className="w-3.5 h-3.5 text-purple-400" />
+                                <Pause className="w-3.5 h-3.5 text-brand-orange" />
                               ) : (
                                 <Play className="w-3.5 h-3.5 text-white" />
                               )}
@@ -1616,7 +1616,7 @@ export default function Messages() {
                           htmlFor="note-media-upload"
                           className="flex items-center justify-center gap-2 w-full py-2.5 bg-white/5 hover:bg-white/10 rounded-xl cursor-pointer text-xs font-bold transition-all text-neutral-300 border border-white/5 select-none"
                         >
-                          {isUploadingMedia ? <Loader2 className="w-4.5 h-4.5 animate-spin text-purple-400" /> : <ImageIcon className="w-4.5 h-4.5 text-purple-400" />}
+                          {isUploadingMedia ? <Loader2 className="w-4.5 h-4.5 animate-spin text-brand-cyan" /> : <ImageIcon className="w-4.5 h-4.5 text-brand-cyan" />}
                           Upload Local Image
                         </label>
                       </div>
@@ -1631,7 +1631,7 @@ export default function Messages() {
                             <div
                               key={gif.id}
                               onClick={() => { setSelectedMediaUrl(gif.url); setSelectedMediaType('GIF'); }}
-                              className="aspect-square bg-white/5 border border-white/5 hover:border-purple-500 rounded-xl p-1 overflow-hidden cursor-pointer flex items-center justify-center transition-all hover:scale-95"
+                              className="aspect-square bg-white/5 border border-white/5 hover:border-brand-cyan rounded-xl p-1 overflow-hidden cursor-pointer flex items-center justify-center transition-all hover:scale-95"
                             >
                               <img src={gif.url} className="w-full h-full object-contain" alt={gif.name} />
                             </div>
@@ -1670,19 +1670,19 @@ export default function Messages() {
                     onClick={() => setNoteIsCloseFriends(false)}
                     className={`flex items-center justify-between p-2 rounded-xl transition-all border-0 cursor-pointer ${
                       !noteIsCloseFriends 
-                        ? 'bg-purple-500/10 text-purple-400 font-semibold' 
+                        ? 'bg-brand-cyan/10 text-brand-cyan font-semibold glow-cyan/5' 
                         : 'bg-transparent text-neutral-455 hover:bg-white/5'
                     }`}
                   >
                     <div className="flex items-center gap-2.5">
-                      <div className={`p-1.5 rounded-full ${!noteIsCloseFriends ? 'bg-purple-500/20' : 'bg-neutral-800'}`}>
+                      <div className={`p-1.5 rounded-full ${!noteIsCloseFriends ? 'bg-brand-cyan/20' : 'bg-neutral-800'}`}>
                         <Users className="w-3.5 h-3.5" />
                       </div>
                       <div className="text-left">
                         <p className="text-2xs font-bold leading-none m-0">Followers you follow back</p>
                       </div>
                     </div>
-                    {!noteIsCloseFriends && <Check className="w-3.5 h-3.5 text-purple-400" />}
+                    {!noteIsCloseFriends && <Check className="w-3.5 h-3.5 text-brand-cyan" />}
                   </button>
 
                   <button
@@ -1710,7 +1710,7 @@ export default function Messages() {
               <button
                 type="submit"
                 disabled={isSubmittingNote || isUploadingMedia || !newNoteText.trim() || newNoteText.length > 60}
-                className="w-full mt-2 bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 hover:from-pink-600 hover:to-indigo-700 text-white font-bold text-xs py-2.5 rounded-xl border-0 cursor-pointer flex items-center justify-center shadow-lg disabled:opacity-50"
+                className="w-full mt-2 btn-primary-gradient text-black font-extrabold text-xs py-2.5 rounded-[12px] border-0 cursor-pointer flex items-center justify-center shadow-lg disabled:opacity-50"
               >
                 {isSubmittingNote ? <Loader2 className="w-4.5 h-4.5 animate-spin" /> : 'Share Status'}
               </button>
@@ -1777,7 +1777,7 @@ export default function Messages() {
 
             <div className="flex items-center gap-3 bg-white/5 border border-white/5 rounded-2xl p-3.5 relative">
               {/* Note Speech Bubble overlay in modal */}
-              <div className="absolute top-[-10px] right-4 bg-purple-600 border border-white/10 text-white text-[9.5px] font-bold px-2.5 py-1.5 rounded-2xl rounded-bl-none shadow">
+              <div className="absolute top-[-10px] right-4 bg-brand-cyan border border-brand-cyan/30 text-black text-[9.5px] font-black px-2.5 py-1.5 rounded-2xl rounded-bl-none shadow">
                 {activeReplyNote.content}
               </div>
 
@@ -1801,7 +1801,7 @@ export default function Messages() {
                   placeholder={`Send a message reply to @${activeReplyNote.user.username}...`}
                   value={replyText}
                   onChange={(e) => setReplyText(e.target.value)}
-                  className="w-full bg-white/5 border border-white/5 focus:border-white/10 rounded-xl px-3.5 py-3 text-xs text-white outline-none focus:ring-0"
+                  className="w-full bg-white/5 border border-white/5 focus:border-brand-cyan/50 rounded-xl px-3.5 py-3 text-xs text-white outline-none focus:ring-0"
                   required
                   autoFocus
                 />
@@ -1810,7 +1810,7 @@ export default function Messages() {
               <button
                 type="submit"
                 disabled={isSubmittingNote || !replyText.trim()}
-                className="w-full bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 hover:from-pink-600 hover:to-indigo-700 text-white font-bold text-xs py-2.5 rounded-xl border-0 cursor-pointer flex items-center justify-center shadow-lg disabled:opacity-50"
+                className="w-full bg-brand-cyan text-black font-extrabold text-xs py-2.5 rounded-[12px] border-0 cursor-pointer flex items-center justify-center shadow-lg hover:bg-brand-cyan/90 disabled:opacity-50"
               >
                 {isSubmittingNote ? <Loader2 className="w-4.5 h-4.5 animate-spin" /> : 'Send Message'}
               </button>
@@ -1825,7 +1825,7 @@ export default function Messages() {
           <div className="w-full max-w-sm bg-neutral-905 border border-white/10 rounded-3xl p-6 flex flex-col gap-4 glass shadow-2xl text-white animate-in fade-in zoom-in duration-200">
             <div className="flex justify-between items-center border-b border-white/5 pb-3">
               <div className="flex items-center gap-2">
-                <Camera className="w-4 h-4 text-purple-400" />
+                <Camera className="w-4 h-4 text-brand-cyan" />
                 <span className="font-bold text-sm font-outfit">Share an Instant</span>
               </div>
               <button 
@@ -1891,12 +1891,12 @@ export default function Messages() {
                     />
                     <label
                       htmlFor="instant-media-upload"
-                      className="flex flex-col items-center justify-center gap-2.5 w-full py-8 border-2 border-dashed border-white/10 hover:border-purple-500/55 hover:bg-white/5 rounded-2xl cursor-pointer text-xs font-bold transition-all text-neutral-350"
+                      className="flex flex-col items-center justify-center gap-2.5 w-full py-8 border-2 border-dashed border-white/10 hover:border-brand-cyan/55 hover:bg-white/5 rounded-2xl cursor-pointer text-xs font-bold transition-all text-neutral-350"
                     >
                       {isUploadingInstantMedia ? (
-                        <Loader2 className="w-6 h-6 animate-spin text-purple-400" />
+                        <Loader2 className="w-6 h-6 animate-spin text-brand-cyan" />
                       ) : (
-                        <Camera className="w-6 h-6 text-purple-400" />
+                        <Camera className="w-6 h-6 text-brand-cyan" />
                       )}
                       <span>Capture or Upload Spontaneous Photo</span>
                     </label>
@@ -1910,7 +1910,7 @@ export default function Messages() {
                         <div
                           key={photo.id}
                           onClick={() => setSelectedInstantMediaUrl(photo.url)}
-                          className="group relative aspect-video rounded-xl overflow-hidden cursor-pointer border border-white/5 hover:border-purple-500 transition-all"
+                          className="group relative aspect-video rounded-xl overflow-hidden cursor-pointer border border-white/5 hover:border-brand-cyan transition-all"
                         >
                           <img src={photo.url} className="w-full h-full object-cover group-hover:scale-105 transition-transform" alt="Preset" />
                           <div className="absolute inset-0 bg-black/40 flex items-end p-2">
@@ -1930,7 +1930,7 @@ export default function Messages() {
                   placeholder="Add a caption..."
                   value={instantCaption}
                   onChange={(e) => setInstantCaption(e.target.value)}
-                  className="w-full bg-white/5 border border-white/5 focus:border-white/10 rounded-xl px-3.5 py-2 text-xs text-white outline-none focus:ring-0"
+                  className="w-full bg-white/5 border border-white/5 focus:border-brand-cyan/50 rounded-xl px-3.5 py-2 text-xs text-white outline-none focus:ring-0"
                 />
               </div>
 
@@ -1942,19 +1942,19 @@ export default function Messages() {
                     onClick={() => setInstantIsPublic(true)}
                     className={`flex items-center justify-between p-2 rounded-xl transition-all border-0 cursor-pointer ${
                       instantIsPublic 
-                        ? 'bg-purple-500/10 text-purple-400 font-semibold' 
+                        ? 'bg-brand-cyan/20 text-brand-cyan font-semibold' 
                         : 'bg-transparent text-neutral-455 hover:bg-white/5'
                     }`}
                   >
                     <div className="flex items-center gap-2.5">
-                      <div className={`p-1.5 rounded-full ${instantIsPublic ? 'bg-purple-500/20' : 'bg-neutral-800'}`}>
+                      <div className={`p-1.5 rounded-full ${instantIsPublic ? 'bg-brand-cyan/20' : 'bg-neutral-800'}`}>
                         <Users className="w-3.5 h-3.5" />
                       </div>
                       <div className="text-left">
                         <p className="text-2xs font-bold leading-none m-0">All Mutual Followers</p>
                       </div>
                     </div>
-                    {instantIsPublic && <Check className="w-3.5 h-3.5 text-purple-400" />}
+                    {instantIsPublic && <Check className="w-3.5 h-3.5 text-brand-cyan" />}
                   </button>
 
                   <button
@@ -1962,7 +1962,7 @@ export default function Messages() {
                     onClick={() => setInstantIsPublic(false)}
                     className={`flex items-center justify-between p-2 rounded-xl transition-all border-0 cursor-pointer ${
                       !instantIsPublic 
-                        ? 'bg-green-500/10 text-green-400 font-semibold' 
+                        ? 'bg-green-500/20 text-green-400 font-semibold' 
                         : 'bg-transparent text-neutral-455 hover:bg-white/5'
                     }`}
                   >
@@ -1998,7 +1998,7 @@ export default function Messages() {
                                 setSelectedInstantRecipients([...selectedInstantRecipients, friend.id]);
                               }
                             }}
-                            className="rounded border-white/15 bg-transparent text-purple-600 focus:ring-purple-500/20"
+                            className="rounded border-white/15 bg-transparent text-brand-cyan focus:ring-brand-cyan/20 animate-pulse"
                           />
                         </label>
                       );
@@ -2010,7 +2010,7 @@ export default function Messages() {
               <button
                 type="submit"
                 disabled={isSubmittingInstant || isUploadingInstantMedia || !selectedInstantMediaUrl}
-                className="w-full mt-2 bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 hover:from-pink-600 hover:to-indigo-700 text-white font-bold text-xs py-2.5 rounded-xl border-0 cursor-pointer flex items-center justify-center shadow-lg disabled:opacity-50"
+                className="w-full mt-2 bg-brand-cyan text-black font-extrabold text-xs py-2.5 rounded-[12px] border-0 cursor-pointer flex items-center justify-center shadow-lg hover:bg-brand-cyan/90 disabled:opacity-50"
               >
                 {isSubmittingInstant ? <Loader2 className="w-4.5 h-4.5 animate-spin" /> : 'Send Instant'}
               </button>
@@ -2061,7 +2061,7 @@ export default function Messages() {
             <div className="relative aspect-[3/4] w-full rounded-3xl overflow-hidden bg-neutral-900 border border-white/10 shadow-2xl flex items-center justify-center">
               <img src={selectedInstant.mediaUrl} className="w-full h-full object-cover" alt="Instant" />
               
-              <div className="absolute top-3 left-3 bg-indigo-600/90 text-white font-extrabold text-[8px] px-2 py-0.5 rounded-full uppercase tracking-wider shadow flex items-center gap-1">
+              <div className="absolute top-3 left-3 bg-brand-cyan text-black font-extrabold text-[8px] px-2 py-0.5 rounded-full uppercase tracking-wider shadow flex items-center gap-1">
                 <Zap className="w-2.5 h-2.5 text-yellow-500 fill-yellow-500" /> Instant
               </div>
               
@@ -2079,13 +2079,13 @@ export default function Messages() {
                   placeholder="Send a direct reply..."
                   value={instantReplyText}
                   onChange={(e) => setInstantReplyText(e.target.value)}
-                  className="flex-1 bg-white/10 border border-white/5 focus:border-white/10 rounded-2xl px-4 py-2.5 text-xs text-white outline-none focus:ring-0"
+                  className="flex-1 bg-white/10 border border-white/5 focus:border-brand-cyan/50 rounded-2xl px-4 py-2.5 text-xs text-white outline-none focus:ring-0"
                   required
                 />
                 <button
                   type="submit"
                   disabled={isSendingInstantReply || !instantReplyText.trim()}
-                  className="p-2.5 bg-gradient-to-r from-pink-500 to-purple-600 rounded-2xl text-white font-bold border-0 cursor-pointer flex items-center justify-center disabled:opacity-50 hover:scale-95 active-shrink"
+                  className="p-2.5 bg-brand-cyan hover:bg-brand-cyan/85 text-black font-extrabold rounded-2xl border-0 cursor-pointer flex items-center justify-center disabled:opacity-50 hover:scale-95 active-shrink"
                 >
                   {isSendingInstantReply ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                 </button>

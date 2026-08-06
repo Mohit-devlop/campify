@@ -203,8 +203,8 @@ export default function CreatePostModal({ isOpen, onClose, defaultTab }: CreateP
               onClick={() => { setActiveTab('post'); setMediaUrls([]); }}
               className={`pb-1 font-bold text-sm transition-all bg-transparent border-0 cursor-pointer ${
                 activeTab === 'post' 
-                  ? 'text-black dark:text-white border-b-2 border-purple-500' 
-                  : 'text-neutral-400 hover:text-neutral-600'
+                  ? 'text-brand-cyan border-b-2 border-brand-cyan' 
+                  : 'text-neutral-400 hover:text-white'
               }`}
             >
               Post
@@ -214,8 +214,8 @@ export default function CreatePostModal({ isOpen, onClose, defaultTab }: CreateP
               onClick={() => { setActiveTab('story'); setMediaUrls([]); }}
               className={`pb-1 font-bold text-sm transition-all bg-transparent border-0 cursor-pointer ${
                 activeTab === 'story' 
-                  ? 'text-black dark:text-white border-b-2 border-purple-500' 
-                  : 'text-neutral-400 hover:text-neutral-600'
+                  ? 'text-brand-cyan border-b-2 border-brand-cyan' 
+                  : 'text-neutral-400 hover:text-white'
               }`}
             >
               Story
@@ -225,8 +225,8 @@ export default function CreatePostModal({ isOpen, onClose, defaultTab }: CreateP
               onClick={() => { setActiveTab('reel'); setMediaUrls([]); }}
               className={`pb-1 font-bold text-sm transition-all bg-transparent border-0 cursor-pointer ${
                 activeTab === 'reel' 
-                  ? 'text-black dark:text-white border-b-2 border-purple-500' 
-                  : 'text-neutral-400 hover:text-neutral-600'
+                  ? 'text-brand-cyan border-b-2 border-brand-cyan' 
+                  : 'text-neutral-400 hover:text-white'
               }`}
             >
               Reel
@@ -254,11 +254,11 @@ export default function CreatePostModal({ isOpen, onClose, defaultTab }: CreateP
             {user?.profile?.avatarUrl ? (
               <img src={user.profile.avatarUrl} alt="avatar" className="w-9 h-9 rounded-full object-cover" />
             ) : (
-              <div className="w-9 h-9 rounded-full bg-purple-500 flex items-center justify-center text-white font-bold text-xs">
+              <div className="w-9 h-9 rounded-full bg-brand-orange flex items-center justify-center text-black font-black text-xs">
                 {user?.username[0].toUpperCase()}
               </div>
             )}
-            <span className="font-semibold text-sm">{user?.username}</span>
+            <span className="font-semibold text-sm text-white">{user?.username}</span>
           </div>
 
           {/* Content Inputs (Only for Post and Reel) */}
@@ -325,7 +325,7 @@ export default function CreatePostModal({ isOpen, onClose, defaultTab }: CreateP
                 htmlFor="modal-file-upload"
                 className="flex items-center gap-2 px-4 py-2.5 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 rounded-xl cursor-pointer text-xs font-bold transition-all text-neutral-800 dark:text-neutral-200 select-none border border-neutral-200 dark:border-neutral-700"
               >
-                <ImageIcon className="w-4 h-4 text-purple-500" />
+                <ImageIcon className="w-4 h-4 text-brand-cyan" />
                 Select {activeTab === 'post' ? 'Image' : activeTab === 'reel' ? 'Video' : 'Media'}
               </label>
 
@@ -372,7 +372,7 @@ export default function CreatePostModal({ isOpen, onClose, defaultTab }: CreateP
                     key={i}
                     onClick={() => handleSelectPreset(url)}
                     className={`relative w-16 h-16 rounded-xl overflow-hidden border-2 flex-shrink-0 transition-all bg-transparent ${
-                      mediaUrls.includes(url) ? 'border-purple-500 scale-95' : 'border-transparent opacity-80 hover:opacity-100'
+                      mediaUrls.includes(url) ? 'border-brand-cyan scale-95' : 'border-transparent opacity-80 hover:opacity-100'
                     }`}
                   >
                     <img src={url} alt="preset" className="w-full h-full object-cover" />
@@ -395,7 +395,7 @@ export default function CreatePostModal({ isOpen, onClose, defaultTab }: CreateP
                     key={i}
                     onClick={() => handleSelectPreset(url)}
                     className={`relative w-20 h-16 rounded-xl overflow-hidden border-2 flex-shrink-0 transition-all bg-neutral-800 flex items-center justify-center ${
-                      mediaUrls.includes(url) ? 'border-purple-500 scale-95' : 'border-transparent opacity-80 hover:opacity-100'
+                      mediaUrls.includes(url) ? 'border-brand-cyan scale-95' : 'border-transparent opacity-80 hover:opacity-100'
                     }`}
                   >
                     <Film className="w-6 h-6 text-white/70" />
@@ -411,7 +411,7 @@ export default function CreatePostModal({ isOpen, onClose, defaultTab }: CreateP
             <div className="flex flex-col gap-2 bg-neutral-100/50 dark:bg-neutral-800/30 p-4 rounded-2xl border border-neutral-200/40 dark:border-neutral-800/50">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-neutral-700 dark:text-neutral-300 flex items-center gap-1.5">
-                  <Music className="w-4 h-4 text-purple-500" />
+                  <Music className="w-4 h-4 text-brand-orange animate-pulse" />
                   Background Music
                 </span>
                 {selectedSong && (
@@ -444,7 +444,7 @@ export default function CreatePostModal({ isOpen, onClose, defaultTab }: CreateP
                     className="p-1.5 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800 border-0 bg-transparent text-neutral-600 dark:text-neutral-300 cursor-pointer flex items-center justify-center"
                   >
                     {previewingSongId === selectedSong.id ? (
-                      <Pause className="w-4 h-4 text-purple-500" />
+                      <Pause className="w-4 h-4 text-brand-orange" />
                     ) : (
                       <Play className="w-4 h-4" />
                     )}
@@ -460,16 +460,16 @@ export default function CreatePostModal({ isOpen, onClose, defaultTab }: CreateP
                     >
                       <img src={song.coverUrl} className="w-8 h-8 rounded-lg object-cover flex-shrink-0" alt="cover" />
                       <div className="flex-1 min-w-0">
-                        <p className="text-[11px] font-bold truncate text-neutral-800 dark:text-neutral-200 group-hover:text-purple-500 transition-colors">{song.name}</p>
+                        <p className="text-[11px] font-bold truncate text-neutral-800 dark:text-neutral-200 group-hover:text-brand-orange transition-colors">{song.name}</p>
                         <p className="text-[9px] text-neutral-400 dark:text-neutral-500 truncate">{song.artist}</p>
                       </div>
                       <button
                         type="button"
                         onClick={(e) => handleTogglePreviewSong(song, e)}
-                        className="p-1 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800 border-0 bg-transparent text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200 cursor-pointer flex-shrink-0 flex items-center justify-center"
+                        className="p-1 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800 border-0 bg-transparent text-neutral-500 hover:text-neutral-850 dark:hover:text-neutral-200 cursor-pointer flex-shrink-0 flex items-center justify-center"
                       >
                         {previewingSongId === song.id ? (
-                          <Pause className="w-3.5 h-3.5 text-purple-500" />
+                          <Pause className="w-3.5 h-3.5 text-brand-orange" />
                         ) : (
                           <Play className="w-3.5 h-3.5" />
                         )}
@@ -490,7 +490,7 @@ export default function CreatePostModal({ isOpen, onClose, defaultTab }: CreateP
                   onClick={() => setIsCloseFriends(false)}
                   className={`flex-1 py-3 px-4 rounded-xl border flex items-center justify-center gap-2 text-xs font-bold transition-all cursor-pointer ${
                     !isCloseFriends
-                      ? 'bg-purple-500/10 border-purple-500 text-purple-500'
+                      ? 'bg-brand-cyan/10 border-brand-cyan text-brand-cyan glow-cyan/5'
                       : 'bg-white/5 border-transparent text-neutral-405 hover:text-neutral-200'
                   }`}
                 >
@@ -543,7 +543,7 @@ export default function CreatePostModal({ isOpen, onClose, defaultTab }: CreateP
                   type="checkbox"
                   checked={isDraft}
                   onChange={(e) => setIsDraft(e.target.checked)}
-                  className="rounded border-neutral-300 dark:border-neutral-700 text-purple-600 focus:ring-purple-500/20"
+                  className="rounded border-neutral-300 dark:border-neutral-700 text-brand-orange focus:ring-brand-orange/20 animate-pulse"
                 />
                 <span className="text-xs text-neutral-500">Save as Draft (hidden from feeds)</span>
               </label>
@@ -554,7 +554,7 @@ export default function CreatePostModal({ isOpen, onClose, defaultTab }: CreateP
           <button
             type="submit"
             disabled={isUploading}
-            className="w-full mt-2 bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 hover:from-pink-600 hover:to-indigo-700 text-white font-bold text-sm py-3 rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-purple-500/20 active-shrink hover-scale disabled:opacity-50 border-0 cursor-pointer"
+            className="w-full btn-primary-gradient text-black font-extrabold text-sm py-3 rounded-[16px] flex items-center justify-center gap-2 shadow-lg active-shrink hover-scale disabled:opacity-50 border-0 cursor-pointer"
           >
             {isUploading ? (
               <>

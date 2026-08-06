@@ -1320,7 +1320,7 @@ export default function UserProfile() {
                           )}
                         </div>
                         {activeHighlight.stories[activeHighlightStoryIndex]?.songName && (
-                          <span className="text-[9px] text-purple-300 flex items-center gap-1 font-semibold select-none">
+                          <span className="text-[9px] text-brand-orange flex items-center gap-1 font-semibold select-none">
                             <span className="animate-pulse">♪</span>
                             {activeHighlight.stories[activeHighlightStoryIndex].songName} &bull; {activeHighlight.stories[activeHighlightStoryIndex].songArtist}
                           </span>
@@ -1342,7 +1342,7 @@ export default function UserProfile() {
                           {isHighlightMuted ? (
                             <span className="text-red-400">🔇</span>
                           ) : (
-                            <span className="text-purple-400">🔊</span>
+                            <span className="text-brand-orange">🔊</span>
                           )}
                         </button>
                       )}
@@ -1517,7 +1517,7 @@ export default function UserProfile() {
                   <button
                     type="submit"
                     disabled={isSubmittingHighlight || !highlightTitle.trim() || selectedArchiveStoryIds.length === 0}
-                    className="w-full mt-2 bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 hover:from-pink-600 hover:to-indigo-700 text-white font-bold text-xs py-2.5 rounded-xl flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 border-0 cursor-pointer"
+                    className="w-full mt-2 btn-primary-gradient text-black font-extrabold text-xs py-2.5 rounded-[12px] flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 border-0 cursor-pointer"
                   >
                     {isSubmittingHighlight ? <Loader2 className="w-4 h-4 animate-spin" /> : editingHighlight ? 'Save Changes' : 'Create Highlight'}
                   </button>

@@ -102,14 +102,14 @@ return (
 <motion.aside
 animate={{ width: isCollapsed ? 80 : 256 }}
 transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-className="hidden md:flex flex-col fixed left-0 top-0 h-screen border-r border-slate-200 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/85 backdrop-blur-xl p-4 z-30 justify-between select-none shadow-sm"
+className="hidden md:flex flex-col fixed left-0 top-0 h-screen border-r border-brand-cyan/15 bg-brand-card/75 backdrop-blur-xl p-4 z-30 justify-between select-none shadow-sm"
 >
 <div className="flex flex-col gap-6 w-full relative">
 
 {/* Collapse Toggle Button */}
 <button
 onClick={onToggleCollapse}
-className="absolute -right-7 top-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-500 hover:text-brand-orange dark:text-slate-400 dark:hover:text-brand-cyan p-1 rounded-full shadow-md z-40 active-shrink cursor-pointer"
+className="absolute -right-7 top-4 bg-brand-card border border-brand-cyan/20 text-brand-text hover:text-brand-cyan p-1 rounded-full shadow-md z-40 active-shrink cursor-pointer"
 >
 {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
 </button>
@@ -141,15 +141,15 @@ const content = (
 <div
 className={`flex items-center gap-4 px-3.5 py-3 rounded-2xl cursor-pointer transition-all duration-200 relative ${
 isActive
-? 'text-brand-orange font-bold'
-: 'text-slate-650 dark:text-slate-400 hover:text-brand-cyan dark:hover:text-brand-cyan hover:bg-brand-cyan/5'
+? 'text-brand-cyan font-bold font-outfit'
+: 'text-neutral-400 hover:text-brand-orange hover:bg-brand-orange/5'
 }`}
 >
 {/* Sliding active indicator */}
 {isActive && (
 <motion.div
 layoutId="activeIndicator"
-className="absolute inset-0 bg-brand-orange/10 rounded-2xl -z-10 border border-brand-orange/20"
+className="absolute inset-0 bg-brand-cyan/10 rounded-2xl -z-10 border border-brand-cyan/25 glow-cyan/10"
 transition={{ type: 'spring', stiffness: 380, damping: 30 }}
 />
 )}
@@ -221,11 +221,11 @@ Admin Panel
 </div>
 
 {/* Footer Actions */}
-<div className="flex flex-col gap-1.5 border-t border-slate-200 dark:border-slate-800/80 pt-4">
+<div className="flex flex-col gap-1.5 border-t border-brand-cyan/15 pt-4">
 {/* Theme Switcher */}
 <button
 onClick={toggleTheme}
-className="flex items-center gap-4 px-3.5 py-3 rounded-2xl cursor-pointer text-slate-650 dark:text-slate-400 hover:bg-brand-cyan/5 hover:text-brand-cyan transition-all duration-200 w-full text-left bg-transparent border-0 active-shrink"
+className="flex items-center gap-4 px-3.5 py-3 rounded-2xl cursor-pointer text-neutral-400 hover:bg-brand-orange/5 hover:text-brand-orange transition-all duration-200 w-full text-left bg-transparent border-0 active-shrink"
 >
 {theme === 'dark' ? <Sun className="w-5 h-5 text-yellow-500 flex-shrink-0" /> : <Moon className="w-5 h-5 text-indigo-500 flex-shrink-0" />}
 {!isCollapsed && (
@@ -240,7 +240,7 @@ className="text-[14px] font-medium"
 </button>
 
 {/* User Profile Card / Dropdown */}
-<div className="flex items-center gap-3 p-2 rounded-2xl bg-slate-50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800/60 overflow-hidden">
+<div className="flex items-center gap-3 p-2 rounded-2xl bg-brand-bg/50 border border-brand-cyan/15 overflow-hidden">
 {user.profile?.avatarUrl ? (
 <img
 src={user.profile.avatarUrl}
@@ -258,15 +258,15 @@ initial={{ opacity: 0 }}
 animate={{ opacity: 1 }}
 className="flex flex-col flex-1 overflow-hidden"
 >
-<span className="font-bold text-xs text-slate-800 dark:text-white truncate">{user.username}</span>
-<span className="text-[10px] text-slate-500 dark:text-slate-400 truncate">{user.email}</span>
+<span className="font-bold text-xs text-white truncate">{user.username}</span>
+<span className="text-[10px] text-neutral-400 truncate">{user.email}</span>
 </motion.div>
 )}
 {!isCollapsed && (
 <button
 onClick={handleLogout}
 title="Sign Out"
-className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-red-500 rounded-lg bg-transparent border-0 cursor-pointer active-shrink"
+className="p-1.5 hover:bg-white/5 text-neutral-400 hover:text-red-500 rounded-lg bg-transparent border-0 cursor-pointer active-shrink"
 >
 <LogOut className="w-4 h-4" />
 </button>
@@ -276,7 +276,7 @@ className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover
 </motion.aside>
 
 {/* Mobile Bottom Navigation */}
-<nav className="md:hidden fixed bottom-0 left-0 w-full h-16 border-t border-slate-200 dark:border-slate-800/80 bg-white/95 dark:bg-slate-950/95 backdrop-blur-xl flex items-center justify-around px-4 z-30 shadow-lg">
+<nav className="md:hidden fixed bottom-0 left-0 w-full h-16 border-t border-brand-cyan/15 bg-brand-card/80 backdrop-blur-xl flex items-center justify-around px-4 z-30 shadow-lg">
 {menuItems
 .filter((item) => ['Dashboard', 'Feed', 'Create', 'Messages', 'Profile'].includes(item.name))
 .map((item, index) => {
@@ -291,7 +291,7 @@ const content = isCreate ? (
 ) : (
 <div
 className={`p-2.5 rounded-xl transition-all active-shrink relative ${
-isActive ? 'text-brand-orange scale-110' : 'text-slate-500 hover:text-brand-cyan dark:text-slate-400 dark:hover:text-brand-cyan'
+isActive ? 'text-brand-cyan scale-110' : 'text-neutral-400 hover:text-brand-orange'
 }`}
 >
 <Icon className="w-5.5 h-5.5" />

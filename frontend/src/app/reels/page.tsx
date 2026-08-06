@@ -125,7 +125,7 @@ export default function ReelsFeed() {
   if (isLoading) {
     return (
       <div className="h-screen w-full flex justify-center items-center bg-black">
-        <Loader2 className="w-8 h-8 text-purple-600 animate-spin" />
+        <Loader2 className="w-8 h-8 text-brand-cyan animate-spin" />
       </div>
     );
   }
@@ -133,7 +133,7 @@ export default function ReelsFeed() {
   if (reels.length === 0) {
     return (
       <div className="h-screen w-full flex flex-col justify-center items-center bg-neutral-950 text-white gap-4">
-        <Sparkles className="w-10 h-10 text-purple-500 animate-pulse" />
+        <Sparkles className="w-10 h-10 text-brand-cyan animate-pulse" />
         <h2 className="font-bold text-xl font-outfit text-white">No Reels Available</h2>
         <p className="text-neutral-400 text-sm">Be the first to upload a video reel!</p>
       </div>
@@ -192,7 +192,7 @@ export default function ReelsFeed() {
             <div className="flex-1 overflow-y-auto py-4 flex flex-col gap-4 no-scrollbar">
               {isCommentsLoading ? (
                 <div className="flex justify-center items-center py-10">
-                  <Loader2 className="w-6 h-6 text-purple-650 animate-spin" />
+                  <Loader2 className="w-6 h-6 text-brand-cyan animate-spin" />
                 </div>
               ) : comments.length === 0 ? (
                 <div className="text-center text-xs text-neutral-500 py-16 italic">
@@ -202,13 +202,13 @@ export default function ReelsFeed() {
                 comments.map((comment) => (
                   <div key={comment.id} className="flex gap-3 text-left">
                     {comment.user.profile?.avatarUrl ? (
-                      <img 
-                        src={comment.user.profile.avatarUrl} 
-                        alt="avatar" 
-                        className="w-8 h-8 rounded-lg object-cover border border-white/10 flex-shrink-0"
-                      />
+                       <img 
+                         src={comment.user.profile.avatarUrl} 
+                         alt="avatar" 
+                         className="w-8 h-8 rounded-lg object-cover border border-white/10 flex-shrink-0"
+                       />
                     ) : (
-                      <div className="w-8 h-8 rounded-lg bg-purple-550 flex items-center justify-center font-bold text-xs flex-shrink-0">
+                      <div className="w-8 h-8 rounded-lg bg-brand-orange text-black font-black text-xs flex-shrink-0 flex items-center justify-center">
                         {comment.user.username[0].toUpperCase()}
                       </div>
                     )}
@@ -246,7 +246,7 @@ export default function ReelsFeed() {
               <button
                 type="submit"
                 disabled={isSubmittingComment || !newCommentText.trim()}
-                className="bg-gradient-to-r from-pink-500 to-purple-600 text-white text-xs font-bold px-4 rounded-xl active-shrink cursor-pointer border-0 flex items-center justify-center disabled:opacity-50"
+                className="bg-brand-cyan hover:bg-brand-cyan/85 text-black text-xs font-bold px-4 rounded-xl active-shrink cursor-pointer border-0 flex items-center justify-center disabled:opacity-50 hover:shadow-md hover:shadow-brand-cyan/15"
               >
                 {isSubmittingComment ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Post'}
               </button>
@@ -399,7 +399,7 @@ function ReelItem({ reel, isMuted, onLikeToggle, onOpenComments }: { reel: any; 
               className="w-9 h-9 rounded-xl object-cover border border-white/20 shadow-md"
             />
           ) : (
-            <div className="w-9 h-9 rounded-xl bg-purple-500 flex items-center justify-center text-white font-bold text-xs">
+            <div className="w-9 h-9 rounded-xl bg-brand-orange text-black font-black text-xs flex items-center justify-center">
               {reel.user.username[0].toUpperCase()}
             </div>
           )}

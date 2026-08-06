@@ -276,28 +276,28 @@ function AuthPageContent() {
   };
 
   return (
-    <div className="min-h-screen w-full flex bg-brand-bg text-brand-text relative overflow-hidden select-none font-sans">
+    <div className="min-h-screen w-full flex bg-brand-bg text-brand-text relative overflow-hidden select-none font-sans bg-futuristic-grid">
       {/* Background Animated Blobs */}
       <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-brand-orange/10 rounded-full blur-[120px] pointer-events-none animate-blob" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-brand-cyan/10 rounded-full blur-[120px] pointer-events-none animate-blob-delayed" />
       <div className="absolute top-[30%] right-[30%] w-[350px] h-[350px] bg-brand-orange/5 rounded-full blur-[120px] pointer-events-none animate-blob-fast" />
 
       {/* LEFT COLUMN: Visual Showcase */}
-      <div className="hidden lg:flex lg:w-[58%] flex-col justify-between p-12 bg-gradient-to-br from-brand-bg via-brand-bg to-slate-100/50 dark:to-brand-card/40 border-r border-slate-200 dark:border-white/5 relative z-10">
+      <div className="hidden lg:flex lg:w-[58%] flex-col justify-between p-12 bg-brand-bg/60 border-r border-brand-cyan/15 relative z-10 backdrop-blur-md">
         {/* Brand header */}
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-orange to-brand-cyan flex items-center justify-center shadow-lg shadow-brand-orange/20 flex-shrink-0">
               <Sparkles className="w-5 h-5 text-black animate-pulse" />
             </div>
-            <span className="font-extrabold text-xl tracking-wider bg-gradient-to-r from-slate-900 via-slate-800 to-slate-600 dark:from-white dark:via-neutral-100 dark:to-neutral-450 bg-clip-text text-transparent">
+            <span className="font-extrabold text-xl tracking-wider bg-gradient-to-r from-white via-brand-cyan to-brand-orange bg-clip-text text-transparent">
               CAMPIFY
             </span>
           </div>
 
           <Link
             href="/"
-            className="flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-slate-900 dark:text-neutral-400 dark:hover:text-white border border-slate-200 dark:border-white/5 hover:border-slate-350 dark:hover:border-white/10 px-4 py-2 rounded-xl bg-slate-50 dark:bg-black/25 transition-all no-underline active-shrink"
+            className="flex items-center gap-2 text-xs font-bold text-neutral-400 hover:text-brand-cyan border border-brand-cyan/20 px-4 py-2 rounded-xl bg-brand-card transition-all no-underline active-shrink hover:shadow-brand-cyan/10 hover:shadow-md"
           >
             <Home className="w-4 h-4 text-brand-cyan" />
             Visit Homepage
@@ -308,32 +308,32 @@ function AuthPageContent() {
         <div className="grid grid-cols-12 gap-8 my-auto items-center w-full relative">
           <div className="col-span-7 flex flex-col gap-6">
             <span className="text-xs font-black uppercase text-brand-orange tracking-widest font-outfit">Connect. Learn. Build.</span>
-            <h1 className="text-3xl xl:text-4xl font-black font-outfit tracking-tight leading-tight text-slate-900 dark:text-white">
+            <h1 className="text-3xl xl:text-4xl font-black font-outfit tracking-tight leading-tight text-white">
               India&apos;s Student <br />
               <span className="bg-gradient-to-r from-brand-orange to-brand-cyan bg-clip-text text-transparent">
                 Community Platform.
               </span>
             </h1>
-            <p className="text-slate-650 dark:text-neutral-400 text-xs leading-relaxed">
+            <p className="text-neutral-400 text-xs leading-relaxed">
               Welcome to the central portal of college innovation. Collaborate on projects, form dynamic hackathon teams, share bite-sized learning reels, join specialized college communities, and climb the gamified leaderboard.
             </p>
 
             <div className="grid grid-cols-2 gap-3.5 mt-2">
-              <div className="flex flex-col gap-0.5 p-4 rounded-2xl bg-white/70 dark:bg-brand-card/50 border border-slate-100 dark:border-white/5 shadow-sm">
-                <span className="text-xl font-extrabold font-outfit tracking-tight text-slate-800 dark:text-white">45k+</span>
-                <span className="text-[9px] text-slate-500 dark:text-neutral-500 uppercase font-bold tracking-wider">Active Students</span>
+              <div className="flex flex-col gap-0.5 p-4 rounded-2xl bg-brand-card/50 border border-brand-cyan/15 shadow-md shadow-brand-cyan/2 hover:border-brand-cyan/30 transition-all">
+                <span className="text-xl font-extrabold font-outfit tracking-tight text-white">45k+</span>
+                <span className="text-[9px] text-neutral-400 uppercase font-bold tracking-wider">Active Students</span>
               </div>
-              <div className="flex flex-col gap-0.5 p-4 rounded-2xl bg-white/70 dark:bg-brand-card/50 border border-slate-100 dark:border-white/5 shadow-sm">
-                <span className="text-xl font-extrabold font-outfit tracking-tight text-slate-800 dark:text-white">250+</span>
-                <span className="text-[9px] text-slate-500 dark:text-neutral-500 uppercase font-bold tracking-wider">Communities</span>
+              <div className="flex flex-col gap-0.5 p-4 rounded-2xl bg-brand-card/50 border border-brand-cyan/15 shadow-md shadow-brand-cyan/2 hover:border-brand-cyan/30 transition-all">
+                <span className="text-xl font-extrabold font-outfit tracking-tight text-white">250+</span>
+                <span className="text-[9px] text-neutral-400 uppercase font-bold tracking-wider">Communities</span>
               </div>
-              <div className="flex flex-col gap-0.5 p-4 rounded-2xl bg-white/70 dark:bg-brand-card/50 border border-slate-100 dark:border-white/5 shadow-sm">
-                <span className="text-xl font-extrabold font-outfit tracking-tight text-slate-800 dark:text-white">1,800+</span>
-                <span className="text-[9px] text-slate-500 dark:text-neutral-500 uppercase font-bold tracking-wider">Projects Built</span>
+              <div className="flex flex-col gap-0.5 p-4 rounded-2xl bg-brand-card/50 border border-brand-cyan/15 shadow-md shadow-brand-cyan/2 hover:border-brand-cyan/30 transition-all">
+                <span className="text-xl font-extrabold font-outfit tracking-tight text-white">1,800+</span>
+                <span className="text-[9px] text-neutral-400 uppercase font-bold tracking-wider">Projects Built</span>
               </div>
-              <div className="flex flex-col gap-0.5 p-4 rounded-2xl bg-white/70 dark:bg-brand-card/50 border border-slate-100 dark:border-white/5 shadow-sm">
-                <span className="text-xl font-extrabold font-outfit tracking-tight text-slate-800 dark:text-white">80+</span>
-                <span className="text-[9px] text-slate-500 dark:text-neutral-500 uppercase font-bold tracking-wider">Active Hackathons</span>
+              <div className="flex flex-col gap-0.5 p-4 rounded-2xl bg-brand-card/50 border border-brand-cyan/15 shadow-md shadow-brand-cyan/2 hover:border-brand-cyan/30 transition-all">
+                <span className="text-xl font-extrabold font-outfit tracking-tight text-white">80+</span>
+                <span className="text-[9px] text-neutral-400 uppercase font-bold tracking-wider">Active Hackathons</span>
               </div>
             </div>
           </div>
@@ -342,9 +342,9 @@ function AuthPageContent() {
             <motion.div
               animate={{ y: [0, -6, 0] }}
               transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-              className="p-4 rounded-2xl bg-slate-900 border border-slate-800 backdrop-blur-md shadow-2xl w-full font-mono select-none"
+              className="p-4 rounded-2xl bg-black/40 border border-brand-cyan/20 backdrop-blur-md shadow-2xl w-full font-mono select-none glow-cyan/5"
             >
-              <div className="flex items-center gap-1.5 border-b border-white/5 pb-2 mb-2">
+              <div className="flex items-center gap-1.5 border-b border-brand-cyan/10 pb-2 mb-2">
                 <span className="w-2 h-2 rounded-full bg-red-500" />
                 <span className="w-2 h-2 rounded-full bg-yellow-500" />
                 <span className="w-2 h-2 rounded-full bg-green-500" />
@@ -362,19 +362,19 @@ function AuthPageContent() {
             <motion.div
               animate={{ y: [0, 6, 0] }}
               transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-              className="p-4 rounded-2xl bg-white dark:bg-brand-card/90 border border-brand-cyan/30 dark:border-brand-cyan/20 backdrop-blur-md shadow-lg flex flex-col gap-2 w-full"
+              className="p-4 rounded-2xl bg-brand-card/70 border border-brand-cyan/20 backdrop-blur-md shadow-lg flex flex-col gap-2 w-full hover:border-brand-cyan/40 transition-all glow-cyan/2"
             >
               <div className="flex items-center justify-between">
                 <span className="text-[8px] font-bold text-brand-orange bg-brand-orange/10 px-2 py-0.5 rounded-md uppercase">Team Finder</span>
-                <span className="text-[8px] text-slate-500">2m ago</span>
+                <span className="text-[8px] text-neutral-400">2m ago</span>
               </div>
-              <p className="text-[10px] font-bold text-slate-800 dark:text-white leading-normal">Need UI/UX developer for Smart Campus Hackathon! Hackers welcome.</p>
-              <span className="text-[8px] text-slate-500 dark:text-neutral-400">Skills: Figma, TailwindCSS, React</span>
+              <p className="text-[10px] font-bold text-white leading-normal">Need UI/UX developer for Smart Campus Hackathon! Hackers welcome.</p>
+              <span className="text-[8px] text-neutral-400">Skills: Figma, TailwindCSS, React</span>
             </motion.div>
           </div>
         </div>
 
-        <div className="text-neutral-500 text-xs flex items-center gap-4">
+        <div className="text-neutral-450 text-xs flex items-center gap-4">
           <span className="flex items-center gap-1.5"><ShieldCheck className="w-4 h-4 text-brand-cyan" /> Campus Secured</span>
           <span>&bull;</span>
           <span>Dev Seed Node</span>
@@ -382,12 +382,12 @@ function AuthPageContent() {
       </div>
 
       {/* RIGHT COLUMN: Glassmorphism OTP Credentials Panel */}
-      <div className="w-full lg:w-[42%] flex items-center justify-center p-6 relative z-10 bg-brand-bg/40">
-        <div className="w-full max-w-[430px] bg-brand-card/65 border border-slate-200/50 dark:border-white/10 backdrop-blur-2xl rounded-[32px] p-8 flex flex-col gap-6 shadow-2xl relative z-20 glass">
+      <div className="w-full lg:w-[42%] flex items-center justify-center p-6 relative z-10 bg-brand-bg/60 backdrop-blur-md bg-futuristic-grid">
+        <div className="w-full max-w-[430px] bg-brand-card/80 border border-brand-cyan/20 backdrop-blur-2xl rounded-[32px] p-8 flex flex-col gap-6 shadow-2xl relative z-20 glass glow-cyan/10">
           
           <Link
             href="/"
-            className="w-full bg-slate-50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-700 dark:text-neutral-200 border border-slate-200 dark:border-white/5 hover:border-slate-300 dark:hover:border-white/10 py-3.5 rounded-2xl flex items-center justify-center gap-2 text-xs font-bold active-shrink hover-scale no-underline transition-all"
+            className="w-full bg-brand-card hover:bg-brand-card/85 text-white border border-brand-cyan/20 py-3.5 rounded-[16px] flex items-center justify-center gap-2 text-xs font-bold active-shrink hover-scale no-underline transition-all shadow-md shadow-brand-cyan/5"
           >
             <Home className="w-4 h-4 text-brand-orange animate-pulse" />
             Back to Home Page
@@ -395,12 +395,12 @@ function AuthPageContent() {
 
           {/* Tab selectors for Login / Register */}
           {(activeTab === 'login' || activeTab === 'register') && (
-            <div className="flex bg-slate-100 dark:bg-black/60 p-1.5 rounded-2xl border border-slate-200 dark:border-white/5">
+            <div className="flex bg-black/40 p-1.5 rounded-2xl border border-brand-cyan/15 shadow-inner">
               <button
                 type="button"
                 onClick={() => { setActiveTab('login'); setError(''); }}
                 className={`flex-1 text-center py-2.5 text-xs font-bold rounded-xl transition-all relative cursor-pointer ${
-                  activeTab === 'login' ? 'text-black font-extrabold animate-pulse' : 'text-slate-500 dark:text-neutral-500 hover:text-slate-800 dark:hover:text-white'
+                  activeTab === 'login' ? 'text-black font-extrabold animate-pulse' : 'text-neutral-400 hover:text-white'
                 }`}
               >
                 {activeTab === 'login' && (
@@ -416,7 +416,7 @@ function AuthPageContent() {
                 type="button"
                 onClick={() => { setActiveTab('register'); setError(''); }}
                 className={`flex-1 text-center py-2.5 text-xs font-bold rounded-xl transition-all relative cursor-pointer ${
-                  activeTab === 'register' ? 'text-black font-extrabold animate-pulse' : 'text-slate-500 dark:text-neutral-500 hover:text-slate-800 dark:hover:text-white'
+                  activeTab === 'register' ? 'text-black font-extrabold animate-pulse' : 'text-neutral-400 hover:text-white'
                 }`}
               >
                 {activeTab === 'register' && (
@@ -433,22 +433,22 @@ function AuthPageContent() {
 
           {activeTab === 'login' && (
             <div className="flex flex-col gap-1 text-center">
-              <h2 className="text-2xl font-extrabold font-outfit text-slate-900 dark:text-white tracking-tight">Student OTP Sign In</h2>
-              <p className="text-xs text-slate-550 dark:text-neutral-400 leading-normal font-medium">Verify your email to enter the Campify network.</p>
+              <h2 className="text-2xl font-extrabold font-outfit text-white tracking-tight">Student OTP Sign In</h2>
+              <p className="text-xs text-neutral-400 leading-normal font-medium">Verify your email to enter the Campify network.</p>
             </div>
           )}
 
           {activeTab === 'register' && (
             <div className="flex flex-col gap-1 text-center">
-              <h2 className="text-2xl font-extrabold font-outfit text-slate-900 dark:text-white tracking-tight">Create Account</h2>
-              <p className="text-xs text-slate-550 dark:text-neutral-400 leading-normal font-medium">Register profile details to access campus innovators.</p>
+              <h2 className="text-2xl font-extrabold font-outfit text-white tracking-tight">Create Account</h2>
+              <p className="text-xs text-neutral-400 leading-normal font-medium">Register profile details to access campus innovators.</p>
             </div>
           )}
 
           {activeTab === 'otp' && (
             <div className="flex flex-col gap-1 text-center">
-              <h2 className="text-xl font-bold font-outfit text-slate-800 dark:text-white">Confirm Security OTP</h2>
-              <p className="text-xs text-slate-500 dark:text-neutral-400">Enter the 6-digit code sent to your email & device.</p>
+              <h2 className="text-xl font-bold font-outfit text-white">Confirm Security OTP</h2>
+              <p className="text-xs text-neutral-400 font-medium">Enter the 6-digit code sent to your email & device.</p>
             </div>
           )}
 
@@ -481,16 +481,16 @@ function AuthPageContent() {
           {(activeTab === 'login' || activeTab === 'register') ? (
             <form onSubmit={handleSendOtp} className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-bold text-slate-500 dark:text-neutral-400 uppercase tracking-wider px-1">Email Address</label>
+                <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider px-1">Email Address</label>
                 <div className="relative group">
-                  <Mail className="w-4.5 h-4.5 text-neutral-550 group-focus-within:text-brand-cyan absolute left-4 top-3.5 transition-colors" />
+                  <Mail className="w-4.5 h-4.5 text-neutral-500 group-focus-within:text-brand-cyan absolute left-4 top-3.5 transition-colors" />
                   <input
                     type="email"
                     required
                     placeholder="student@college.edu"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/5 focus:border-brand-cyan/40 focus:ring-1 focus:ring-brand-cyan/20 rounded-2xl pl-12 pr-4 py-3.5 text-sm outline-none text-slate-800 dark:text-white transition-all placeholder:text-slate-400 dark:placeholder:text-neutral-600 focus:bg-white dark:focus:bg-black/60"
+                    className="w-full bg-black/40 border border-brand-cyan/20 focus:border-brand-cyan/55 focus:ring-1 focus:ring-brand-cyan/30 rounded-[16px] pl-12 pr-4 py-3.5 text-sm outline-none text-white transition-all placeholder:text-neutral-500 focus:bg-black/60 shadow-inner"
                   />
                 </div>
               </div>
@@ -498,31 +498,31 @@ function AuthPageContent() {
               {activeTab === 'register' && (
                 <>
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-[10px] font-bold text-slate-500 dark:text-neutral-400 uppercase tracking-wider px-1">Username</label>
+                    <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider px-1">Username</label>
                     <div className="relative group">
-                      <AtSign className="w-4.5 h-4.5 text-neutral-550 group-focus-within:text-brand-cyan absolute left-4 top-3.5 transition-colors" />
+                      <AtSign className="w-4.5 h-4.5 text-neutral-500 group-focus-within:text-brand-cyan absolute left-4 top-3.5 transition-colors" />
                       <input
                         type="text"
                         required
                         placeholder="student_handle"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
-                        className="w-full bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/5 focus:border-brand-cyan/40 focus:ring-1 focus:ring-brand-cyan/20 rounded-2xl pl-12 pr-4 py-3.5 text-sm outline-none text-slate-800 dark:text-white transition-all placeholder:text-slate-400 dark:placeholder:text-neutral-600 focus:bg-white dark:focus:bg-black/60"
+                        className="w-full bg-black/40 border border-brand-cyan/20 focus:border-brand-cyan/55 focus:ring-1 focus:ring-brand-cyan/30 rounded-[16px] pl-12 pr-4 py-3.5 text-sm outline-none text-white transition-all placeholder:text-neutral-500 focus:bg-black/60 shadow-inner"
                       />
                     </div>
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-[10px] font-bold text-slate-500 dark:text-neutral-400 uppercase tracking-wider px-1">Display Name</label>
+                    <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider px-1">Display Name</label>
                     <div className="relative group">
-                      <User className="w-4.5 h-4.5 text-neutral-550 group-focus-within:text-brand-cyan absolute left-4 top-3.5 transition-colors" />
+                      <User className="w-4.5 h-4.5 text-neutral-500 group-focus-within:text-brand-cyan absolute left-4 top-3.5 transition-colors" />
                       <input
                         type="text"
                         required
                         placeholder="Enter full name"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="w-full bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/5 focus:border-brand-cyan/40 focus:ring-1 focus:ring-brand-cyan/20 rounded-2xl pl-12 pr-4 py-3.5 text-sm outline-none text-slate-800 dark:text-white transition-all placeholder:text-slate-400 dark:placeholder:text-neutral-600 focus:bg-white dark:focus:bg-black/60"
+                        className="w-full bg-black/40 border border-brand-cyan/20 focus:border-brand-cyan/55 focus:ring-1 focus:ring-brand-cyan/30 rounded-[16px] pl-12 pr-4 py-3.5 text-sm outline-none text-white transition-all placeholder:text-neutral-500 focus:bg-black/60 shadow-inner"
                       />
                     </div>
                   </div>
@@ -531,27 +531,27 @@ function AuthPageContent() {
 
               {/* Password field */}
               <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-bold text-slate-500 dark:text-neutral-400 uppercase tracking-wider px-1">Password</label>
+                <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider px-1">Password</label>
                 <div className="relative group">
-                  <Lock className="w-4.5 h-4.5 text-neutral-550 group-focus-within:text-brand-cyan absolute left-4 top-3.5 transition-colors" />
+                  <Lock className="w-4.5 h-4.5 text-neutral-500 group-focus-within:text-brand-cyan absolute left-4 top-3.5 transition-colors" />
                   <input
                     type="password"
                     required
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/5 focus:border-brand-cyan/40 focus:ring-1 focus:ring-brand-cyan/20 rounded-2xl pl-12 pr-4 py-3.5 text-sm outline-none text-slate-800 dark:text-white transition-all placeholder:text-slate-400 dark:placeholder:text-neutral-600 focus:bg-white dark:focus:bg-black/60"
+                    className="w-full bg-black/40 border border-brand-cyan/20 focus:border-brand-cyan/55 focus:ring-1 focus:ring-brand-cyan/30 rounded-[16px] pl-12 pr-4 py-3.5 text-sm outline-none text-white transition-all placeholder:text-neutral-500 focus:bg-black/60 shadow-inner"
                   />
                 </div>
 
                 {/* Password strength meter for registration */}
                 {activeTab === 'register' && password.length > 0 && (
                   <div className="flex flex-col gap-1 px-1 mt-1">
-                    <div className="flex justify-between items-center text-[9px] font-bold text-slate-500">
+                    <div className="flex justify-between items-center text-[9px] font-bold text-neutral-500">
                       <span>Security Strength</span>
                       <span className="uppercase">{strength.label}</span>
                     </div>
-                    <div className="h-1 w-full bg-slate-200 dark:bg-black/60 rounded-full overflow-hidden flex gap-0.5">
+                    <div className="h-1 w-full bg-black/60 rounded-full overflow-hidden flex gap-0.5">
                       <div className={`h-full flex-1 transition-all ${strength.score >= 1 ? strength.color : 'bg-transparent'}`} />
                       <div className={`h-full flex-1 transition-all ${strength.score >= 2 ? strength.color : 'bg-transparent'}`} />
                       <div className={`h-full flex-1 transition-all ${strength.score >= 3 ? strength.color : 'bg-transparent'}`} />
@@ -564,7 +564,7 @@ function AuthPageContent() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-gradient-to-r from-brand-orange to-brand-cyan hover:opacity-95 text-black font-extrabold text-xs uppercase tracking-wider py-4 rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-brand-orange/10 active-shrink hover-scale disabled:opacity-50 mt-2 cursor-pointer border-0"
+                className="w-full btn-primary-gradient text-black font-extrabold text-xs uppercase tracking-wider py-4 rounded-[16px] flex items-center justify-center gap-2 shadow-lg active-shrink hover-scale disabled:opacity-50 mt-2 cursor-pointer border-0"
               >
                 {isLoading ? (
                   <>
@@ -592,7 +592,7 @@ function AuthPageContent() {
                     onChange={(e) => handleOtpChange(e.target.value, idx)}
                     onKeyDown={(e) => handleOtpKeyDown(e, idx)}
                     onPaste={handleOtpPaste}
-                    className="w-11 h-12 bg-slate-50 dark:bg-black/40 border border-slate-200/55 dark:border-white/10 focus:border-brand-cyan/40 focus:ring-1 focus:ring-brand-cyan/20 rounded-xl text-center text-lg font-extrabold outline-none text-slate-800 dark:text-white transition-all focus:bg-white dark:focus:bg-black/60 font-sans"
+                    className="w-11 h-12 bg-black/40 border border-brand-cyan/20 focus:border-brand-cyan/55 focus:ring-1 focus:ring-brand-cyan/30 rounded-xl text-center text-lg font-extrabold outline-none text-white transition-all focus:bg-black/60 font-sans"
                   />
                 ))}
               </div>
@@ -621,15 +621,15 @@ function AuthPageContent() {
           {(activeTab === 'login' || activeTab === 'register') && (
             <div className="flex flex-col gap-4">
               <div className="flex items-center my-1">
-                <div className="flex-grow border-t border-slate-200 dark:border-white/5" />
-                <span className="text-[9px] uppercase font-bold text-slate-400 dark:text-neutral-500 px-4 tracking-wider">Or continue with</span>
-                <div className="flex-grow border-t border-slate-200 dark:border-white/5" />
+                <div className="flex-grow border-t border-brand-cyan/15" />
+                <span className="text-[9px] uppercase font-bold text-neutral-500 px-4 tracking-wider">Or continue with</span>
+                <div className="flex-grow border-t border-brand-cyan/15" />
               </div>
 
               <button
                 onClick={simulateGoogleLogin}
                 type="button"
-                className="w-full bg-slate-50 hover:bg-slate-100 dark:bg-black/40 dark:hover:bg-black/60 text-slate-700 dark:text-neutral-200 border border-slate-200 dark:border-white/5 py-3 rounded-2xl flex items-center justify-center gap-2.5 text-xs font-semibold active-shrink hover-scale cursor-pointer"
+                className="w-full bg-brand-card hover:bg-brand-card/85 text-white border border-brand-cyan/20 py-3 rounded-[16px] flex items-center justify-center gap-2.5 text-xs font-semibold active-shrink hover-scale cursor-pointer shadow-md shadow-brand-cyan/5"
               >
                 <svg className="w-4.5 h-4.5" viewBox="0 0 24 24">
                   <path

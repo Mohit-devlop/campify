@@ -610,14 +610,14 @@ return (
 <div className="flex-1 max-w-[640px] flex flex-col gap-6">
 
 {/* Sticky Top Header Filter */}
-<div className="sticky top-0 bg-brand-bg/85 backdrop-blur-xl z-20 py-3 border-b border-white/5 flex items-center justify-between px-1">
+<div className="sticky top-0 bg-brand-bg/85 backdrop-blur-xl z-20 py-3 border-b border-brand-cyan/15 flex items-center justify-between px-1">
 <div className="flex gap-4">
 <button
 onClick={() => setFeedFilter('for-you')}
 className={`text-sm font-bold pb-1 transition-all bg-transparent border-0 cursor-pointer ${
 feedFilter === 'for-you'
-? 'text-brand-orange border-b-2 border-brand-orange'
-: 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-200'
+? 'text-brand-cyan border-b-2 border-brand-cyan'
+: 'text-neutral-450 hover:text-white'
 }`}
 >
 For You
@@ -626,8 +626,8 @@ For You
 onClick={() => setFeedFilter('following')}
 className={`text-sm font-bold pb-1 transition-all bg-transparent border-0 cursor-pointer ${
 feedFilter === 'following'
-? 'text-brand-orange border-b-2 border-brand-orange'
-: 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-200'
+? 'text-brand-cyan border-b-2 border-brand-cyan'
+: 'text-neutral-450 hover:text-white'
 }`}
 >
 Following
@@ -643,30 +643,30 @@ className="bg-transparent border-0 cursor-pointer p-1"
 </div>
 
 {/* Dashboard Top Command Center Widget */}
-<div className="p-5 bg-brand-card border border-white/5 rounded-[24px] shadow-lg flex flex-col md:flex-row items-center justify-between gap-5 relative overflow-hidden">
+<div className="p-5 bg-brand-card border border-brand-cyan/15 rounded-[24px] shadow-lg flex flex-col md:flex-row items-center justify-between gap-5 relative overflow-hidden bg-futuristic-grid glow-cyan/2">
 <div className="absolute top-0 right-0 w-24 h-24 bg-brand-orange/5 rounded-full blur-2xl pointer-events-none" />
 <div className="absolute bottom-0 left-0 w-24 h-24 bg-brand-cyan/5 rounded-full blur-2xl pointer-events-none" />
 
 {/* Left Welcome */}
 <div className="flex items-center gap-3 w-full md:w-auto">
 {user.profile?.avatarUrl ? (
-<img src={user.profile.avatarUrl} alt="avatar" className="w-12 h-12 rounded-xl object-cover border border-white/10" />
+<img src={user.profile.avatarUrl} alt="avatar" className="w-12 h-12 rounded-xl object-cover border border-brand-cyan/15" />
 ) : (
 <div className="w-12 h-12 rounded-xl bg-brand-orange text-black font-black text-lg flex items-center justify-center flex-shrink-0">
 {user.username[0].toUpperCase()}
 </div>
 )}
-    <div className="flex flex-col">
-      <h2 className="text-sm font-black text-slate-800 dark:text-white leading-tight">Welcome, {user.name || user.username}!</h2>
-      <p className="text-[10px] text-slate-500 dark:text-neutral-500 mt-0.5">Let&apos;s build some awesome projects today.</p>
+    <div className="flex flex-col text-white">
+      <h2 className="text-sm font-black leading-tight">Welcome, {user.name || user.username}!</h2>
+      <p className="text-[10px] text-neutral-400 mt-0.5">Let&apos;s build some awesome projects today.</p>
     </div>
   </div>
 
   {/* Right Stats Widgets */}
   <div className="flex items-center gap-4 flex-wrap md:flex-nowrap w-full md:w-auto justify-between md:justify-end">
     {/* Level + XP Progress */}
-    <div className="flex flex-col gap-1 p-2.5 bg-black/40 border border-white/5 rounded-xl w-[105px] flex-shrink-0">
-      <div className="flex items-center justify-between text-[8px] uppercase font-bold text-neutral-500">
+    <div className="flex flex-col gap-1 p-2.5 bg-brand-bg/60 border border-brand-cyan/15 rounded-xl w-[105px] flex-shrink-0 shadow-inner">
+      <div className="flex items-center justify-between text-[8px] uppercase font-bold text-neutral-400">
         <span>LVL {gamification?.stats?.level || 1}</span>
         <span className="text-brand-cyan">{gamification?.stats?.xpPoints || 0} XP</span>
       </div>
@@ -679,27 +679,27 @@ className="bg-transparent border-0 cursor-pointer p-1"
     </div>
 
     {/* Streak count */}
-    <div className="flex items-center gap-2 p-2.5 bg-black/40 border border-white/5 rounded-xl w-[95px] flex-shrink-0">
+    <div className="flex items-center gap-2 p-2.5 bg-brand-bg/60 border border-brand-cyan/15 rounded-xl w-[95px] flex-shrink-0 shadow-inner">
       <Flame className="w-4 h-4 text-brand-orange animate-pulse" />
       <div className="flex flex-col">
-        <span className="text-[8px] uppercase font-bold text-slate-500 dark:text-neutral-550">Streak</span>
-        <span className="text-[10px] font-black text-slate-850 dark:text-white">{gamification?.stats?.dailyStreak || 0} Days</span>
+        <span className="text-[8px] uppercase font-bold text-neutral-500">Streak</span>
+        <span className="text-[10px] font-black text-white">{gamification?.stats?.dailyStreak || 0} Days</span>
       </div>
     </div>
 
     {/* Communities stats */}
-    <div className="flex items-center gap-2 p-2.5 bg-black/40 border border-white/5 rounded-xl w-[95px] flex-shrink-0">
+    <div className="flex items-center gap-2 p-2.5 bg-brand-bg/60 border border-brand-cyan/15 rounded-xl w-[95px] flex-shrink-0 shadow-inner">
       <Sparkles className="w-4 h-4 text-brand-cyan animate-pulse" />
       <div className="flex flex-col">
-        <span className="text-[8px] uppercase font-bold text-slate-500 dark:text-neutral-555">Activity</span>
-        <span className="text-[10px] font-black text-slate-850 dark:text-white">{gamification?.badges?.length || 0} Badges</span>
+        <span className="text-[8px] uppercase font-bold text-neutral-550">Activity</span>
+        <span className="text-[10px] font-black text-white">{gamification?.badges?.length || 0} Badges</span>
       </div>
     </div>
   </div>
 </div>
 
 {/* Stories Horizontal Container */}
-<div className="w-full flex gap-4 overflow-x-auto py-4 px-4 bg-brand-card border border-white/5 rounded-[24px] items-center no-scrollbar">
+<div className="w-full flex gap-4 overflow-x-auto py-4 px-4 bg-brand-card border border-brand-cyan/15 rounded-[24px] items-center no-scrollbar bg-futuristic-grid shadow-md shadow-brand-cyan/2">
 {/* Add story trigger */}
 <button
 type="button"
@@ -708,10 +708,10 @@ window.dispatchEvent(new CustomEvent('open-create-modal', { detail: { tab: 'stor
 }}
 className="flex flex-col items-center gap-2 flex-shrink-0 cursor-pointer hover:scale-[1.02] active-shrink bg-transparent border-0 outline-none select-none"
 >
-<div className="w-[66px] h-[66px] rounded-2xl bg-black/40 flex items-center justify-center border border-dashed border-white/10 relative animate-in fade-in">
-<Plus className="w-5 h-5 text-neutral-500" />
+<div className="w-[66px] h-[66px] rounded-2xl bg-brand-bg/60 flex items-center justify-center border border-dashed border-brand-cyan/20 relative animate-in fade-in">
+<Plus className="w-5 h-5 text-neutral-450" />
 </div>
-<span className="text-[10px] font-bold text-neutral-500">Add Story</span>
+<span className="text-[10px] font-bold text-neutral-450">Add Story</span>
 </button>
 
 {/* Stories List */}
@@ -748,10 +748,10 @@ className="w-[56px] h-[56px] rounded-[11px] object-cover"
 </div>
 
 {/* Create Post composer box */}
-<form onSubmit={handleCreatePost} className="p-5 bg-brand-card border border-white/5 rounded-[24px] flex flex-col gap-4">
+<form onSubmit={handleCreatePost} className="p-5 bg-brand-card border border-brand-cyan/15 rounded-[24px] flex flex-col gap-4 bg-futuristic-grid shadow-md shadow-brand-cyan/2">
 <div className="flex gap-4 items-start">
 {user.profile?.avatarUrl ? (
-<img src={user.profile.avatarUrl} alt="avatar" className="w-10 h-10 rounded-xl object-cover border border-white/10" />
+<img src={user.profile.avatarUrl} alt="avatar" className="w-10 h-10 rounded-xl object-cover border border-brand-cyan/15" />
 ) : (
 <div className="w-10 h-10 rounded-xl bg-brand-orange text-black font-bold text-xs flex items-center justify-center flex-shrink-0">
 {user.username[0].toUpperCase()}
@@ -763,7 +763,7 @@ placeholder="What's happening in your sphere today?"
 value={newPostContent}
 onChange={(e) => setNewPostContent(e.target.value)}
 rows={2}
-className="w-full bg-transparent border-0 outline-none text-sm placeholder:text-slate-400 dark:placeholder:text-neutral-655 resize-none focus:ring-0 text-slate-850 dark:text-white"
+className="w-full bg-transparent border-0 outline-none text-sm placeholder:text-neutral-500 resize-none focus:ring-0 text-white font-medium"
 />
 
 {/* Optional media/location inputs */}
@@ -807,7 +807,7 @@ setIsPosting(false);
 />
 
 {newPostMedia && (
-<div className="relative w-20 h-20 rounded-xl overflow-hidden border border-white/10 mt-2">
+<div className="relative w-20 h-20 rounded-xl overflow-hidden border border-brand-cyan/15 mt-2">
 <img src={newPostMedia} alt="composer preview" className="w-full h-full object-cover" />
 <button
 type="button"
@@ -824,15 +824,15 @@ type="text"
 placeholder="Location (optional)"
 value={newPostLocation}
 onChange={(e) => setNewPostLocation(e.target.value)}
-className="bg-black/40 border border-white/5 focus:border-white/10 rounded-xl px-3 py-1.5 text-xs outline-none transition-all w-full md:w-[150px] text-white mt-1"
+className="bg-black/40 border border-brand-cyan/15 focus:border-brand-cyan/45 rounded-xl px-3 py-1.5 text-xs outline-none transition-all w-full md:w-[150px] text-white mt-1 shadow-inner"
 />
 </div>
 </div>
 </div>
 
-<div className="flex items-center justify-between border-t border-white/5 pt-3">
+<div className="flex items-center justify-between border-t border-brand-cyan/15 pt-3">
 <div className="flex gap-2 text-neutral-400">
-<label htmlFor="feed-file-upload" className="p-2 hover:bg-white/5 rounded-lg text-brand-cyan bg-transparent border-0 cursor-pointer flex items-center justify-center" title="Attach Media">
+<label htmlFor="feed-file-upload" className="p-2 hover:bg-white/5 rounded-lg text-brand-cyan bg-transparent border-0 cursor-pointer flex items-center justify-center animate-pulse" title="Attach Media">
 <Image className="w-4 h-4" />
 </label>
 <button type="button" className="p-2 hover:bg-white/5 rounded-lg text-brand-cyan bg-transparent border-0 cursor-pointer" title="Attach Location">
@@ -843,7 +843,7 @@ className="bg-black/40 border border-white/5 focus:border-white/10 rounded-xl px
 <button
 type="submit"
 disabled={isPosting || (!newPostContent.trim() && !newPostMedia.trim())}
-className="bg-brand-orange hover:opacity-95 text-black font-extrabold text-xs px-4 py-2.5 rounded-xl active-shrink hover-scale disabled:opacity-50 border-0 cursor-pointer shadow-md shadow-brand-orange/10"
+className="btn-primary-gradient text-black font-extrabold text-xs px-5 py-2.5 rounded-[12px] active-shrink hover-scale disabled:opacity-50 border-0 cursor-pointer shadow-md shadow-brand-cyan/10"
 >
 {isPosting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : 'Publish Log'}
 </button>
@@ -856,10 +856,10 @@ className="bg-brand-orange hover:opacity-95 text-black font-extrabold text-xs px
 <Loader2 className="w-8 h-8 text-brand-orange animate-spin" />
 </div>
 ) : posts.length === 0 ? (
-<div className="bg-brand-card border border-white/5 rounded-[28px] p-12 text-center flex flex-col items-center gap-3">
+<div className="bg-brand-card border border-brand-cyan/15 rounded-[28px] p-12 text-center flex flex-col items-center gap-3">
 <Sparkles className="w-10 h-10 text-brand-cyan animate-pulse" />
-<h3 className="font-extrabold text-lg font-outfit text-slate-800 dark:text-white">Feed is empty</h3>
-<p className="text-slate-500 dark:text-neutral-500 text-xs max-w-xs leading-relaxed">
+<h3 className="font-extrabold text-lg font-outfit text-white">Feed is empty</h3>
+<p className="text-neutral-400 text-xs max-w-xs leading-relaxed">
 No recent updates matching this tab. Follow creators or post updates to watch them appear here!
 </p>
 </div>
@@ -870,25 +870,25 @@ const isMediaPost = post.mediaUrls && post.mediaUrls.length > 0;
 return (
 <article
 key={post.id}
-className={`bg-brand-card border border-white/5 rounded-[24px] overflow-hidden shadow-sm flex flex-col transition-all duration-300 hover:shadow-xl hover:border-white/10 border-l-4 ${
+className={`bg-brand-card border border-brand-cyan/15 rounded-[24px] overflow-hidden shadow-sm flex flex-col transition-all duration-300 hover:shadow-xl hover:border-brand-cyan/35 border-l-4 glow-cyan/2 ${
 isMediaPost ? 'border-l-brand-cyan' : 'border-l-brand-orange'
 }`}
 >
 {/* Repost Header Indicator */}
 {post.type === 'REPOST' && !post.content && (
-<div className="px-4 pt-3 pb-0 text-[10px] font-bold text-neutral-500 flex items-center gap-1.5 select-none">
+<div className="px-4 pt-3 pb-0 text-[10px] font-bold text-neutral-450 flex items-center gap-1.5 select-none">
 <Repeat className="w-3.5 h-3.5 text-brand-cyan" />
 <span>@{post.user.username} reposted</span>
 </div>
 )}
 {/* Creator Header */}
-<div className="flex items-center justify-between p-4 border-b border-white/5">
+<div className="flex items-center justify-between p-4 border-b border-brand-cyan/15">
 <Link href={`/${post.user.username}`} className="flex items-center gap-3 no-underline">
 {post.user.profile?.avatarUrl ? (
 <img
 src={post.user.profile.avatarUrl}
 alt="avatar"
-className="w-10 h-10 rounded-xl object-cover border border-white/10"
+className="w-10 h-10 rounded-xl object-cover border border-brand-cyan/15"
 />
 ) : (
 <div className="w-10 h-10 rounded-xl bg-brand-orange text-black font-black text-sm flex items-center justify-center">
@@ -896,7 +896,7 @@ className="w-10 h-10 rounded-xl object-cover border border-white/10"
 </div>
 )}
 <div className="flex flex-col">
-<span className="font-bold text-sm text-slate-800 dark:text-white flex items-center gap-1 hover:underline">
+<span className="font-bold text-sm text-white flex items-center gap-1 hover:underline">
 {post.user.username}
 {post.user.verified && (
 <span title="Completed Learning Targets (Gold Medal)">
@@ -1206,7 +1206,7 @@ commentsMap[post.id].map((comment: any) => (
 </div>
 
 {/* Composer comment inputs */}
-<div className="flex gap-2 border-t border-white/5 pt-3">
+<div className="flex gap-2 border-t border-brand-cyan/15 pt-3">
 <input
 type="text"
 placeholder="Add a comment on this post..."
@@ -1217,12 +1217,12 @@ if (e.key === 'Enter') {
 handleCommentSubmit(post.id);
 }
 }}
-className="flex-1 bg-black/40 border border-white/5 focus:border-white/10 rounded-xl px-3.5 py-2 text-xs outline-none transition-all placeholder:text-neutral-500 text-white"
+className="flex-1 bg-black/40 border border-brand-cyan/15 focus:border-brand-cyan/45 rounded-xl px-3.5 py-2 text-xs outline-none transition-all placeholder:text-neutral-500 text-white shadow-inner"
 />
 <button
 onClick={() => handleCommentSubmit(post.id)}
 disabled={!(newCommentTexts[post.id] || '').trim()}
-className="bg-brand-cyan hover:opacity-95 text-black font-extrabold text-xs px-3 py-2 rounded-xl border-0 cursor-pointer disabled:opacity-40"
+className="bg-brand-cyan hover:bg-brand-cyan/85 text-black font-extrabold text-xs px-4 py-2 rounded-xl border-0 cursor-pointer disabled:opacity-40 hover:shadow-md hover:shadow-brand-cyan/10"
 >
 Post
 </button>
@@ -1242,16 +1242,16 @@ Post
 <div className="hidden lg:flex flex-col w-[340px] gap-6 sticky top-6 self-start h-[calc(100vh-48px)] overflow-y-auto pr-1 pb-8 no-scrollbar">
 
 {/* User Quick Info Header */}
-<div className="flex items-center justify-between p-4 bg-brand-card border border-white/5 rounded-[24px]">
+<div className="flex items-center justify-between p-4 bg-brand-card border border-brand-cyan/15 rounded-[24px]">
 <Link href={`/${user.username}`} className="flex items-center gap-3 no-underline">
 {user.profile?.avatarUrl ? (
-<img src={user.profile.avatarUrl} alt="avatar" className="w-11 h-11 rounded-xl object-cover border border-white/10" />
+<img src={user.profile.avatarUrl} alt="avatar" className="w-11 h-11 rounded-xl object-cover border border-brand-cyan/15" />
 ) : (
 <div className="w-11 h-11 rounded-xl bg-brand-orange text-black font-black text-sm flex items-center justify-center flex-shrink-0">
 {user.username[0].toUpperCase()}
 </div>
 )}
-<div className="flex flex-col text-slate-800 dark:text-white">
+<div className="flex flex-col text-white">
 <span className="font-bold text-xs flex items-center gap-1 hover:underline">
 {user.username}
 {user.verified && (
@@ -1260,13 +1260,13 @@ Post
 </span>
 )}
 </span>
-<span className="text-[10px] text-slate-500 dark:text-neutral-500 font-medium">{user.name || `@${user.username}`}</span>
+<span className="text-[10px] text-neutral-450 font-medium">{user.name || `@${user.username}`}</span>
 </div>
 </Link>
 </div>
 
 {/* Active Students List (Online / Suggestions) */}
-<div className="bg-brand-card border border-white/5 rounded-[24px] p-5 flex flex-col gap-4 text-white">
+<div className="bg-brand-card border border-brand-cyan/15 rounded-[24px] p-5 flex flex-col gap-4 text-white">
 <span className="font-bold text-xs uppercase text-neutral-500 tracking-wider flex items-center gap-1.5 font-outfit">
 <Flame className="w-4 h-4 text-brand-orange animate-pulse" /> Active Students
 </span>
@@ -1278,7 +1278,7 @@ return (
 <div className="flex items-center gap-2.5">
 <div className="relative">
 {creator.avatarUrl ? (
-<img src={creator.avatarUrl} alt="avatar" className="w-8 h-8 rounded-lg object-cover border border-white/10" />
+<img src={creator.avatarUrl} alt="avatar" className="w-8 h-8 rounded-lg object-cover border border-brand-cyan/15" />
 ) : (
 <div className="w-8 h-8 rounded-lg bg-brand-orange text-black font-bold text-[10px] flex items-center justify-center flex-shrink-0">
 {creator.username[0].toUpperCase()}
@@ -1286,9 +1286,9 @@ return (
 )}
 <span className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border-2 border-brand-card ${isOnline ? 'bg-green-500' : 'bg-neutral-500'}`} />
 </div>
-<span className="font-bold text-slate-700 dark:text-neutral-200">@{creator.username}</span>
+<span className="font-bold text-neutral-200">@{creator.username}</span>
 </div>
-<span className="text-[9px] font-semibold text-slate-500 dark:text-neutral-500">{isOnline ? 'Active Now' : 'Offline'}</span>
+<span className="text-[9px] font-semibold text-neutral-450">{isOnline ? 'Active Now' : 'Offline'}</span>
 </div>
 );
 })}
@@ -1296,7 +1296,7 @@ return (
 </div>
 
 {/* Trending Communities Widget */}
-<div className="bg-brand-card border border-white/5 rounded-[24px] p-5 flex flex-col gap-4 text-white">
+<div className="bg-brand-card border border-brand-cyan/15 rounded-[24px] p-5 flex flex-col gap-4 text-white">
 <span className="font-bold text-xs uppercase text-neutral-500 tracking-wider flex items-center gap-1.5 font-outfit">
 <Users className="w-4 h-4 text-brand-orange" /> Trending Communities
 </span>
@@ -1305,8 +1305,8 @@ return (
 <div className="flex items-center gap-2">
 <span className="text-base">🌐</span>
 <div className="flex flex-col">
-<span className="font-bold text-slate-800 dark:text-white">NextJS Hackers</span>
-<span className="text-[9px] text-slate-500 dark:text-neutral-500">142 members</span>
+<span className="font-bold text-white">NextJS Hackers</span>
+<span className="text-[9px] text-neutral-450">142 members</span>
 </div>
 </div>
 <button className="text-[9px] font-bold text-brand-cyan bg-brand-cyan/5 border border-brand-cyan/20 px-2.5 py-1 rounded-lg hover:bg-brand-cyan hover:text-black transition-colors cursor-pointer">Join</button>
@@ -1315,8 +1315,8 @@ return (
 <div className="flex items-center gap-2">
 <span className="text-base">🤖</span>
 <div className="flex flex-col">
-<span className="font-bold text-slate-800 dark:text-white">AI Innovators Circle</span>
-<span className="text-[9px] text-slate-500 dark:text-neutral-500 font-medium">96 members</span>
+<span className="font-bold text-white">AI Innovators Circle</span>
+<span className="text-[9px] text-neutral-450 font-medium">96 members</span>
 </div>
 </div>
 <button className="text-[9px] font-bold text-brand-cyan bg-brand-cyan/5 border border-brand-cyan/20 px-2.5 py-1 rounded-lg hover:bg-brand-cyan hover:text-black transition-colors cursor-pointer">Join</button>
@@ -1325,7 +1325,7 @@ return (
 </div>
 
 {/* Upcoming Events & Hackathons Widget */}
-<div className="bg-brand-card border border-white/5 rounded-[24px] p-5 flex flex-col gap-4 text-white">
+<div className="bg-brand-card border border-brand-cyan/15 rounded-[24px] p-5 flex flex-col gap-4 text-white">
 <span className="font-bold text-xs uppercase text-neutral-500 tracking-wider flex items-center gap-1.5 font-outfit">
 <Calendar className="w-4 h-4 text-brand-cyan" /> Upcoming Events
 </span>
@@ -1336,8 +1336,8 @@ return (
 <span className="text-sm font-black leading-none mt-1">28</span>
 </div>
 <div className="flex flex-col">
-<span className="font-bold text-slate-800 dark:text-white">Campus Smart Hackathon</span>
-<span className="text-[10px] text-slate-500 dark:text-neutral-500 mt-0.5">24h innovation build sprint</span>
+<span className="font-bold text-white">Campus Smart Hackathon</span>
+<span className="text-[10px] text-neutral-450 mt-0.5">24h innovation build sprint</span>
 </div>
 </div>
 <div className="flex gap-3 items-start">
@@ -1346,15 +1346,15 @@ return (
 <span className="text-sm font-black leading-none mt-1">05</span>
 </div>
 <div className="flex flex-col">
-<span className="font-bold text-slate-800 dark:text-white">AI Pitch Fest 2026</span>
-<span className="text-[10px] text-slate-500 dark:text-neutral-500 mt-0.5">Incubator pitch day</span>
+<span className="font-bold text-white">AI Pitch Fest 2026</span>
+<span className="text-[10px] text-neutral-450 mt-0.5">Incubator pitch day</span>
 </div>
 </div>
 </div>
 </div>
 
 {/* Teammate / Project Requests Widget */}
-<div className="bg-brand-card border border-white/5 rounded-[24px] p-5 flex flex-col gap-4 text-white">
+<div className="bg-brand-card border border-brand-cyan/15 rounded-[24px] p-5 flex flex-col gap-4 text-white">
 <span className="font-bold text-xs uppercase text-neutral-500 tracking-wider flex items-center gap-1.5 font-outfit">
 <UserPlus className="w-4 h-4 text-brand-orange" /> Hackathon Team Requests
 </span>
@@ -1363,12 +1363,12 @@ return (
 <span className="text-[10px] text-neutral-500 italic">No team requests active. Create one in Team Finder!</span>
 ) : (
 activeTeams.slice(0, 2).map((team) => (
-<div key={team.id} className="p-3 bg-black/40 border border-white/5 rounded-xl flex flex-col gap-1.5">
+<div key={team.id} className="p-3 bg-black/30 border border-brand-cyan/15 rounded-xl flex flex-col gap-1.5">
 <div className="flex justify-between items-center">
-<span className="font-bold text-xs text-slate-850 dark:text-white truncate max-w-[150px]">{team.name}</span>
+<span className="font-bold text-xs text-white truncate max-w-[150px]">{team.name}</span>
 <span className="text-[8px] bg-brand-cyan/10 text-brand-cyan px-1.5 py-0.5 rounded-md font-bold uppercase">{team.lookingFor}</span>
 </div>
-<p className="text-[10px] text-slate-500 dark:text-neutral-400 line-clamp-2 leading-relaxed">{team.description}</p>
+<p className="text-[10px] text-neutral-400 line-clamp-2 leading-relaxed">{team.description}</p>
 </div>
 ))
 )}
