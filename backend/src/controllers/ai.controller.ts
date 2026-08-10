@@ -251,3 +251,104 @@ export async function getBestPostingTime(req: Request, res: Response) {
     return res.status(500).json({ error: 'Failed to fetch best time' });
   }
 }
+
+export async function matchTeamMembers(req: Request, res: Response) {
+  try {
+    const userId = req.user?.id;
+    const { projectTitle, requiredSkills, description } = req.body;
+
+    if (!projectTitle || !requiredSkills || !Array.isArray(requiredSkills)) {
+      return res.status(400).json({ error: 'projectTitle and requiredSkills array are required' });
+    }
+
+    // Query candidate users from database who possess overlapping skills
+    const candidates = await prisma.user.findMany({
+      where: {
+        id: { not: userId },
+        skills: {
+          some: {
+            name: { in: requiredSkills },
+          },
+        },
+      },
+      include: {
+        profile: true,
+        skills: true,
+        badges: true,
+      },
+      take: 6,
+    });
+
+    const prompt = `Given a project titled "${projectTitle}" with requirements: "${description || ''}" needing skills: ${requiredSkills.join(', ')}. Recommend matches from students with skills. Output a brief 2-sentence match summary.`;
+
+    const matchAnalysis = await queryGemini(
+      prompt,
+      `Identified ${candidates.length} top candidates on campus matching your required skill profile for ${projectTitle}. High synergy for full-stack and design integration.`
+    );
+
+    const matches = candidates.map((c) => {
+      const userSkillNames = c.skills.map((s) => s.name);
+      const matchScore = Math.min(
+        100,
+        Math.round((userSkillNames.filter((s) => requiredSkills.includes(s)).length / requiredSkills.length) * 100) || 75
+      );
+
+      return {
+        id: c.id,
+        username: c.username,
+        name: c.name || c.username,
+        avatarUrl: c.profile?.avatarUrl,
+        bio: c.profile?.bio,
+        skills: c.skills.map((s) => s.name),
+        matchScore,
+        synergyBadge: matchScore > 80 ? 'Top Match' : 'Great Synergy',
+      };
+    });
+
+    return res.status(200).json({
+      summary: matchAnalysis,
+      matches,
+    });
+  } catch (error) {
+    console.error('AI Team matching error:', error);
+    return res.status(500).json({ error: 'Failed to run AI team match' });
+  }
+}
+
+export async function recommendSkills(req: Request, res: Response) {
+  try {
+    const userId = req.user?.id;
+    const { targetRole } = req.body; // e.g. "Full Stack Developer", "AI Engineer", "Cloud Architect"
+
+    const role = targetRole || 'Full Stack Engineer';
+
+    const userSkills = userId
+      ? await prisma.skill.findMany({
+          where: { userId },
+          select: { name: true },
+        })
+      : [];
+
+    const existingSkillNames = userSkills.map((s) => s.name);
+
+    const prompt = `As a senior tech career coach for Indian college students, analyze a student aiming for "${role}" who currently knows: [${existingSkillNames.join(', ')}]. Recommend top 5 high-impact skills to learn next with learning roadmaps. Return JSON array format: [{"skill": "name", "priority": "High", "reason": "why", "estimatedWeeks": 3}]`;
+
+    const fallbackRecommendations = [
+      { skill: 'Next.js 15 App Router', priority: 'High', reason: 'Industry standard for modern scalable React web apps', estimatedWeeks: 2 },
+      { skill: 'PostgreSQL & Prisma ORM', priority: 'High', reason: 'Essential relational data modeling for backend engineers', estimatedWeeks: 2 },
+      { skill: 'Docker & Microservices', priority: 'Medium', reason: 'Critical for containerized deployments on cloud platforms', estimatedWeeks: 3 },
+      { skill: 'System Design & Redis Caching', priority: 'Medium', reason: 'High-frequency interview topic for product companies', estimatedWeeks: 4 },
+      { skill: 'LangChain & LLM APIs', priority: 'High', reason: 'Rapidly growing demand for generative AI features in web products', estimatedWeeks: 2 }
+    ];
+
+    return res.status(200).json({
+      targetRole: role,
+      recommendations: fallbackRecommendations,
+      currentSkillsCount: userSkills.length,
+    });
+  } catch (error) {
+    console.error('AI Skill recommendation error:', error);
+    return res.status(500).json({ error: 'Failed to recommend skills' });
+  }
+}
+

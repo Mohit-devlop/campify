@@ -45,3 +45,8 @@ Thumbs.db
 
 # Typescript
 *.tsbuildinfo
+
+# Local tunnels & binaries
+cloudflared.exe
+LIVE_BACKEND_URL.txt
+LIVE_URLS.json

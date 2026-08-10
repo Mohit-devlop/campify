@@ -13,6 +13,7 @@ import * as adminCtrl from '../controllers/admin.controller';
 // New Feature Controllers
 import * as aiCtrl from '../controllers/ai.controller';
 import * as commCtrl from '../controllers/community.controller';
+import * as eventCtrl from '../controllers/event.controller';
 import * as skillsCtrl from '../controllers/skills.controller';
 import * as teamCtrl from '../controllers/team.controller';
 import * as learnCtrl from '../controllers/learning.controller';
@@ -147,13 +148,25 @@ router.get('/admin/reports', authenticate, authorize(['ADMIN', 'MODERATOR']), ad
 router.post('/admin/reports/:reportId/action', authenticate, authorize(['ADMIN', 'MODERATOR']), adminCtrl.actionReport);
 
 // ==========================================
-// AI SOCIAL ASSISTANT ROUTES
+// AI SOCIAL & CAREER ASSISTANT ROUTES
 // ==========================================
 router.post('/ai/caption', authenticate, aiCtrl.generateCaption);
 router.post('/ai/hashtags', authenticate, aiCtrl.generateHashtags);
 router.post('/ai/reels-ideas', authenticate, aiCtrl.getReelIdeas);
 router.post('/ai/predict-engagement', authenticate, aiCtrl.predictEngagement);
 router.get('/ai/best-time', authenticate, aiCtrl.getBestPostingTime);
+router.post('/ai/team-match', authenticate, aiCtrl.matchTeamMembers);
+router.post('/ai/skill-recommendation', authenticate, aiCtrl.recommendSkills);
+
+// ==========================================
+// CAMPUS & COMMUNITY EVENTS ROUTES
+// ==========================================
+router.get('/events', eventCtrl.getEvents);
+router.get('/events/:eventId', eventCtrl.getEventById);
+router.post('/events', authenticate, eventCtrl.createEvent);
+router.post('/events/:eventId/register', authenticate, eventCtrl.registerEvent);
+router.delete('/events/:eventId/register', authenticate, eventCtrl.unregisterEvent);
+router.get('/events/registrations/my', authenticate, eventCtrl.getMyRegistrations);
 
 // ==========================================
 // COMMUNITY HUB ROUTES

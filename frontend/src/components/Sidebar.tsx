@@ -11,7 +11,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
 Home, Search, Compass, Film, MessageCircle, Heart, PlusSquare, User,
 ShieldAlert, LogOut, Sun, Moon, Sparkles, ChevronLeft, ChevronRight,
-Users, Trophy, BookOpen, UserPlus, Settings
+Users, Trophy, BookOpen, UserPlus, Settings, Calendar
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -80,6 +80,7 @@ const menuItems = [
 { name: 'Search', onClick: onSearchClick, icon: Search },
 { name: 'Feed', href: '/explore', icon: Compass },
 { name: 'Reels', href: '/reels', icon: Film },
+{ name: 'Events', href: '/events', icon: Calendar },
 { name: 'Learning Reels', href: '/learning', icon: BookOpen },
 { name: 'Communities', href: '/communities', icon: Users },
 { name: 'Team Finder', href: '/team-finder', icon: UserPlus },

@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: campify-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install && npx prisma generate && npm run build
+    startCommand: npm run start
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: FRONTEND_URL
+        value: https://your-frontend-domain.vercel.app
+      - key: CLOUDINARY_CLOUD_NAME
+        value: mock
+      - key: CLOUDINARY_API_KEY
+        value: mock
+      - key: CLOUDINARY_API_SECRET
+        value: mock
+      - key: GEMINI_API_KEY
+        value: mock
+      - key: RESEND_API_KEY
+        value: mock
