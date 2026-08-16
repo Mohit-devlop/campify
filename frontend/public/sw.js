@@ -1,4 +1,4 @@
-const CACHE_NAME = 'campify-cache-v6';
+const CACHE_NAME = 'campify-cache-v7';
 const ASSETS_TO_CACHE = [
   '/',
   '/logo.svg',

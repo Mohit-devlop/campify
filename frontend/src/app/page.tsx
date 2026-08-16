@@ -604,7 +604,7 @@ return <LandingPage />;
 }
 
 return (
-<div className="max-w-[1200px] mx-auto px-4 md:px-6 py-6 flex gap-6 relative select-none bg-brand-bg text-brand-text">
+    <div className="max-w-[1200px] mx-auto px-4 md:px-6 py-6 flex gap-6 relative select-none bg-transparent text-brand-text">
 
 {/* LEFT COLUMN: Feed & Composer */}
 <div className="flex-1 max-w-[640px] flex flex-col gap-6">

@@ -199,7 +199,7 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-brand-bg text-brand-text transition-colors duration-300 relative overflow-hidden select-none font-sans pb-16">
+    <div className="min-h-screen w-full bg-transparent text-brand-text transition-colors duration-300 relative overflow-hidden select-none font-sans pb-16">
       
       {/* Self-contained CSS Animations for Heading Gradient Flow */}
       <style>{`
