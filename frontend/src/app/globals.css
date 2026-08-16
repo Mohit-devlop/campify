@@ -205,20 +205,34 @@ border: 1px solid rgba(216, 238, 63, 0.15);
 box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.55);
 }
 
-/* Futuristic Grid Background */
+/* Futuristic Grid & Starry Background */
 .bg-futuristic-grid {
-background-image: 
-  linear-gradient(rgba(28, 107, 76, 0.03) 1px, transparent 1px), 
-  linear-gradient(90deg, rgba(28, 107, 76, 0.03) 1px, transparent 1px);
-background-size: 30px 30px;
-background-color: #f5f3ec;
+  background-image: 
+    radial-gradient(1.5px 1.5px at 20px 30px, rgba(28, 107, 76, 0.15), rgba(0, 0, 0, 0)),
+    radial-gradient(2px 2px at 40px 70px, rgba(28, 107, 76, 0.12), rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 50px 160px, rgba(28, 107, 76, 0.2), rgba(0, 0, 0, 0)),
+    radial-gradient(2px 2px at 90px 40px, rgba(28, 107, 76, 0.15), rgba(0, 0, 0, 0)),
+    radial-gradient(1.5px 1.5px at 130px 80px, rgba(28, 107, 76, 0.25), rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 160px 120px, rgba(28, 107, 76, 0.18), rgba(0, 0, 0, 0)),
+    linear-gradient(rgba(28, 107, 76, 0.03) 1px, transparent 1px), 
+    linear-gradient(90deg, rgba(28, 107, 76, 0.03) 1px, transparent 1px);
+  background-size: 200px 200px, 200px 200px, 200px 200px, 200px 200px, 200px 200px, 200px 200px, 30px 30px, 30px 30px;
+  background-color: #f5f3ec;
+  background-attachment: fixed;
 }
 .dark .bg-futuristic-grid {
-background-image: 
-  linear-gradient(rgba(216, 238, 63, 0.02) 1px, transparent 1px), 
-  linear-gradient(90deg, rgba(216, 238, 63, 0.02) 1px, transparent 1px);
-background-size: 30px 30px;
-background-color: #0d1713;
+  background-image: 
+    radial-gradient(1.5px 1.5px at 20px 30px, rgba(216, 238, 63, 0.35), rgba(0, 0, 0, 0)),
+    radial-gradient(2px 2px at 40px 70px, rgba(255, 255, 255, 0.4), rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 50px 160px, rgba(216, 238, 63, 0.5), rgba(0, 0, 0, 0)),
+    radial-gradient(2px 2px at 90px 40px, rgba(255, 255, 255, 0.3), rgba(0, 0, 0, 0)),
+    radial-gradient(1.5px 1.5px at 130px 80px, rgba(216, 238, 63, 0.45), rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 160px 120px, rgba(255, 255, 255, 0.4), rgba(0, 0, 0, 0)),
+    linear-gradient(rgba(216, 238, 63, 0.02) 1px, transparent 1px), 
+    linear-gradient(90deg, rgba(216, 238, 63, 0.02) 1px, transparent 1px);
+  background-size: 200px 200px, 200px 200px, 200px 200px, 200px 200px, 200px 200px, 200px 200px, 30px 30px, 30px 30px;
+  background-color: #0d1713;
+  background-attachment: fixed;
 }
 
 .glow-orange {
