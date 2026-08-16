@@ -17,7 +17,7 @@ retry: false,
 
 const { initializeAuth, user, isAuthenticated } = useAuthStore();
 const { connectSocket, disconnectSocket } = useSocketStore();
-const [theme, setTheme] = useState<'light' | 'dark'>('light');
+const [theme, setTheme] = useState<'light' | 'dark'>('dark');
 
 // Initialize auth credentials from localStorage
 useEffect(() => {
@@ -36,7 +36,7 @@ disconnectSocket();
 // Load and apply theme
 useEffect(() => {
 const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
-const defaultTheme = savedTheme || 'light'; // default to premium light mode
+const defaultTheme = savedTheme || 'dark'; // default to dark mode
 setTheme(defaultTheme);
 
 if (defaultTheme === 'dark') {
