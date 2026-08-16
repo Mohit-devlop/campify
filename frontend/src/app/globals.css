@@ -50,16 +50,16 @@
 --brand-orange: #1c6b4c;
 --brand-cyan: #d8ee3f;
 --brand-bg: #f5f3ec;
---brand-card: #ffffff;
+--brand-card: #fcfaf2;
 --brand-text: #17231e;
 
 --background: 49 20% 94%;      /* #f5f3ec */
 --foreground: 161 20% 11%;      /* #17231e */
 
---card: 0 0% 100%;            /* #ffffff */
+--card: 48 55% 97%;            /* #fcfaf2 */
 --card-foreground: 161 20% 11%;
 
---popover: 0 0% 100%;
+--popover: 48 55% 97%;
 --popover-foreground: 161 20% 11%;
 
 --primary: 156 58% 26%;         /* #1c6b4c */
@@ -84,7 +84,7 @@
 --radius: 1rem;
 
 /* Custom transparency adaptations */
---bg-widget: rgba(255, 255, 255, 0.85);
+--bg-widget: rgba(252, 250, 242, 0.85);
 --bg-widget-hover: rgba(28, 107, 76, 0.08);
 --border-widget: rgba(228, 225, 216, 0.8);
 --border-widget-strong: rgba(28, 107, 76, 0.25);
