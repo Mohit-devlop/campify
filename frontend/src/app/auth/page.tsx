@@ -290,7 +290,7 @@ function AuthPageContent() {
             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-orange to-brand-cyan flex items-center justify-center shadow-lg shadow-brand-orange/20 flex-shrink-0">
               <Sparkles className="w-5 h-5 text-black animate-pulse" />
             </div>
-            <span className="font-extrabold text-xl tracking-wider bg-gradient-to-r from-white via-brand-cyan to-brand-orange bg-clip-text text-transparent">
+            <span className="font-extrabold text-xl tracking-wider bg-gradient-to-r from-brand-text via-brand-cyan to-brand-orange bg-clip-text text-transparent">
               CAMPIFY
             </span>
           </div>
@@ -350,7 +350,7 @@ function AuthPageContent() {
                 <span className="w-2 h-2 rounded-full bg-green-500" />
                 <span className="text-[8px] text-neutral-500 ml-2">campify_kernel.sh</span>
               </div>
-              <pre className="text-[9px] text-brand-cyan leading-relaxed font-semibold">
+              <pre className="text-[9px] text-brand-orange leading-relaxed font-semibold">
                 {`$ npx create-campify-app@latest
 ✔ Connected to CampusHub
 ✔ Hackathon Mode Enabled
@@ -400,7 +400,7 @@ function AuthPageContent() {
                 type="button"
                 onClick={() => { setActiveTab('login'); setError(''); }}
                 className={`flex-1 text-center py-2.5 text-xs font-bold rounded-xl transition-all relative cursor-pointer ${
-                  activeTab === 'login' ? 'text-black font-extrabold animate-pulse' : 'text-neutral-400 hover:text-white'
+                  activeTab === 'login' ? 'text-black font-extrabold animate-pulse' : 'text-neutral-500 hover:text-brand-text'
                 }`}
               >
                 {activeTab === 'login' && (
@@ -416,7 +416,7 @@ function AuthPageContent() {
                 type="button"
                 onClick={() => { setActiveTab('register'); setError(''); }}
                 className={`flex-1 text-center py-2.5 text-xs font-bold rounded-xl transition-all relative cursor-pointer ${
-                  activeTab === 'register' ? 'text-black font-extrabold animate-pulse' : 'text-neutral-400 hover:text-white'
+                  activeTab === 'register' ? 'text-black font-extrabold animate-pulse' : 'text-neutral-500 hover:text-brand-text'
                 }`}
               >
                 {activeTab === 'register' && (
@@ -609,7 +609,7 @@ function AuthPageContent() {
                 <button
                   type="button"
                   onClick={() => { setActiveTab(lastTab); setOtpValues(['', '', '', '', '', '']); }}
-                  className="text-xs font-bold text-neutral-400 hover:text-white bg-transparent border-0 cursor-pointer transition-colors"
+                  className="text-xs font-bold text-neutral-500 hover:text-brand-text bg-transparent border-0 cursor-pointer transition-colors"
                 >
                   Change Details / Go Back
                 </button>

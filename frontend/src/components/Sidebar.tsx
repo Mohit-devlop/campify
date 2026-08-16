@@ -3,14 +3,14 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuthStore } from '../store/authStore';
-import { useTheme } from '../app/providers';
+
 import { useSocketStore } from '../store/socketStore';
 import { apiFetch } from '../lib/api';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
 Home, Search, Compass, Film, MessageCircle, Heart, PlusSquare, User,
-ShieldAlert, LogOut, Sun, Moon, Sparkles, ChevronLeft, ChevronRight,
+ShieldAlert, LogOut, Sparkles, ChevronLeft, ChevronRight,
 Users, Trophy, BookOpen, UserPlus, Settings, Calendar
 } from 'lucide-react';
 
@@ -29,7 +29,6 @@ onCreateClick
 }: SidebarProps) {
 const pathname = usePathname();
 const { user, logout } = useAuthStore();
-const { theme, toggleTheme } = useTheme();
 const { socket } = useSocketStore();
 
 const [unreadCount, setUnreadCount] = useState(0);
@@ -223,22 +222,6 @@ Admin Panel
 
 {/* Footer Actions */}
 <div className="flex flex-col gap-1.5 border-t border-brand-cyan/15 pt-4">
-{/* Theme Switcher */}
-<button
-onClick={toggleTheme}
-className="flex items-center gap-4 px-3.5 py-3 rounded-2xl cursor-pointer text-neutral-400 hover:bg-brand-orange/5 hover:text-brand-orange transition-all duration-200 w-full text-left bg-transparent border-0 active-shrink"
->
-{theme === 'dark' ? <Sun className="w-5 h-5 text-yellow-500 flex-shrink-0" /> : <Moon className="w-5 h-5 text-indigo-500 flex-shrink-0" />}
-{!isCollapsed && (
-<motion.span
-initial={{ opacity: 0 }}
-animate={{ opacity: 1 }}
-className="text-[14px] font-medium"
->
-{theme === 'dark' ? 'Light Theme' : 'Dark Theme'}
-</motion.span>
-)}
-</button>
 
 {/* User Profile Card / Dropdown */}
 <div className="flex items-center gap-3 p-2 rounded-2xl bg-brand-bg/50 border border-brand-cyan/15 overflow-hidden">

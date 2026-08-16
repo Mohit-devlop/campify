@@ -4,14 +4,14 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '../../store/authStore';
 import { apiFetch } from '../../lib/api';
-import { Sparkles, User, FileText, Globe, MapPin, Lock, Loader2, ArrowLeft, Camera, Star, Search, Award, Sun, Moon, MessageSquare } from 'lucide-react';
+import { Sparkles, User, FileText, Globe, MapPin, Lock, Loader2, ArrowLeft, Camera, Star, Search, Award, MessageSquare } from 'lucide-react';
 import Link from 'next/link';
-import { useTheme } from '../providers';
+
 
 export default function Settings() {
   const router = useRouter();
   const { user, updateUser, isAuthenticated, isInitialized } = useAuthStore();
-  const { theme, toggleTheme } = useTheme();
+
 
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
@@ -396,28 +396,7 @@ export default function Settings() {
           <span className="text-xs text-neutral-500 font-semibold">Make account Private (Follow requests required)</span>
         </label>
 
-        {/* Theme Preference Settings */}
-        <div className="flex flex-col gap-2 p-4 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl">
-          <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider px-1">Theme Preferences</label>
-          <div className="flex items-center justify-between mt-1">
-            <span className="text-xs text-neutral-600 dark:text-neutral-300 font-semibold">Switch App Theme Color</span>
-            <button
-              type="button"
-              onClick={toggleTheme}
-              className="flex items-center gap-2 px-4 py-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-750 text-neutral-800 dark:text-neutral-100 rounded-xl border border-neutral-200 dark:border-neutral-700 text-xs font-bold transition-all cursor-pointer select-none"
-            >
-              {theme === 'dark' ? (
-                <>
-                  <Sun className="w-4 h-4 text-yellow-500 animate-pulse" /> Light Mode
-                </>
-              ) : (
-                <>
-                  <Moon className="w-4 h-4 text-brand-cyan animate-pulse" /> Dark Mode
-                </>
-              )}
-            </button>
-          </div>
-        </div>
+
 
         {/* Chat Disappearing Messages Settings */}
         <div className="flex flex-col gap-2 p-4 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl">

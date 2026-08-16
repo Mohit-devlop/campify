@@ -2,10 +2,10 @@
 
 import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
-import { useTheme } from './providers';
+
 import { motion, Variants } from 'framer-motion';
 import { 
-  Sparkles, Sun, Moon, ArrowRight, ShieldCheck, Code, 
+  Sparkles, ArrowRight, ShieldCheck, Code, 
   Lightbulb, Users, Award, Flame, Play, Terminal 
 } from 'lucide-react';
 
@@ -58,7 +58,7 @@ function AnimatedCounter({ value, duration = 2000 }: { value: string; duration?:
 }
 
 export default function LandingPage() {
-  const { theme, toggleTheme } = useTheme();
+
   const [terminalText, setTerminalText] = useState('');
   const [particles, setParticles] = useState<any[]>([]);
 
@@ -271,21 +271,7 @@ export default function LandingPage() {
           {/* Links & CTA */}
           <div className="flex items-center gap-6">
             
-            {/* Theme Toggle Button */}
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={toggleTheme}
-              type="button"
-              className="w-10 h-10 rounded-xl bg-brand-card border border-brand-cyan/20 text-neutral-400 hover:text-brand-orange hover:border-brand-orange/40 flex items-center justify-center cursor-pointer transition-all shadow-sm shadow-brand-cyan/5"
-              title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-            >
-              {theme === 'dark' ? (
-                <Sun className="w-4.5 h-4.5 text-yellow-500" />
-              ) : (
-                <Moon className="w-4.5 h-4.5 text-indigo-500" />
-              )}
-            </motion.button>
+
 
             {/* Login Link */}
             <Link 
