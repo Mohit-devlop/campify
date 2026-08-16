@@ -387,7 +387,7 @@ function AuthPageContent() {
           
           <Link
             href="/"
-            className="w-full bg-brand-card hover:bg-brand-card/85 text-white border border-brand-cyan/20 py-3.5 rounded-[16px] flex items-center justify-center gap-2 text-xs font-bold active-shrink hover-scale no-underline transition-all shadow-md shadow-brand-cyan/5"
+            className="w-full bg-brand-card hover:bg-brand-card/85 text-brand-text border border-brand-cyan/20 py-3.5 rounded-[16px] flex items-center justify-center gap-2 text-xs font-bold active-shrink hover-scale no-underline transition-all shadow-md shadow-brand-cyan/5"
           >
             <Home className="w-4 h-4 text-brand-orange animate-pulse" />
             Back to Home Page
@@ -395,7 +395,7 @@ function AuthPageContent() {
 
           {/* Tab selectors for Login / Register */}
           {(activeTab === 'login' || activeTab === 'register') && (
-            <div className="flex bg-black/40 p-1.5 rounded-2xl border border-brand-cyan/15 shadow-inner">
+            <div className="flex bg-brand-bg/50 p-1.5 rounded-2xl border border-brand-cyan/15 shadow-inner">
               <button
                 type="button"
                 onClick={() => { setActiveTab('login'); setError(''); }}
@@ -433,21 +433,21 @@ function AuthPageContent() {
 
           {activeTab === 'login' && (
             <div className="flex flex-col gap-1 text-center">
-              <h2 className="text-2xl font-extrabold font-outfit text-white tracking-tight">Student OTP Sign In</h2>
+              <h2 className="text-2xl font-extrabold font-outfit text-brand-text tracking-tight">Student OTP Sign In</h2>
               <p className="text-xs text-neutral-400 leading-normal font-medium">Verify your email to enter the Campify network.</p>
             </div>
           )}
 
           {activeTab === 'register' && (
             <div className="flex flex-col gap-1 text-center">
-              <h2 className="text-2xl font-extrabold font-outfit text-white tracking-tight">Create Account</h2>
+              <h2 className="text-2xl font-extrabold font-outfit text-brand-text tracking-tight">Create Account</h2>
               <p className="text-xs text-neutral-400 leading-normal font-medium">Register profile details to access campus innovators.</p>
             </div>
           )}
 
           {activeTab === 'otp' && (
             <div className="flex flex-col gap-1 text-center">
-              <h2 className="text-xl font-bold font-outfit text-white">Confirm Security OTP</h2>
+              <h2 className="text-xl font-bold font-outfit text-brand-text">Confirm Security OTP</h2>
               <p className="text-xs text-neutral-400 font-medium">Enter the 6-digit code sent to your email & device.</p>
             </div>
           )}
@@ -490,7 +490,7 @@ function AuthPageContent() {
                     placeholder="student@college.edu"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full bg-black/40 border border-brand-cyan/20 focus:border-brand-cyan/55 focus:ring-1 focus:ring-brand-cyan/30 rounded-[16px] pl-12 pr-4 py-3.5 text-sm outline-none text-white transition-all placeholder:text-neutral-500 focus:bg-black/60 shadow-inner"
+                    className="w-full bg-brand-card/50 border border-brand-cyan/20 focus:border-brand-cyan/55 focus:ring-1 focus:ring-brand-cyan/30 rounded-[16px] pl-12 pr-4 py-3.5 text-sm outline-none text-brand-text transition-all placeholder:text-neutral-500 focus:bg-brand-card shadow-inner"
                   />
                 </div>
               </div>
@@ -507,7 +507,7 @@ function AuthPageContent() {
                         placeholder="student_handle"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
-                        className="w-full bg-black/40 border border-brand-cyan/20 focus:border-brand-cyan/55 focus:ring-1 focus:ring-brand-cyan/30 rounded-[16px] pl-12 pr-4 py-3.5 text-sm outline-none text-white transition-all placeholder:text-neutral-500 focus:bg-black/60 shadow-inner"
+                        className="w-full bg-brand-card/50 border border-brand-cyan/20 focus:border-brand-cyan/55 focus:ring-1 focus:ring-brand-cyan/30 rounded-[16px] pl-12 pr-4 py-3.5 text-sm outline-none text-brand-text transition-all placeholder:text-neutral-500 focus:bg-brand-card shadow-inner"
                       />
                     </div>
                   </div>
@@ -522,7 +522,7 @@ function AuthPageContent() {
                         placeholder="Enter full name"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="w-full bg-black/40 border border-brand-cyan/20 focus:border-brand-cyan/55 focus:ring-1 focus:ring-brand-cyan/30 rounded-[16px] pl-12 pr-4 py-3.5 text-sm outline-none text-white transition-all placeholder:text-neutral-500 focus:bg-black/60 shadow-inner"
+                        className="w-full bg-brand-card/50 border border-brand-cyan/20 focus:border-brand-cyan/55 focus:ring-1 focus:ring-brand-cyan/30 rounded-[16px] pl-12 pr-4 py-3.5 text-sm outline-none text-brand-text transition-all placeholder:text-neutral-500 focus:bg-brand-card shadow-inner"
                       />
                     </div>
                   </div>
@@ -540,7 +540,7 @@ function AuthPageContent() {
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full bg-black/40 border border-brand-cyan/20 focus:border-brand-cyan/55 focus:ring-1 focus:ring-brand-cyan/30 rounded-[16px] pl-12 pr-4 py-3.5 text-sm outline-none text-white transition-all placeholder:text-neutral-500 focus:bg-black/60 shadow-inner"
+                    className="w-full bg-brand-card/50 border border-brand-cyan/20 focus:border-brand-cyan/55 focus:ring-1 focus:ring-brand-cyan/30 rounded-[16px] pl-12 pr-4 py-3.5 text-sm outline-none text-brand-text transition-all placeholder:text-neutral-500 focus:bg-brand-card shadow-inner"
                   />
                 </div>
 
@@ -592,7 +592,7 @@ function AuthPageContent() {
                     onChange={(e) => handleOtpChange(e.target.value, idx)}
                     onKeyDown={(e) => handleOtpKeyDown(e, idx)}
                     onPaste={handleOtpPaste}
-                    className="w-11 h-12 bg-black/40 border border-brand-cyan/20 focus:border-brand-cyan/55 focus:ring-1 focus:ring-brand-cyan/30 rounded-xl text-center text-lg font-extrabold outline-none text-white transition-all focus:bg-black/60 font-sans"
+                    className="w-11 h-12 bg-brand-card/50 border border-brand-cyan/20 focus:border-brand-cyan/55 focus:ring-1 focus:ring-brand-cyan/30 rounded-xl text-center text-lg font-extrabold outline-none text-brand-text transition-all focus:bg-brand-card font-sans"
                   />
                 ))}
               </div>
@@ -629,7 +629,7 @@ function AuthPageContent() {
               <button
                 onClick={simulateGoogleLogin}
                 type="button"
-                className="w-full bg-brand-card hover:bg-brand-card/85 text-white border border-brand-cyan/20 py-3 rounded-[16px] flex items-center justify-center gap-2.5 text-xs font-semibold active-shrink hover-scale cursor-pointer shadow-md shadow-brand-cyan/5"
+                className="w-full bg-brand-card hover:bg-brand-card/85 text-brand-text border border-brand-cyan/20 py-3 rounded-[16px] flex items-center justify-center gap-2.5 text-xs font-semibold active-shrink hover-scale cursor-pointer shadow-md shadow-brand-cyan/5"
               >
                 <svg className="w-4.5 h-4.5" viewBox="0 0 24 24">
                   <path
