@@ -58,9 +58,105 @@ function AnimatedCounter({ value, duration = 2000 }: { value: string; duration?:
 }
 
 export default function LandingPage() {
-
   const [terminalText, setTerminalText] = useState('');
   const [particles, setParticles] = useState<any[]>([]);
+
+  // Interactive shell states
+  const [isInteractive, setIsInteractive] = useState(false);
+  const [shellInput, setShellInput] = useState('');
+  const [shellHistory, setShellHistory] = useState<string[]>([
+    'Campify Kernel Shell v1.0.0',
+    'Type "help" to list available commands.',
+    ''
+  ]);
+  const [isHackingMode, setIsHackingMode] = useState(false);
+  const shellInputRef = useRef<HTMLInputElement>(null);
+
+  const enableInteractiveShell = () => {
+    if (isInteractive) return;
+    setIsInteractive(true);
+    setTimeout(() => {
+      shellInputRef.current?.focus();
+    }, 50);
+  };
+
+  const disableInteractiveShell = () => {
+    setIsInteractive(false);
+    setIsHackingMode(false);
+  };
+
+  const handleShellSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const cmd = shellInput.trim().toLowerCase();
+    if (!cmd) return;
+
+    const newHistory = [...shellHistory, `campify@student:~$ ${shellInput}`];
+    setShellInput('');
+
+    if (cmd === 'help') {
+      newHistory.push(
+        'Available commands:',
+        '  help   - Show this command menu',
+        '  hack   - Run security bypass script',
+        '  team   - Match active hackathon teams',
+        '  gamify - Claim daily bonus level XP',
+        '  clear  - Clear shell logs',
+        '  exit   - Close interactive shell'
+      );
+      setShellHistory(newHistory);
+    } else if (cmd === 'hack') {
+      setIsHackingMode(true);
+      setTimeout(() => {
+        setIsHackingMode(false);
+        setShellHistory(prev => [
+          ...prev,
+          'campify@student:~$ hack',
+          '✔ Initiating matrix stream decryption...',
+          '✔ Firewalls bypassed. Encryption disabled.',
+          '✔ System core matches aligned. Kernel SECURED!'
+        ]);
+      }, 2500);
+    } else if (cmd === 'team') {
+      newHistory.push(
+        '✔ Initiating active developer match index...',
+        '✔ 3 matches found for hackathon team recruiting:',
+        '  - mohit_dev [Skill: React/Prisma]',
+        '  - sneha_ai  [Skill: Python/Gemini]',
+        '  - rohan_ux  [Skill: UI-UX/Figma]',
+        '✔ Secure chat routes created successfully!'
+      );
+      setShellHistory(newHistory);
+    } else if (cmd === 'gamify') {
+      newHistory.push(
+        '🏆 XP REWARD SYSTEM INITIALIZED',
+        '✔ Claimed +250 XP bonus points!',
+        '✔ Daily streak preserved: 13 Days.',
+        '✔ Current Level: 6 [Progress: 60%]'
+      );
+      setShellHistory(newHistory);
+    } else if (cmd === 'clear') {
+      setShellHistory([
+        'Campify Kernel Shell v1.0.0',
+        'Type "help" to list available commands.',
+        ''
+      ]);
+    } else if (cmd === 'exit') {
+      disableInteractiveShell();
+    } else {
+      newHistory.push(`Command not found: "${cmd}". Type "help" for a list of available actions.`);
+      setShellHistory(newHistory);
+    }
+  };
+
+  // Card cursor glow movement handler
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    card.style.setProperty('--mouse-x', `${x}px`);
+    card.style.setProperty('--mouse-y', `${y}px`);
+  };
 
   useEffect(() => {
     // Generate floating particle metrics once on mount to prevent loop/hydration issues
@@ -359,8 +455,16 @@ export default function LandingPage() {
           animate={{ y: [0, -6, 0] }}
           transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
           whileHover={{ scale: 1.005, transition: { duration: 0.2 } }}
-          className="w-full max-w-[850px] mt-8 p-4 md:p-6 rounded-[32px] bg-brand-card/50 border border-brand-cyan/15 backdrop-blur-xl shadow-2xl relative bg-futuristic-grid"
+          onMouseMove={handleMouseMove}
+          className="w-full max-w-[850px] mt-8 p-4 md:p-6 rounded-[32px] bg-brand-card/50 border border-brand-cyan/15 backdrop-blur-xl shadow-2xl relative bg-futuristic-grid group overflow-hidden"
         >
+          {/* Spotlight Glow Layer */}
+          <div 
+            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-0"
+            style={{
+              background: `radial-gradient(350px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(216, 238, 63, 0.06), transparent 80%)`
+            }}
+          />
           
           <div className="absolute top-0 right-0 w-24 h-24 bg-brand-orange/5 rounded-full blur-2xl pointer-events-none" />
           <div className="absolute bottom-0 left-0 w-24 h-24 bg-brand-cyan/5 rounded-full blur-2xl pointer-events-none" />
@@ -404,12 +508,71 @@ export default function LandingPage() {
                 </div>
               </div>
 
-              {/* Console preview with auto-typing text effect */}
-              <div className="p-4 rounded-2xl bg-black/40 border border-brand-cyan/15 font-mono min-h-[92px] select-text shadow-inner shadow-brand-cyan/5">
-                <pre className="text-[10px] text-brand-cyan leading-relaxed font-bold font-mono whitespace-pre-wrap">
-                  {terminalText}
-                  <span className="animate-pulse bg-brand-cyan text-transparent w-1.5 h-3 inline-block ml-0.5">|</span>
-                </pre>
+              {/* Console preview with auto-typing text effect or interactive shell */}
+              <div 
+                onClick={enableInteractiveShell}
+                className="p-4 rounded-2xl bg-black/50 border border-brand-cyan/20 font-mono min-h-[140px] select-text shadow-inner shadow-brand-cyan/5 relative cursor-text group overflow-hidden"
+              >
+                {!isInteractive ? (
+                  <>
+                    <pre className="text-[10px] text-brand-cyan leading-relaxed font-bold font-mono whitespace-pre-wrap">
+                      {terminalText}
+                      <span className="animate-pulse bg-brand-cyan text-transparent w-1.5 h-3 inline-block ml-0.5">|</span>
+                    </pre>
+                    <div className="absolute bottom-2 right-3 text-[8px] font-bold text-neutral-500 uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none select-none">
+                      &gt; Click console to type
+                    </div>
+                  </>
+                ) : (
+                  <div className="flex flex-col gap-1 text-[10px] text-brand-cyan leading-relaxed font-bold font-mono">
+                    <div className="flex justify-between items-center border-b border-brand-cyan/10 pb-1 mb-1">
+                      <span>Campify Interactive Kernel [Active]</span>
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); disableInteractiveShell(); }} 
+                        className="text-[8px] bg-brand-cyan/10 hover:bg-brand-cyan/20 border border-brand-cyan/20 text-brand-cyan px-1.5 py-0.5 rounded cursor-pointer transition-colors font-mono font-bold"
+                      >
+                        EXIT
+                      </button>
+                    </div>
+                    {isHackingMode ? (
+                      <div className="text-[9px] text-brand-orange animate-pulse leading-normal select-none py-1">
+                        {`ACCESSING SECURE DATA PROTOCOLS...
+====================================
+10100110101100101010110010101010101
+01101010011010010101101001001010101
+11010101010110110010101011110010101
+00010101011001101010100101101101010
+====================================
+BYPASSING FIREWALL... STATUS: 100% OK`}
+                      </div>
+                    ) : (
+                      <>
+                        <div className="flex flex-col max-h-[120px] overflow-y-auto no-scrollbar">
+                          {shellHistory.map((line, idx) => (
+                            <pre key={idx} className="whitespace-pre-wrap leading-normal font-semibold font-mono">{line}</pre>
+                          ))}
+                        </div>
+                        <form onSubmit={handleShellSubmit} className="flex items-center gap-1.5 w-full mt-1">
+                          <span className="text-neutral-400 select-none">campify@student:~$</span>
+                          <input
+                            ref={shellInputRef}
+                            type="text"
+                            value={shellInput}
+                            onChange={(e) => setShellInput(e.target.value)}
+                            onBlur={() => {
+                              if (isInteractive) {
+                                setTimeout(() => shellInputRef.current?.focus(), 10);
+                              }
+                            }}
+                            className="bg-transparent border-0 outline-none text-brand-cyan font-bold font-mono flex-grow text-[10px] p-0"
+                            placeholder="try 'help'..."
+                            autoFocus
+                          />
+                        </form>
+                      </>
+                    )}
+                  </div>
+                )}
               </div>
 
             </div>
@@ -488,90 +651,150 @@ export default function LandingPage() {
           <motion.div 
             variants={cardVariants}
             whileHover={{ y: -8, scale: 1.015, boxShadow: '0 20px 30px -10px rgba(255, 122, 0, 0.15)' }}
-            className="p-6 rounded-[24px] bg-brand-card/60 border border-brand-cyan/15 backdrop-blur-md shadow-lg shadow-brand-cyan/2 transition-all duration-300"
+            onMouseMove={handleMouseMove}
+            className="p-6 rounded-[24px] bg-brand-card/60 border border-brand-cyan/15 backdrop-blur-md shadow-lg shadow-brand-cyan/2 transition-all duration-300 relative overflow-hidden group"
           >
-            <div className="w-10 h-10 rounded-xl bg-brand-orange/10 flex items-center justify-center text-brand-orange">
-              <Code className="w-5 h-5" />
+            {/* Spotlight Glow Layer */}
+            <div 
+              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-0"
+              style={{
+                background: `radial-gradient(280px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(216, 238, 63, 0.08), transparent 80%)`
+              }}
+            />
+            <div className="relative z-10">
+              <div className="w-10 h-10 rounded-xl bg-brand-orange/10 flex items-center justify-center text-brand-orange">
+                <Code className="w-5 h-5" />
+              </div>
+              <h3 className="font-extrabold text-base text-white mt-4">Project Team Finder</h3>
+              <p className="text-neutral-400 text-xs leading-relaxed mt-2">
+                Find teammate matches for college projects and hackathons. Sort by specific roles, languages, and framework dependencies.
+              </p>
             </div>
-            <h3 className="font-extrabold text-base text-white">Project Team Finder</h3>
-            <p className="text-neutral-400 text-xs leading-relaxed">
-              Find teammate matches for college projects and hackathons. Sort by specific roles, languages, and framework dependencies.
-            </p>
           </motion.div>
 
           {/* Card 2: Learning Reels */}
           <motion.div 
             variants={cardVariants}
             whileHover={{ y: -8, scale: 1.015, boxShadow: '0 20px 30px -10px rgba(0, 194, 255, 0.15)' }}
-            className="p-6 rounded-[24px] bg-brand-card/60 border border-brand-cyan/15 backdrop-blur-md shadow-lg shadow-brand-cyan/2 transition-all duration-300"
+            onMouseMove={handleMouseMove}
+            className="p-6 rounded-[24px] bg-brand-card/60 border border-brand-cyan/15 backdrop-blur-md shadow-lg shadow-brand-cyan/2 transition-all duration-300 relative overflow-hidden group"
           >
-            <div className="w-10 h-10 rounded-xl bg-brand-cyan/10 flex items-center justify-center text-brand-cyan">
-              <Play className="w-5 h-5" />
+            {/* Spotlight Glow Layer */}
+            <div 
+              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-0"
+              style={{
+                background: `radial-gradient(280px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(216, 238, 63, 0.08), transparent 80%)`
+              }}
+            />
+            <div className="relative z-10">
+              <div className="w-10 h-10 rounded-xl bg-brand-cyan/10 flex items-center justify-center text-brand-cyan">
+                <Play className="w-5 h-5" />
+              </div>
+              <h3 className="font-extrabold text-base text-white mt-4">Micro-Learning Reels</h3>
+              <p className="text-neutral-400 text-xs leading-relaxed mt-2">
+                Consume high-value tech knowledge via a vertical video feed. Test your recall with quick embedded quizzes for bonus XP points.
+              </p>
             </div>
-            <h3 className="font-extrabold text-base text-white">Micro-Learning Reels</h3>
-            <p className="text-neutral-400 text-xs leading-relaxed">
-              Consume high-value tech knowledge via a vertical video feed. Test your recall with quick embedded quizzes for bonus XP points.
-            </p>
           </motion.div>
 
           {/* Card 3: Communities */}
           <motion.div 
             variants={cardVariants}
             whileHover={{ y: -8, scale: 1.015, boxShadow: '0 20px 30px -10px rgba(255, 122, 0, 0.15)' }}
-            className="p-6 rounded-[24px] bg-brand-card/60 border border-brand-cyan/15 backdrop-blur-md shadow-lg shadow-brand-cyan/2 transition-all duration-300"
+            onMouseMove={handleMouseMove}
+            className="p-6 rounded-[24px] bg-brand-card/60 border border-brand-cyan/15 backdrop-blur-md shadow-lg shadow-brand-cyan/2 transition-all duration-300 relative overflow-hidden group"
           >
-            <div className="w-10 h-10 rounded-xl bg-brand-orange/10 flex items-center justify-center text-brand-orange">
-              <Users className="w-5 h-5" />
+            {/* Spotlight Glow Layer */}
+            <div 
+              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-0"
+              style={{
+                background: `radial-gradient(280px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(216, 238, 63, 0.08), transparent 80%)`
+              }}
+            />
+            <div className="relative z-10">
+              <div className="w-10 h-10 rounded-xl bg-brand-orange/10 flex items-center justify-center text-brand-orange">
+                <Users className="w-5 h-5" />
+              </div>
+              <h3 className="font-extrabold text-base text-white mt-4">College Communities</h3>
+              <p className="text-neutral-400 text-xs leading-relaxed mt-2">
+                Join or build academic hubs. Coordinate events, host live presentations, and design community polls in real-time.
+              </p>
             </div>
-            <h3 className="font-extrabold text-base text-white">College Communities</h3>
-            <p className="text-neutral-400 text-xs leading-relaxed">
-              Join or build academic hubs. Coordinate events, host live presentations, and design community polls in real-time.
-            </p>
           </motion.div>
 
           {/* Card 4: Gamified Portfolio */}
           <motion.div 
             variants={cardVariants}
             whileHover={{ y: -8, scale: 1.015, boxShadow: '0 20px 30px -10px rgba(234, 179, 8, 0.15)' }}
-            className="p-6 rounded-[24px] bg-brand-card/60 border border-brand-cyan/15 backdrop-blur-md shadow-lg shadow-brand-cyan/2 transition-all duration-300"
+            onMouseMove={handleMouseMove}
+            className="p-6 rounded-[24px] bg-brand-card/60 border border-brand-cyan/15 backdrop-blur-md shadow-lg shadow-brand-cyan/2 transition-all duration-300 relative overflow-hidden group"
           >
-            <div className="w-10 h-10 rounded-xl bg-yellow-500/10 flex items-center justify-center text-yellow-500">
-              <Award className="w-5 h-5" />
+            {/* Spotlight Glow Layer */}
+            <div 
+              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-0"
+              style={{
+                background: `radial-gradient(280px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(216, 238, 63, 0.08), transparent 80%)`
+              }}
+            />
+            <div className="relative z-10">
+              <div className="w-10 h-10 rounded-xl bg-yellow-500/10 flex items-center justify-center text-yellow-500">
+                <Award className="w-5 h-5" />
+              </div>
+              <h3 className="font-extrabold text-base text-white mt-4">Developer Badge Portfolio</h3>
+              <p className="text-neutral-400 text-xs leading-relaxed mt-2">
+                Build your technical CV. Display certifications, achievements, coding projects, and earn special badges for streaks.
+              </p>
             </div>
-            <h3 className="font-extrabold text-base text-white">Developer Badge Portfolio</h3>
-            <p className="text-neutral-400 text-xs leading-relaxed">
-              Build your technical CV. Display certifications, achievements, coding projects, and earn special badges for streaks.
-            </p>
           </motion.div>
 
           {/* Card 5: Real-time Chats */}
           <motion.div 
             variants={cardVariants}
             whileHover={{ y: -8, scale: 1.015, boxShadow: '0 20px 30px -10px rgba(0, 194, 255, 0.15)' }}
-            className="p-6 rounded-[24px] bg-brand-card/60 border border-brand-cyan/15 backdrop-blur-md shadow-lg shadow-brand-cyan/2 transition-all duration-300"
+            onMouseMove={handleMouseMove}
+            className="p-6 rounded-[24px] bg-brand-card/60 border border-brand-cyan/15 backdrop-blur-md shadow-lg shadow-brand-cyan/2 transition-all duration-300 relative overflow-hidden group"
           >
-            <div className="w-10 h-10 rounded-xl bg-brand-cyan/10 flex items-center justify-center text-brand-cyan">
-              <Terminal className="w-5 h-5" />
+            {/* Spotlight Glow Layer */}
+            <div 
+              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-0"
+              style={{
+                background: `radial-gradient(280px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(216, 238, 63, 0.08), transparent 80%)`
+              }}
+            />
+            <div className="relative z-10">
+              <div className="w-10 h-10 rounded-xl bg-brand-cyan/10 flex items-center justify-center text-brand-cyan">
+                <Terminal className="w-5 h-5" />
+              </div>
+              <h3 className="font-extrabold text-base text-white mt-4">Direct Real-Time Chat</h3>
+              <p className="text-neutral-400 text-xs leading-relaxed mt-2">
+                Chat instantly with teammate leads. Send multimedia logs, voice notes, and receive instant screenshot alerts.
+              </p>
             </div>
-            <h3 className="font-extrabold text-base text-white">Direct Real-Time Chat</h3>
-            <p className="text-neutral-400 text-xs leading-relaxed">
-              Chat instantly with teammate leads. Send multimedia logs, voice notes, and receive instant screenshot alerts.
-            </p>
           </motion.div>
 
           {/* Card 6: Secure Screening */}
           <motion.div 
             variants={cardVariants}
             whileHover={{ y: -8, scale: 1.015, boxShadow: '0 20px 30px -10px rgba(244, 63, 94, 0.15)' }}
-            className="p-6 rounded-[24px] bg-brand-card/60 border border-brand-cyan/15 backdrop-blur-md shadow-lg shadow-brand-cyan/2 transition-all duration-300"
+            onMouseMove={handleMouseMove}
+            className="p-6 rounded-[24px] bg-brand-card/60 border border-brand-cyan/15 backdrop-blur-md shadow-lg shadow-brand-cyan/2 transition-all duration-300 relative overflow-hidden group"
           >
-            <div className="w-10 h-10 rounded-xl bg-rose-500/10 flex items-center justify-center text-rose-450">
-              <ShieldCheck className="w-5 h-5" />
+            {/* Spotlight Glow Layer */}
+            <div 
+              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-0"
+              style={{
+                background: `radial-gradient(280px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(216, 238, 63, 0.08), transparent 80%)`
+              }}
+            />
+            <div className="relative z-10">
+              <div className="w-10 h-10 rounded-xl bg-rose-500/10 flex items-center justify-center text-rose-450">
+                <ShieldCheck className="w-5 h-5" />
+              </div>
+              <h3 className="font-extrabold text-base text-white mt-4">Toxicity Moderation</h3>
+              <p className="text-neutral-400 text-xs leading-relaxed mt-2">
+                Participate safely. Campify has automated toxicity scanners that filter out abusive content and keep the environment secured.
+              </p>
             </div>
-            <h3 className="font-extrabold text-base text-white">Toxicity Moderation</h3>
-            <p className="text-neutral-400 text-xs leading-relaxed">
-              Participate safely. Campify has automated toxicity scanners that filter out abusive content and keep the environment secured.
-            </p>
           </motion.div>
 
         </motion.div>
@@ -585,8 +808,17 @@ export default function LandingPage() {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.7 }}
-          className="p-8 md:p-12 rounded-[32px] bg-brand-card/80 border border-brand-cyan/15 text-brand-text flex flex-wrap gap-8 items-center justify-around shadow-2xl relative overflow-hidden bg-futuristic-grid"
+          onMouseMove={handleMouseMove}
+          className="p-8 md:p-12 rounded-[32px] bg-brand-card/80 border border-brand-cyan/15 text-brand-text flex flex-wrap gap-8 items-center justify-around shadow-2xl relative overflow-hidden bg-futuristic-grid group"
         >
+          {/* Spotlight Glow Layer */}
+          <div 
+            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-0"
+            style={{
+              background: `radial-gradient(450px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(216, 238, 63, 0.05), transparent 80%)`
+            }}
+          />
+          
           <div className="absolute top-0 right-0 w-48 h-48 bg-brand-orange/10 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-brand-cyan/10 rounded-full blur-3xl pointer-events-none" />
           

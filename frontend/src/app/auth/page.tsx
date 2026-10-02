@@ -10,6 +10,7 @@ import {
 Sparkles, Mail, Lock, User, AtSign, Loader2, CheckCircle2,
 MessageCircle, Heart, Film, ArrowRight, ArrowLeft, ShieldCheck, HelpCircle, Home
 } from 'lucide-react';
+import SpaceBackground from '../../components/SpaceBackground';
 
 type Tab = 'login' | 'register' | 'otp';
 
@@ -275,123 +276,58 @@ function AuthPageContent() {
     }
   };
 
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    card.style.setProperty('--mouse-x', `${x}px`);
+    card.style.setProperty('--mouse-y', `${y}px`);
+  };
+
   return (
-    <div className="min-h-screen w-full flex bg-brand-bg text-brand-text relative overflow-hidden select-none font-sans bg-futuristic-grid">
+    <div className="min-h-screen w-full flex flex-col bg-brand-bg text-brand-text relative overflow-hidden select-none font-sans">
+      {/* Dynamic space background */}
+      <SpaceBackground />
+
       {/* Background Animated Blobs */}
-      <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-brand-orange/10 rounded-full blur-[120px] pointer-events-none animate-blob" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-brand-cyan/10 rounded-full blur-[120px] pointer-events-none animate-blob-delayed" />
-      <div className="absolute top-[30%] right-[30%] w-[350px] h-[350px] bg-brand-orange/5 rounded-full blur-[120px] pointer-events-none animate-blob-fast" />
+      <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-brand-orange/10 rounded-full blur-[120px] pointer-events-none animate-blob z-0" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-brand-cyan/10 rounded-full blur-[120px] pointer-events-none animate-blob-delayed z-0" />
+      <div className="absolute top-[30%] right-[30%] w-[350px] h-[350px] bg-brand-orange/5 rounded-full blur-[120px] pointer-events-none animate-blob-fast z-0" />
 
-      {/* LEFT COLUMN: Visual Showcase */}
-      <div className="hidden lg:flex lg:w-[58%] flex-col justify-between p-12 bg-brand-bg/60 border-r border-brand-cyan/15 relative z-10 backdrop-blur-md">
-        {/* Brand header */}
-        <div className="flex items-center justify-between w-full">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-orange to-brand-cyan flex items-center justify-center shadow-lg shadow-brand-orange/20 flex-shrink-0">
-              <Sparkles className="w-5 h-5 text-black animate-pulse" />
-            </div>
-            <span className="font-extrabold text-xl tracking-wider bg-gradient-to-r from-brand-text via-brand-cyan to-brand-orange bg-clip-text text-transparent">
-              CAMPIFY
-            </span>
+      {/* Global Top Navbar */}
+      <header className="w-full px-6 py-5 md:px-12 md:py-6 flex justify-between items-center relative z-20">
+        <Link href="/" className="flex items-center gap-3 no-underline">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-orange to-brand-cyan flex items-center justify-center shadow-lg shadow-brand-orange/20 flex-shrink-0">
+            <Sparkles className="w-5 h-5 text-black animate-pulse" />
           </div>
+          <span className="font-extrabold text-xl tracking-wider bg-gradient-to-r from-brand-text via-brand-cyan to-brand-orange bg-clip-text text-transparent">
+            CAMPIFY
+          </span>
+        </Link>
 
-          <Link
-            href="/"
-            className="flex items-center gap-2 text-xs font-bold text-neutral-400 hover:text-brand-cyan border border-brand-cyan/20 px-4 py-2 rounded-xl bg-brand-card transition-all no-underline active-shrink hover:shadow-brand-cyan/10 hover:shadow-md"
-          >
-            <Home className="w-4 h-4 text-brand-cyan" />
-            Visit Homepage
-          </Link>
-        </div>
+        <Link
+          href="/"
+          className="flex items-center gap-2 text-xs font-bold text-neutral-400 hover:text-brand-cyan border border-brand-cyan/20 px-4 py-2 rounded-xl bg-brand-card transition-all no-underline active-shrink hover:shadow-brand-cyan/10 hover:shadow-md"
+        >
+          <Home className="w-4 h-4 text-brand-cyan" />
+          Visit Homepage
+        </Link>
+      </header>
 
-        {/* Main Split Grid */}
-        <div className="grid grid-cols-12 gap-8 my-auto items-center w-full relative">
-          <div className="col-span-7 flex flex-col gap-6">
-            <span className="text-xs font-black uppercase text-brand-orange tracking-widest font-outfit">Connect. Learn. Build.</span>
-            <h1 className="text-3xl xl:text-4xl font-black font-outfit tracking-tight leading-tight text-white">
-              India&apos;s Student <br />
-              <span className="bg-gradient-to-r from-brand-orange to-brand-cyan bg-clip-text text-transparent">
-                Community Platform.
-              </span>
-            </h1>
-            <p className="text-neutral-400 text-xs leading-relaxed">
-              Welcome to the central portal of college innovation. Collaborate on projects, form dynamic hackathon teams, share bite-sized learning reels, join specialized college communities, and climb the gamified leaderboard.
-            </p>
-
-            <div className="grid grid-cols-2 gap-3.5 mt-2">
-              <div className="flex flex-col gap-0.5 p-4 rounded-2xl bg-brand-card/50 border border-brand-cyan/15 shadow-md shadow-brand-cyan/2 hover:border-brand-cyan/30 transition-all">
-                <span className="text-xl font-extrabold font-outfit tracking-tight text-white">45k+</span>
-                <span className="text-[9px] text-neutral-400 uppercase font-bold tracking-wider">Active Students</span>
-              </div>
-              <div className="flex flex-col gap-0.5 p-4 rounded-2xl bg-brand-card/50 border border-brand-cyan/15 shadow-md shadow-brand-cyan/2 hover:border-brand-cyan/30 transition-all">
-                <span className="text-xl font-extrabold font-outfit tracking-tight text-white">250+</span>
-                <span className="text-[9px] text-neutral-400 uppercase font-bold tracking-wider">Communities</span>
-              </div>
-              <div className="flex flex-col gap-0.5 p-4 rounded-2xl bg-brand-card/50 border border-brand-cyan/15 shadow-md shadow-brand-cyan/2 hover:border-brand-cyan/30 transition-all">
-                <span className="text-xl font-extrabold font-outfit tracking-tight text-white">1,800+</span>
-                <span className="text-[9px] text-neutral-400 uppercase font-bold tracking-wider">Projects Built</span>
-              </div>
-              <div className="flex flex-col gap-0.5 p-4 rounded-2xl bg-brand-card/50 border border-brand-cyan/15 shadow-md shadow-brand-cyan/2 hover:border-brand-cyan/30 transition-all">
-                <span className="text-xl font-extrabold font-outfit tracking-tight text-white">80+</span>
-                <span className="text-[9px] text-neutral-400 uppercase font-bold tracking-wider">Active Hackathons</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="col-span-5 flex flex-col gap-6 pl-4 relative">
-            <motion.div
-              animate={{ y: [0, -6, 0] }}
-              transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-              className="p-4 rounded-2xl bg-black/40 border border-brand-cyan/20 backdrop-blur-md shadow-2xl w-full font-mono select-none glow-cyan/5"
-            >
-              <div className="flex items-center gap-1.5 border-b border-brand-cyan/10 pb-2 mb-2">
-                <span className="w-2 h-2 rounded-full bg-red-500" />
-                <span className="w-2 h-2 rounded-full bg-yellow-500" />
-                <span className="w-2 h-2 rounded-full bg-green-500" />
-                <span className="text-[8px] text-neutral-500 ml-2">campify_kernel.sh</span>
-              </div>
-              <pre className="text-[9px] text-brand-orange leading-relaxed font-semibold">
-                {`$ npx create-campify-app@latest
-✔ Connected to CampusHub
-✔ Hackathon Mode Enabled
-✔ Streak: Active 12 Days
-✔ Project matches found: 4`}
-              </pre>
-            </motion.div>
-
-            <motion.div
-              animate={{ y: [0, 6, 0] }}
-              transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-              className="p-4 rounded-2xl bg-brand-card/70 border border-brand-cyan/20 backdrop-blur-md shadow-lg flex flex-col gap-2 w-full hover:border-brand-cyan/40 transition-all glow-cyan/2"
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-[8px] font-bold text-brand-orange bg-brand-orange/10 px-2 py-0.5 rounded-md uppercase">Team Finder</span>
-                <span className="text-[8px] text-neutral-400">2m ago</span>
-              </div>
-              <p className="text-[10px] font-bold text-white leading-normal">Need UI/UX developer for Smart Campus Hackathon! Hackers welcome.</p>
-              <span className="text-[8px] text-neutral-400">Skills: Figma, TailwindCSS, React</span>
-            </motion.div>
-          </div>
-        </div>
-
-        <div className="text-neutral-450 text-xs flex items-center gap-4">
-          <span className="flex items-center gap-1.5"><ShieldCheck className="w-4 h-4 text-brand-cyan" /> Campus Secured</span>
-          <span>&bull;</span>
-          <span>Dev Seed Node</span>
-        </div>
-      </div>
-
-      {/* RIGHT COLUMN: Glassmorphism OTP Credentials Panel */}
-      <div className="w-full lg:w-[42%] flex items-center justify-center p-6 relative z-10 bg-brand-bg/60 backdrop-blur-md bg-futuristic-grid">
-        <div className="w-full max-w-[430px] bg-brand-card/80 border border-brand-cyan/20 backdrop-blur-2xl rounded-[32px] p-8 flex flex-col gap-6 shadow-2xl relative z-20 glass glow-cyan/10">
-          
-          <Link
-            href="/"
-            className="w-full bg-brand-card hover:bg-brand-card/85 text-brand-text border border-brand-cyan/20 py-3.5 rounded-[16px] flex items-center justify-center gap-2 text-xs font-bold active-shrink hover-scale no-underline transition-all shadow-md shadow-brand-cyan/5"
-          >
-            <Home className="w-4 h-4 text-brand-orange animate-pulse" />
-            Back to Home Page
-          </Link>
+      {/* Centered Login Panel */}
+      <div className="flex-grow flex items-center justify-center p-6 relative z-10">
+        <div 
+          onMouseMove={handleMouseMove}
+          className="w-full max-w-[430px] bg-brand-card/80 border border-brand-cyan/20 backdrop-blur-2xl rounded-[32px] p-8 flex flex-col gap-6 shadow-2xl relative z-20 glass glow-cyan/10 group overflow-hidden"
+        >
+          {/* Spotlight Glow Layer */}
+          <div 
+            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-0"
+            style={{
+              background: `radial-gradient(280px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(216, 238, 63, 0.08), transparent 80%)`
+            }}
+          />
 
           {/* Tab selectors for Login / Register */}
           {(activeTab === 'login' || activeTab === 'register') && (
@@ -490,7 +426,7 @@ function AuthPageContent() {
                     placeholder="student@college.edu"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full bg-brand-card/50 border border-brand-cyan/20 focus:border-brand-cyan/55 focus:ring-1 focus:ring-brand-cyan/30 rounded-[16px] pl-12 pr-4 py-3.5 text-sm outline-none text-brand-text transition-all placeholder:text-neutral-500 focus:bg-brand-card shadow-inner"
+                    className="w-full bg-brand-card/50 border border-brand-cyan/20 focus:border-brand-cyan/55 focus:ring-1 focus:ring-brand-cyan/30 focus:shadow-[0_0_15px_rgba(216,238,63,0.12)] rounded-[16px] pl-12 pr-4 py-3.5 text-sm outline-none text-brand-text transition-all placeholder:text-neutral-500 focus:bg-brand-card shadow-inner"
                   />
                 </div>
               </div>
@@ -507,7 +443,7 @@ function AuthPageContent() {
                         placeholder="student_handle"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
-                        className="w-full bg-brand-card/50 border border-brand-cyan/20 focus:border-brand-cyan/55 focus:ring-1 focus:ring-brand-cyan/30 rounded-[16px] pl-12 pr-4 py-3.5 text-sm outline-none text-brand-text transition-all placeholder:text-neutral-500 focus:bg-brand-card shadow-inner"
+                        className="w-full bg-brand-card/50 border border-brand-cyan/20 focus:border-brand-cyan/55 focus:ring-1 focus:ring-brand-cyan/30 focus:shadow-[0_0_15px_rgba(216,238,63,0.12)] rounded-[16px] pl-12 pr-4 py-3.5 text-sm outline-none text-brand-text transition-all placeholder:text-neutral-500 focus:bg-brand-card shadow-inner"
                       />
                     </div>
                   </div>
@@ -522,7 +458,7 @@ function AuthPageContent() {
                         placeholder="Enter full name"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="w-full bg-brand-card/50 border border-brand-cyan/20 focus:border-brand-cyan/55 focus:ring-1 focus:ring-brand-cyan/30 rounded-[16px] pl-12 pr-4 py-3.5 text-sm outline-none text-brand-text transition-all placeholder:text-neutral-500 focus:bg-brand-card shadow-inner"
+                        className="w-full bg-brand-card/50 border border-brand-cyan/20 focus:border-brand-cyan/55 focus:ring-1 focus:ring-brand-cyan/30 focus:shadow-[0_0_15px_rgba(216,238,63,0.12)] rounded-[16px] pl-12 pr-4 py-3.5 text-sm outline-none text-brand-text transition-all placeholder:text-neutral-500 focus:bg-brand-card shadow-inner"
                       />
                     </div>
                   </div>
@@ -540,7 +476,7 @@ function AuthPageContent() {
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full bg-brand-card/50 border border-brand-cyan/20 focus:border-brand-cyan/55 focus:ring-1 focus:ring-brand-cyan/30 rounded-[16px] pl-12 pr-4 py-3.5 text-sm outline-none text-brand-text transition-all placeholder:text-neutral-500 focus:bg-brand-card shadow-inner"
+                    className="w-full bg-brand-card/50 border border-brand-cyan/20 focus:border-brand-cyan/55 focus:ring-1 focus:ring-brand-cyan/30 focus:shadow-[0_0_15px_rgba(216,238,63,0.12)] rounded-[16px] pl-12 pr-4 py-3.5 text-sm outline-none text-brand-text transition-all placeholder:text-neutral-500 focus:bg-brand-card shadow-inner"
                   />
                 </div>
 
