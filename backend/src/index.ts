@@ -53,10 +53,13 @@ app.use('/api', limiter);
 // Root status and welcome endpoint
 app.get('/', async (req, res) => {
   let dbStatus = 'CONNECTED';
+  let dbError = '';
   try {
     await prisma.$queryRaw`SELECT 1`;
-  } catch (err) {
+  } catch (err: any) {
     dbStatus = 'DISCONNECTED';
+    dbError = err?.message || String(err);
+    console.error('[DB Check Error]:', dbError);
   }
 
   if (req.accepts('html')) {
@@ -70,7 +73,7 @@ app.get('/', async (req, res) => {
           <style>
             * { box-sizing: border-box; }
             body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #080d1a; color: #f1f5f9; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; }
-            .card { background: #111a2e; border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 20px; padding: 40px; max-width: 520px; width: 100%; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7); text-align: center; }
+            .card { background: #111a2e; border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 20px; padding: 40px; max-width: 540px; width: 100%; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7); text-align: center; }
             h1 { color: #38bdf8; margin: 0 0 12px 0; font-size: 26px; }
             p { color: #94a3b8; line-height: 1.6; font-size: 15px; margin: 8px 0; }
             .badge-container { margin: 18px 0; }
@@ -93,6 +96,21 @@ app.get('/', async (req, res) => {
                 Database: ${dbStatus}
               </span>
             </div>
+            ${
+              dbStatus === 'DISCONNECTED'
+                ? `
+              <div style="margin: 16px 0; padding: 14px; background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; font-size: 13px; color: #fca5a5; text-align: left;">
+                <div style="font-weight: 600; margin-bottom: 6px; color: #f87171;">⚠️ Connection Notice:</div>
+                <div style="font-family: monospace; font-size: 11px; max-height: 80px; overflow-y: auto; background: rgba(0,0,0,0.3); padding: 8px; border-radius: 6px; word-break: break-all;">
+                  ${dbError ? dbError.slice(0, 300) : 'DATABASE_URL environment variable is missing.'}
+                </div>
+                <div style="margin-top: 10px; font-size: 12px; color: #cbd5e1;">
+                  💡 <b>Fix:</b> Go to your <b>Render Dashboard</b> ➔ Service ➔ <b>Environment</b> tab ➔ Add <code>DATABASE_URL</code> (without quotes).
+                </div>
+              </div>
+            `
+                : ''
+            }
             <p style="font-size: 13px; color: #64748b;">Connect your Next.js frontend by setting <code>NEXT_PUBLIC_API_URL</code> to this URL + <code>/api</code>.</p>
             <div class="links">
               <a href="/health">Health Endpoint</a>
@@ -108,6 +126,7 @@ app.get('/', async (req, res) => {
     name: 'Campify Backend API',
     status: 'ONLINE',
     database: dbStatus,
+    error: dbError || undefined,
     health: '/health',
     api: '/api',
     timestamp: new Date().toISOString(),
