@@ -8,7 +8,7 @@ const typingUsers = new Map<string, Set<string>>(); // chatId -> set of userIds
 export function initSocketServer(server: HttpServer): Server {
   io = new Server(server, {
     cors: {
-      origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+      origin: (origin, callback) => callback(null, true),
       methods: ['GET', 'POST'],
       credentials: true,
     },
