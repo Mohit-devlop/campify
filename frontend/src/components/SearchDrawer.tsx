@@ -39,6 +39,8 @@ export default function SearchDrawer({ isOpen, onClose }: SearchDrawerProps) {
     return () => clearTimeout(delayDebounce);
   }, [query]);
 
+  if (!isOpen) return null;
+
   return (
     <div
       className={`fixed top-0 left-0 h-screen w-80 bg-brand-card/95 backdrop-blur-xl border-r border-brand-cyan/20 z-40 p-6 flex flex-col gap-6 shadow-2xl transition-transform duration-300 ease-in-out text-brand-text ${

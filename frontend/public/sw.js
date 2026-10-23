@@ -1,6 +1,5 @@
-const CACHE_NAME = 'campify-cache-v7';
+const CACHE_NAME = 'campify-cache-v10';
 const ASSETS_TO_CACHE = [
-  '/',
   '/logo.svg',
   '/favicon.ico',
 ];
@@ -17,7 +16,7 @@ self.addEventListener('install', (event) => {
   }
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('[Service Worker] Caching app shell');
+      console.log('[Service Worker] Caching app static assets');
       return cache.addAll(ASSETS_TO_CACHE);
     })
   );
@@ -44,10 +43,15 @@ self.addEventListener('activate', (event) => {
 // Fetch Interception
 self.addEventListener('fetch', (event) => {
   if (isDev) {
-    return; // Bypass caching and interception in development to prevent HMR and reload loops
+    return; // Bypass caching in dev
   }
 
-  // Avoid intercepting API routes, WebSockets, or Next.js development hot reloads
+  // Never intercept HTML page navigations (ensures fresh HTML with valid chunk hashes)
+  if (event.request.mode === 'navigate') {
+    return;
+  }
+
+  // Avoid intercepting API routes, WebSockets, Next static chunks, or extensions
   if (
     event.request.url.includes('/api/') ||
     event.request.url.includes('/_next/') ||
