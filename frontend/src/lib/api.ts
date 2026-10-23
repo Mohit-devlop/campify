@@ -1,6 +1,25 @@
 import { useAuthStore } from '../store/authStore';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+export function getApiBaseUrl(): string {
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_API_URL.includes('localhost')) {
+      const host = window.location.hostname;
+      if (host && host !== 'localhost' && host !== '127.0.0.1' && !host.endsWith('.vercel.app')) {
+        return `${window.location.protocol}//${host}:5001/api`;
+      }
+    }
+    return process.env.NEXT_PUBLIC_API_URL;
+  }
+  if (typeof window !== 'undefined') {
+    const host = window.location.hostname;
+    if (host && host !== 'localhost' && host !== '127.0.0.1' && !host.endsWith('.vercel.app')) {
+      return `${window.location.protocol}//${host}:5001/api`;
+    }
+  }
+  return 'http://localhost:5001/api';
+}
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api';
 
 interface FetchOptions extends RequestInit {
   skipAuth?: boolean;
@@ -23,7 +42,9 @@ export async function apiFetch(endpoint: string, options: FetchOptions = {}) {
     }
   }
 
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+  const baseUrl = getApiBaseUrl();
+
+  const response = await fetch(`${baseUrl}${endpoint}`, {
     ...fetchOptions,
     headers,
   });
@@ -33,7 +54,7 @@ export async function apiFetch(endpoint: string, options: FetchOptions = {}) {
     const refreshToken = useAuthStore.getState().refreshToken;
     if (refreshToken) {
       try {
-        const refreshResponse = await fetch(`${API_BASE_URL}/auth/refresh`, {
+        const refreshResponse = await fetch(`${baseUrl}/auth/refresh`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ token: refreshToken }),
@@ -49,7 +70,7 @@ export async function apiFetch(endpoint: string, options: FetchOptions = {}) {
 
           // Retry original request with new token
           headers.set('Authorization', `Bearer ${credentials.accessToken}`);
-          const retryResponse = await fetch(`${API_BASE_URL}${endpoint}`, {
+          const retryResponse = await fetch(`${baseUrl}${endpoint}`, {
             ...fetchOptions,
             headers,
           });

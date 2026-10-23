@@ -129,7 +129,7 @@ export default function TeamFinderPage() {
   };
 
   return (
-    <div className="max-w-[1200px] mx-auto px-4 md:px-6 py-6 flex flex-col gap-6 select-none font-sans text-white min-h-[85vh]">
+    <div className="w-full max-w-[1200px] mx-auto px-3 sm:px-4 md:px-6 py-6 flex flex-col gap-6 select-none font-sans text-white min-h-[85vh]">
       
       {/* Header bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">

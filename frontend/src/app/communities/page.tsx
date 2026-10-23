@@ -260,7 +260,7 @@ export default function CommunitiesPage() {
   };
 
   return (
-    <div className="max-w-[1200px] mx-auto px-4 md:px-6 py-6 flex flex-col md:flex-row gap-6 select-none font-sans text-brand-text min-h-[85vh]">
+    <div className="w-full max-w-[1200px] mx-auto px-3 sm:px-4 md:px-6 py-6 flex flex-col md:flex-row justify-center gap-6 select-none font-sans text-brand-text min-h-[85vh]">
       
       {/* LEFT COLUMN: Discover & Communities list */}
       <div className="w-full md:w-[360px] flex flex-col gap-5 flex-shrink-0">

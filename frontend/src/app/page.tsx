@@ -604,10 +604,10 @@ return <LandingPage />;
 }
 
 return (
-    <div className="max-w-[1200px] mx-auto px-4 md:px-6 py-6 flex gap-6 relative select-none bg-transparent text-brand-text">
+    <div className="w-full max-w-[1140px] mx-auto px-3 sm:px-4 md:px-6 py-4 md:py-6 flex justify-center gap-6 lg:gap-8 relative select-none bg-transparent text-brand-text">
 
 {/* LEFT COLUMN: Feed & Composer */}
-<div className="flex-1 max-w-[640px] flex flex-col gap-6">
+<div className="w-full flex-1 max-w-[640px] flex flex-col gap-6 mx-auto lg:mx-0">
 
 {/* Sticky Top Header Filter */}
 <div className="sticky top-0 bg-brand-bg/85 backdrop-blur-xl z-20 py-3 border-b border-brand-cyan/15 flex items-center justify-between px-1">
@@ -1239,7 +1239,7 @@ Post
 </div>
 
 {/* RIGHT COLUMN: Redesigned widgets for Communities, Events, Active students, Opportunities */}
-<div className="hidden lg:flex flex-col w-[340px] gap-6 sticky top-6 self-start h-[calc(100vh-48px)] overflow-y-auto pr-1 pb-8 no-scrollbar">
+<div className="hidden lg:flex flex-col w-[340px] gap-6 sticky top-6 self-start h-[calc(100vh-48px)] overflow-y-auto pr-1 pb-8 no-scrollbar flex-shrink-0">
 
 {/* User Quick Info Header */}
 <div className="flex items-center justify-between p-4 bg-brand-card border border-brand-cyan/15 rounded-[24px]">

@@ -1,7 +1,24 @@
 import { create } from 'zustand';
 import { io, Socket } from 'socket.io-client';
 
-const SOCKET_BASE_URL = process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:5000';
+function getSocketBaseUrl(): string {
+  if (process.env.NEXT_PUBLIC_SOCKET_URL) {
+    if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_SOCKET_URL.includes('localhost')) {
+      const host = window.location.hostname;
+      if (host && host !== 'localhost' && host !== '127.0.0.1' && !host.endsWith('.vercel.app')) {
+        return `${window.location.protocol}//${host}:5001`;
+      }
+    }
+    return process.env.NEXT_PUBLIC_SOCKET_URL;
+  }
+  if (typeof window !== 'undefined') {
+    const host = window.location.hostname;
+    if (host && host !== 'localhost' && host !== '127.0.0.1' && !host.endsWith('.vercel.app')) {
+      return `${window.location.protocol}//${host}:5001`;
+    }
+  }
+  return 'http://localhost:5001';
+}
 
 interface SocketState {
   socket: Socket | null;
@@ -18,7 +35,8 @@ export const useSocketStore = create<SocketState>((set, get) => ({
   connectSocket: (userId) => {
     if (get().socket) return;
 
-    const socketInstance = io(SOCKET_BASE_URL, {
+    const socketUrl = getSocketBaseUrl();
+    const socketInstance = io(socketUrl, {
       query: { userId },
       transports: ['websocket'],
     });
