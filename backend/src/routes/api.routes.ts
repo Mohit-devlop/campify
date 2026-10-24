@@ -18,6 +18,7 @@ import * as skillsCtrl from '../controllers/skills.controller';
 import * as teamCtrl from '../controllers/team.controller';
 import * as learnCtrl from '../controllers/learning.controller';
 import * as gamifyCtrl from '../controllers/gamification.controller';
+import * as securityCtrl from '../controllers/security.controller';
 
 const router = Router();
 import * as uploadCtrl from '../controllers/upload.controller';
@@ -38,6 +39,16 @@ router.post('/auth/google', authCtrl.googleLogin);
 router.post('/auth/forgot-password', authCtrl.forgotPassword);
 router.post('/auth/reset-password', authCtrl.resetPassword);
 router.post('/auth/change-password', authenticate, authCtrl.changePassword);
+
+// ==========================================
+// COLLEGE ENROLLMENT & BIOMETRIC SECURITY ROUTES
+// ==========================================
+router.post('/security/enrollment/validate', securityCtrl.validateEnrollment);
+router.post('/security/face/enroll', securityCtrl.enrollFace);
+router.post('/security/face/verify-login', securityCtrl.verifyLoginFace);
+router.post('/security/continuous-verify', authenticate, securityCtrl.continuousVerify);
+router.post('/security/report-camera-issue', authenticate, securityCtrl.reportCameraIssue);
+router.get('/security/status', authenticate, securityCtrl.getSecurityStatus);
 
 // ==========================================
 // USER PROFILE ROUTES
@@ -146,6 +157,12 @@ router.get('/admin/users', authenticate, authorize(['ADMIN']), adminCtrl.getUser
 router.put('/admin/users/:userId/status', authenticate, authorize(['ADMIN']), adminCtrl.updateUserStatus);
 router.get('/admin/reports', authenticate, authorize(['ADMIN', 'MODERATOR']), adminCtrl.getReports);
 router.post('/admin/reports/:reportId/action', authenticate, authorize(['ADMIN', 'MODERATOR']), adminCtrl.actionReport);
+
+// ADMIN SECURITY MANAGEMENT & UNLOCK ROUTES
+router.get('/admin/security/locked-accounts', authenticate, authorize(['ADMIN']), securityCtrl.getAdminSecurityAccounts);
+router.get('/admin/security/audit-trail', authenticate, authorize(['ADMIN']), securityCtrl.getSecurityAuditTrail);
+router.get('/admin/security/audit-trail/:userId', authenticate, authorize(['ADMIN']), securityCtrl.getSecurityAuditTrail);
+router.post('/admin/security/unlock/:userId', authenticate, authorize(['ADMIN']), securityCtrl.unlockUserAccount);
 
 // ==========================================
 // AI SOCIAL & CAREER ASSISTANT ROUTES

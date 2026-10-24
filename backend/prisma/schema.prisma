@@ -86,6 +86,18 @@ model User {
   // --- INSTAGRAM INSTANTS ---
   instants             Instant[]
   receivedInstants     InstantRecipient[]
+
+  // --- COLLEGE SECURITY & BIOMETRIC SYSTEM ---
+  enrollmentId         String?           @unique
+  securityStatus       String            @default("ACTIVE") // ACTIVE, SECURITY_REVIEW, SECURITY_LOCKED
+  strikeCount          Int               @default(0)
+  lastStrikeAt         DateTime?
+  lockedAt             DateTime?
+  lockReason           String?
+  tokenVersion         Int               @default(1)
+  faceEnrollment       FaceEnrollment?
+  securityLogs         SecurityAuditLog[] @relation("UserSecurityLogs")
+  adminAuditsPerformed SecurityAuditLog[] @relation("AdminSecurityLogs")
 }
 
 model Profile {
@@ -704,3 +716,59 @@ model OtpVerification {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }
+
+// ==========================================
+// --- COLLEGE ENROLLMENT & SECURITY SYSTEM ---
+// ==========================================
+
+model VerifiedStudentRegistry {
+  id              String   @id @default(uuid())
+  enrollmentId    String   @unique
+  studentName     String
+  collegeEmail    String   @unique
+  department      String   @default("Computer Science")
+  yearOfStudy     Int      @default(2024)
+  isClaimed       Boolean  @default(false)
+  claimedByUserId String?  @unique
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model FaceEnrollment {
+  id              String   @id @default(uuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  descriptor      String   // JSON stringified 128-d floating-point biometric vector
+  facialLandmarks String?  // Key landmark metrics/geometry JSON
+  consentGivenAt  DateTime @default(now())
+  livenessScore   Float    @default(0.95)
+  faceHash        String?  // Fingerprint hash for duplicate enrollment detection
+  enrolledAt      DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model SecurityAuditLog {
+  id             String    @id @default(uuid())
+  userId         String
+  user           User      @relation("UserSecurityLogs", fields: [userId], references: [id], onDelete: Cascade)
+  adminId        String?
+  admin          User?     @relation("AdminSecurityLogs", fields: [adminId], references: [id], onDelete: SetNull)
+  eventType      String    // STRIKE_1, STRIKE_2, STRIKE_3_LOCK, ADMIN_UNLOCK, LOGIN_REJECTED_LOCKED, FACE_MISMATCH, LIVENESS_FAILURE, CAMERA_ERROR_BENIGN
+  reason         String
+  strikeNumber   Int       @default(0)
+  incidentId     String?
+  ipAddress      String?
+  userAgent      String?
+  metadata       String?   // JSON object for additional contextual diagnostics
+  createdAt      DateTime  @default(now())
+}
+
+model SecurityIncident {
+  id             String    @id @default(uuid())
+  incidentId     String    @unique
+  userId         String
+  eventType      String
+  processed      Boolean   @default(false)
+  createdAt      DateTime  @default(now())
+}
+

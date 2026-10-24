@@ -17,6 +17,9 @@ export interface User {
   name: string | null;
   role: 'USER' | 'MODERATOR' | 'ADMIN';
   verified: boolean;
+  securityStatus?: string;
+  strikeCount?: number;
+  enrollmentId?: string | null;
   profile: UserProfile | null;
 }
 

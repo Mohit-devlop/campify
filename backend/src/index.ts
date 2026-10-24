@@ -164,6 +164,8 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
 // Initialize Socket.io Server
 initSocketServer(server);
 
+import { ensureStudentRegistrySeeded } from './services/seedRegistry';
+
 // Start server
 server.listen(Number(PORT), '0.0.0.0', async () => {
   console.log(`\n==========================================`);
@@ -175,6 +177,7 @@ server.listen(Number(PORT), '0.0.0.0', async () => {
   try {
     await prisma.$connect();
     console.log('Successfully connected to PostgreSQL database via Prisma ORM.');
+    await ensureStudentRegistrySeeded();
   } catch (error) {
     console.error('Failed to connect to database during startup:', error);
   }

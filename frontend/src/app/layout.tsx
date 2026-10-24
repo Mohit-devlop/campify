@@ -13,6 +13,7 @@ import SearchDrawer from '../components/SearchDrawer';
 import CreatePostModal from '../components/CreatePostModal';
 import ShareAppModal from '../components/ShareAppModal';
 import PwaInstallButton from '../components/PwaInstallButton';
+import ContinuousFaceMonitor from '../components/ContinuousFaceMonitor';
 import './globals.css';
 
 export default function RootLayout({
@@ -132,6 +133,9 @@ export default function RootLayout({
 
               {/* PWA Floating Install Button */}
               <PwaInstallButton />
+
+              {/* Continuous Biometric Guard */}
+              <ContinuousFaceMonitor />
             </div>
           </MobileDeviceFrame>
         </Providers>
