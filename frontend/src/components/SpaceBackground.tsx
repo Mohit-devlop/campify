@@ -94,9 +94,9 @@ export default function SpaceBackground() {
         alpha: Math.random(),
         targetAlpha: Math.random() * 0.8 + 0.2,
         alphaSpeed: Math.random() * 0.015 + 0.005,
-        color: Math.random() < 0.2 
-          ? (isDarkMode ? '#d8ee3f' : '#1c6b4c') // Cyan/yellow in dark, green in light
-          : (Math.random() < 0.1 ? '#267a56' : '#ffffff'), // Orange/green or white
+        color: Math.random() < 0.25 
+          ? (isDarkMode ? '#00f2fe' : '#4f46e5') // Electric cyan in dark, indigo in light
+          : (Math.random() < 0.2 ? '#ff3366' : (Math.random() < 0.2 ? '#8b5cf6' : '#ffffff')), // Rose, purple, or crisp white
         label: hasLabel ? techLabels[Math.floor(Math.random() * techLabels.length)] : undefined,
         labelTimer: Math.random() * 100
       });
@@ -157,16 +157,16 @@ export default function SpaceBackground() {
       // 1. Draw Nebula Glows (large soft radial gradients)
       ctx.globalCompositeOperation = 'screen';
       
-      // Left blob (orange-ish/green)
-      const gradLeft = ctx.createRadialGradient(width * 0.2, height * 0.3, 0, width * 0.2, height * 0.3, width * 0.4);
-      gradLeft.addColorStop(0, isDarkMode ? 'rgba(38, 122, 86, 0.03)' : 'rgba(28, 107, 76, 0.03)');
+      // Left blob (vibrant indigo/violet)
+      const gradLeft = ctx.createRadialGradient(width * 0.2, height * 0.3, 0, width * 0.2, height * 0.3, width * 0.45);
+      gradLeft.addColorStop(0, isDarkMode ? 'rgba(99, 102, 241, 0.08)' : 'rgba(99, 102, 241, 0.04)');
       gradLeft.addColorStop(1, 'rgba(0, 0, 0, 0)');
       ctx.fillStyle = gradLeft;
       ctx.fillRect(0, 0, width, height);
 
-      // Right blob (cyan/yellow)
-      const gradRight = ctx.createRadialGradient(width * 0.8, height * 0.7, 0, width * 0.8, height * 0.7, width * 0.4);
-      gradRight.addColorStop(0, isDarkMode ? 'rgba(216, 238, 63, 0.02)' : 'rgba(216, 238, 63, 0.02)');
+      // Right blob (electric cyan)
+      const gradRight = ctx.createRadialGradient(width * 0.8, height * 0.7, 0, width * 0.8, height * 0.7, width * 0.45);
+      gradRight.addColorStop(0, isDarkMode ? 'rgba(0, 242, 254, 0.06)' : 'rgba(2, 132, 199, 0.04)');
       gradRight.addColorStop(1, 'rgba(0, 0, 0, 0)');
       ctx.fillStyle = gradRight;
       ctx.fillRect(0, 0, width, height);
@@ -174,7 +174,7 @@ export default function SpaceBackground() {
       ctx.globalCompositeOperation = 'source-over';
 
       // 2. Draw Tech Grid lines (very faint)
-      ctx.strokeStyle = isDarkMode ? 'rgba(216, 238, 63, 0.015)' : 'rgba(28, 107, 76, 0.025)';
+      ctx.strokeStyle = isDarkMode ? 'rgba(99, 102, 241, 0.03)' : 'rgba(99, 102, 241, 0.035)';
       ctx.lineWidth = 0.5;
       const gridSize = 120;
       for (let x = 0; x < width; x += gridSize) {
@@ -194,7 +194,7 @@ export default function SpaceBackground() {
       techRings.forEach(ring => {
         ring.rotation += ring.speed;
         
-        ctx.strokeStyle = isDarkMode ? `rgba(216, 238, 63, ${ring.opacity})` : `rgba(28, 107, 76, ${ring.opacity * 1.5})`;
+        ctx.strokeStyle = isDarkMode ? `rgba(0, 242, 254, ${ring.opacity * 1.5})` : `rgba(99, 102, 241, ${ring.opacity * 1.5})`;
         ctx.lineWidth = 0.5;
         
         // Draw main circle

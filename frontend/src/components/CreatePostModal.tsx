@@ -592,7 +592,7 @@ export default function CreatePostModal({ isOpen, onClose, defaultTab }: CreateP
           <button
             type="submit"
             disabled={isUploading}
-            className="w-full btn-primary-gradient text-black font-extrabold text-sm py-3 rounded-[16px] flex items-center justify-center gap-2 shadow-lg active-shrink hover-scale disabled:opacity-50 border-0 cursor-pointer"
+            className="w-full btn-primary-gradient text-white font-extrabold text-sm py-3.5 rounded-[16px] flex items-center justify-center gap-2 shadow-lg active-shrink hover-scale disabled:opacity-50 border-0 cursor-pointer"
           >
             {isUploading ? (
               <>

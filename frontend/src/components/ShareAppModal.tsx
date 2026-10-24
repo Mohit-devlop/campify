@@ -110,11 +110,11 @@ export default function ShareAppModal({ isOpen, onClose }: ShareAppModalProps) {
           {/* Modal Header */}
           <div className="flex items-center justify-between pb-3 border-b border-brand-cyan/15 relative z-10">
             <div className="flex items-center gap-2.5">
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-orange to-brand-cyan flex items-center justify-center shadow-lg shadow-brand-orange/20">
-                <Share2 className="w-5 h-5 text-black" />
+              <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-orange via-purple-600 to-brand-cyan flex items-center justify-center shadow-lg shadow-brand-orange/25">
+                <Share2 className="w-5 h-5 text-white" />
               </div>
               <div className="flex flex-col">
-                <h3 className="text-base font-extrabold tracking-tight text-white leading-none">
+                <h3 className="text-base font-extrabold tracking-tight text-white leading-none font-outfit">
                   Share Campify Web App
                 </h3>
                 <span className="text-[11px] text-neutral-400 mt-1">
@@ -135,9 +135,9 @@ export default function ShareAppModal({ isOpen, onClose }: ShareAppModalProps) {
           {canNativeShare && (
             <button
               onClick={handleNativeShare}
-              className="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-brand-orange to-brand-cyan text-black font-extrabold text-sm flex items-center justify-center gap-2.5 shadow-lg shadow-brand-orange/25 active-shrink cursor-pointer hover:opacity-95 transition-all"
+              className="w-full py-3 px-4 rounded-2xl btn-primary-gradient text-white font-extrabold text-sm flex items-center justify-center gap-2.5 shadow-lg active-shrink cursor-pointer hover:opacity-95 transition-all"
             >
-              <Smartphone className="w-5 h-5" />
+              <Smartphone className="w-5 h-5 text-white" />
               <span>Share via Phone Apps (WhatsApp, Messages...)</span>
             </button>
           )}
@@ -155,8 +155,8 @@ export default function ShareAppModal({ isOpen, onClose }: ShareAppModalProps) {
                 onClick={handleCopyLink}
                 className={`py-2 px-3.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer border-0 ${
                   copied
-                    ? 'bg-emerald-500 text-black shadow-md'
-                    : 'bg-brand-cyan text-black hover:opacity-90 active-shrink'
+                    ? 'bg-emerald-500 text-white shadow-md'
+                    : 'bg-gradient-to-r from-brand-orange to-brand-cyan text-white hover:opacity-90 active-shrink shadow-sm'
                 }`}
               >
                 {copied ? (

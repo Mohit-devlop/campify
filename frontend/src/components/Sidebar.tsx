@@ -118,16 +118,16 @@ className="absolute -right-7 top-4 bg-brand-card border border-brand-cyan/20 tex
 </button>
 
 {/* Logo */}
-<Link href="/" className="flex items-center gap-2.5 px-2.5 py-2 overflow-hidden">
-<div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-orange to-brand-cyan flex items-center justify-center shadow-lg shadow-brand-orange/20 active-shrink flex-shrink-0">
-<Sparkles className="w-5 h-5 text-black animate-pulse" />
+<Link href="/" className="flex items-center gap-2.5 px-2.5 py-2 overflow-hidden group">
+<div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-orange via-purple-500 to-brand-cyan flex items-center justify-center shadow-lg shadow-brand-orange/25 group-hover:scale-105 transition-transform active-shrink flex-shrink-0">
+<Sparkles className="w-5 h-5 text-white animate-pulse" />
 </div>
 {!isCollapsed && (
 <motion.span
 initial={{ opacity: 0, x: -10 }}
 animate={{ opacity: 1, x: 0 }}
 exit={{ opacity: 0, x: -10 }}
-className="font-extrabold text-lg tracking-wider bg-gradient-to-r from-brand-orange to-brand-cyan bg-clip-text text-transparent"
+className="font-extrabold text-lg tracking-wider bg-gradient-to-r from-brand-orange via-purple-400 to-brand-cyan bg-clip-text text-transparent font-outfit"
 >
 CAMPIFY
 </motion.span>
@@ -144,22 +144,22 @@ const content = (
 <div
 className={`flex items-center gap-4 px-3.5 py-3 rounded-2xl cursor-pointer transition-all duration-200 relative ${
 isActive
-? 'text-brand-cyan font-bold font-outfit'
-: 'text-neutral-400 hover:text-brand-orange hover:bg-brand-orange/5'
+? 'text-white font-bold font-outfit'
+: 'text-neutral-400 hover:text-white hover:bg-white/5'
 }`}
 >
 {/* Sliding active indicator */}
 {isActive && (
 <motion.div
 layoutId="activeIndicator"
-className="absolute inset-0 bg-brand-cyan/10 rounded-2xl -z-10 border border-brand-cyan/25 glow-cyan/10"
+className="absolute inset-0 bg-gradient-to-r from-brand-orange/15 via-purple-500/10 to-brand-cyan/15 rounded-2xl -z-10 border border-brand-cyan/35 shadow-[0_0_15px_rgba(0,242,254,0.15)]"
 transition={{ type: 'spring', stiffness: 380, damping: 30 }}
 />
 )}
 <div className="relative flex items-center justify-center">
-<Icon className={`w-5 h-5 flex-shrink-0 transition-transform ${isActive ? 'scale-110' : ''}`} />
+<Icon className={`w-5 h-5 flex-shrink-0 transition-transform ${isActive ? 'scale-110 text-brand-cyan' : ''}`} />
 {item.name === 'Notifications' && unreadCount > 0 && (
-<span className="absolute -top-1.5 -right-1.5 bg-brand-orange text-black text-[8px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-md animate-pulse">
+<span className="absolute -top-1.5 -right-1.5 bg-gradient-to-r from-brand-orange to-pink-500 text-white text-[8px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-md animate-pulse">
 {unreadCount}
 </span>
 )}

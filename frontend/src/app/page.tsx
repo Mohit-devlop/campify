@@ -681,49 +681,56 @@ className="bg-transparent border-0 cursor-pointer p-1"
 {/* Left Welcome */}
 <div className="flex items-center gap-3 w-full md:w-auto">
 {user.profile?.avatarUrl ? (
-<img src={user.profile.avatarUrl} alt="avatar" className="w-12 h-12 rounded-xl object-cover border border-brand-cyan/15" />
+<img src={user.profile.avatarUrl} alt="avatar" className="w-12 h-12 rounded-xl object-cover border border-brand-cyan/30 shadow-md shadow-brand-cyan/10" />
 ) : (
-<div className="w-12 h-12 rounded-xl bg-brand-orange text-black font-black text-lg flex items-center justify-center flex-shrink-0">
+<div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-brand-orange via-purple-600 to-brand-cyan text-white font-black text-lg flex items-center justify-center flex-shrink-0 shadow-lg shadow-brand-orange/20">
 {user.username[0].toUpperCase()}
 </div>
 )}
     <div className="flex flex-col text-white">
-      <h2 className="text-sm font-black leading-tight">Welcome, {user.name || user.username}!</h2>
+      <h2 className="text-sm font-black leading-tight flex items-center gap-1.5">
+        <span>Welcome, {user.name || user.username}!</span>
+        <span className="text-xs">🚀</span>
+      </h2>
       <p className="text-[10px] text-neutral-400 mt-0.5">Let&apos;s build some awesome projects today.</p>
     </div>
   </div>
 
   {/* Right Stats Widgets */}
-  <div className="flex items-center gap-4 flex-wrap md:flex-nowrap w-full md:w-auto justify-between md:justify-end">
+  <div className="flex items-center gap-3 flex-wrap md:flex-nowrap w-full md:w-auto justify-between md:justify-end">
     {/* Level + XP Progress */}
-    <div className="flex flex-col gap-1 p-2.5 bg-brand-bg/60 border border-brand-cyan/15 rounded-xl w-[105px] flex-shrink-0 shadow-inner">
+    <div className="flex flex-col gap-1 p-2.5 bg-neutral-900/70 border border-amber-500/25 rounded-2xl w-[112px] flex-shrink-0 shadow-md">
       <div className="flex items-center justify-between text-[8px] uppercase font-bold text-neutral-400">
-        <span>LVL {gamification?.stats?.level || 1}</span>
-        <span className="text-brand-cyan">{gamification?.stats?.xpPoints || 0} XP</span>
+        <span className="text-amber-400 font-extrabold">LVL {gamification?.stats?.level || 1}</span>
+        <span className="text-amber-300 font-black">{gamification?.stats?.xpPoints || 0} XP</span>
       </div>
-      <div className="h-1 w-full bg-neutral-800 rounded-full overflow-hidden">
+      <div className="h-1.5 w-full bg-neutral-800 rounded-full overflow-hidden">
         <div
-          className="h-full bg-brand-cyan transition-all"
+          className="h-full bg-gradient-to-r from-amber-500 to-yellow-400 transition-all rounded-full"
           style={{ width: `${Math.min(100, ((gamification?.stats?.xpPoints || 0) % 100))}%` }}
         />
       </div>
     </div>
 
     {/* Streak count */}
-    <div className="flex items-center gap-2 p-2.5 bg-brand-bg/60 border border-brand-cyan/15 rounded-xl w-[95px] flex-shrink-0 shadow-inner">
-      <Flame className="w-4 h-4 text-brand-orange animate-pulse" />
+    <div className="flex items-center gap-2.5 p-2.5 bg-neutral-900/70 border border-orange-500/25 rounded-2xl w-[105px] flex-shrink-0 shadow-md">
+      <div className="w-7 h-7 rounded-xl bg-orange-500/20 border border-orange-500/30 flex items-center justify-center flex-shrink-0">
+        <Flame className="w-4 h-4 text-orange-400 animate-pulse" />
+      </div>
       <div className="flex flex-col">
-        <span className="text-[8px] uppercase font-bold text-neutral-500">Streak</span>
-        <span className="text-[10px] font-black text-white">{gamification?.stats?.dailyStreak || 0} Days</span>
+        <span className="text-[8px] uppercase font-bold text-neutral-400">Streak</span>
+        <span className="text-[11px] font-black text-orange-400">{gamification?.stats?.dailyStreak || 0} Days</span>
       </div>
     </div>
 
-    {/* Communities stats */}
-    <div className="flex items-center gap-2 p-2.5 bg-brand-bg/60 border border-brand-cyan/15 rounded-xl w-[95px] flex-shrink-0 shadow-inner">
-      <Sparkles className="w-4 h-4 text-brand-cyan animate-pulse" />
+    {/* Activity stats */}
+    <div className="flex items-center gap-2.5 p-2.5 bg-neutral-900/70 border border-brand-cyan/25 rounded-2xl w-[105px] flex-shrink-0 shadow-md">
+      <div className="w-7 h-7 rounded-xl bg-cyan-500/20 border border-brand-cyan/30 flex items-center justify-center flex-shrink-0">
+        <Sparkles className="w-4 h-4 text-brand-cyan animate-pulse" />
+      </div>
       <div className="flex flex-col">
-        <span className="text-[8px] uppercase font-bold text-neutral-550">Activity</span>
-        <span className="text-[10px] font-black text-white">{gamification?.badges?.length || 0} Badges</span>
+        <span className="text-[8px] uppercase font-bold text-neutral-400">Activity</span>
+        <span className="text-[11px] font-black text-brand-cyan">{gamification?.badges?.length || 0} Badges</span>
       </div>
     </div>
   </div>
@@ -737,12 +744,12 @@ type="button"
 onClick={() => {
 window.dispatchEvent(new CustomEvent('open-create-modal', { detail: { tab: 'story' } }));
 }}
-className="flex flex-col items-center gap-2 flex-shrink-0 cursor-pointer hover:scale-[1.02] active-shrink bg-transparent border-0 outline-none select-none"
+className="flex flex-col items-center gap-2 flex-shrink-0 cursor-pointer hover:scale-[1.04] active-shrink bg-transparent border-0 outline-none select-none group"
 >
-<div className="w-[66px] h-[66px] rounded-2xl bg-brand-bg/60 flex items-center justify-center border border-dashed border-brand-cyan/20 relative animate-in fade-in">
-<Plus className="w-5 h-5 text-neutral-450" />
+<div className="w-[66px] h-[66px] rounded-2xl bg-gradient-to-tr from-brand-orange/15 to-brand-cyan/15 flex items-center justify-center border-2 border-dashed border-brand-cyan/35 group-hover:border-brand-cyan relative animate-in fade-in transition-colors">
+<Plus className="w-6 h-6 text-brand-cyan group-hover:rotate-90 transition-transform duration-300" />
 </div>
-<span className="text-[10px] font-bold text-neutral-450">Add Story</span>
+<span className="text-[10px] font-bold text-neutral-300">Add Story</span>
 </button>
 
 {/* Stories List */}
@@ -874,9 +881,14 @@ className="bg-black/40 border border-brand-cyan/15 focus:border-brand-cyan/45 ro
 <button
 type="submit"
 disabled={isPosting || (!newPostContent.trim() && !newPostMedia.trim())}
-className="btn-primary-gradient text-black font-extrabold text-xs px-5 py-2.5 rounded-[12px] active-shrink hover-scale disabled:opacity-50 border-0 cursor-pointer shadow-md shadow-brand-cyan/10"
+className="btn-primary-gradient text-white font-black text-xs px-6 py-2.5 rounded-[14px] active-shrink hover-scale disabled:opacity-50 border-0 cursor-pointer shadow-lg shadow-brand-cyan/20 flex items-center gap-1.5"
 >
-{isPosting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : 'Publish Log'}
+{isPosting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : (
+  <>
+    <Sparkles className="w-3.5 h-3.5 text-white" />
+    <span>Publish Log</span>
+  </>
+)}
 </button>
 </div>
 </form>
@@ -1328,57 +1340,57 @@ return (
 
 {/* Trending Communities Widget */}
 <div className="bg-brand-card border border-brand-cyan/15 rounded-[24px] p-5 flex flex-col gap-4 text-white">
-<span className="font-bold text-xs uppercase text-neutral-500 tracking-wider flex items-center gap-1.5 font-outfit">
-<Users className="w-4 h-4 text-brand-orange" /> Trending Communities
+<span className="font-bold text-xs uppercase text-neutral-400 tracking-wider flex items-center gap-1.5 font-outfit">
+<Users className="w-4 h-4 text-brand-orange animate-pulse" /> Trending Communities
 </span>
 <div className="flex flex-col gap-3 text-xs">
-<div className="flex justify-between items-center">
-<div className="flex items-center gap-2">
-<span className="text-base">🌐</span>
+<div className="flex justify-between items-center p-2 rounded-xl bg-white/5 border border-white/5 hover:border-brand-cyan/30 transition-all">
+<div className="flex items-center gap-2.5">
+<div className="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center text-base">🌐</div>
 <div className="flex flex-col">
 <span className="font-bold text-white">NextJS Hackers</span>
-<span className="text-[9px] text-neutral-450">142 members</span>
+<span className="text-[9px] text-neutral-400">142 members</span>
 </div>
 </div>
-<button className="text-[9px] font-bold text-brand-cyan bg-brand-cyan/5 border border-brand-cyan/20 px-2.5 py-1 rounded-lg hover:bg-brand-cyan hover:text-black transition-colors cursor-pointer">Join</button>
+<button className="text-[9px] font-bold text-white bg-gradient-to-r from-brand-orange to-brand-cyan px-3 py-1 rounded-lg hover:opacity-90 transition-all cursor-pointer shadow-sm">Join</button>
 </div>
-<div className="flex justify-between items-center">
-<div className="flex items-center gap-2">
-<span className="text-base">🤖</span>
+<div className="flex justify-between items-center p-2 rounded-xl bg-white/5 border border-white/5 hover:border-brand-cyan/30 transition-all">
+<div className="flex items-center gap-2.5">
+<div className="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center text-base">🤖</div>
 <div className="flex flex-col">
 <span className="font-bold text-white">AI Innovators Circle</span>
-<span className="text-[9px] text-neutral-450 font-medium">96 members</span>
+<span className="text-[9px] text-neutral-400 font-medium">96 members</span>
 </div>
 </div>
-<button className="text-[9px] font-bold text-brand-cyan bg-brand-cyan/5 border border-brand-cyan/20 px-2.5 py-1 rounded-lg hover:bg-brand-cyan hover:text-black transition-colors cursor-pointer">Join</button>
+<button className="text-[9px] font-bold text-white bg-gradient-to-r from-brand-orange to-brand-cyan px-3 py-1 rounded-lg hover:opacity-90 transition-all cursor-pointer shadow-sm">Join</button>
 </div>
 </div>
 </div>
 
 {/* Upcoming Events & Hackathons Widget */}
 <div className="bg-brand-card border border-brand-cyan/15 rounded-[24px] p-5 flex flex-col gap-4 text-white">
-<span className="font-bold text-xs uppercase text-neutral-500 tracking-wider flex items-center gap-1.5 font-outfit">
-<Calendar className="w-4 h-4 text-brand-cyan" /> Upcoming Events
+<span className="font-bold text-xs uppercase text-neutral-400 tracking-wider flex items-center gap-1.5 font-outfit">
+<Calendar className="w-4 h-4 text-brand-cyan animate-pulse" /> Upcoming Events
 </span>
-<div className="flex flex-col gap-3.5 text-xs">
-<div className="flex gap-3 items-start">
-<div className="p-2 bg-brand-orange/10 rounded-lg flex flex-col items-center justify-center text-brand-orange font-bold font-outfit w-10">
-<span className="text-[10px] uppercase font-bold leading-none">Jul</span>
+<div className="flex flex-col gap-3 text-xs">
+<div className="flex gap-3 items-center p-2 rounded-xl bg-white/5 border border-white/5 hover:border-brand-orange/30 transition-all">
+<div className="p-2 bg-gradient-to-b from-brand-orange/20 to-purple-600/20 border border-brand-orange/30 rounded-xl flex flex-col items-center justify-center text-brand-orange font-bold font-outfit w-11 shadow-sm flex-shrink-0">
+<span className="text-[9px] uppercase font-bold leading-none">Jul</span>
 <span className="text-sm font-black leading-none mt-1">28</span>
 </div>
 <div className="flex flex-col">
 <span className="font-bold text-white">Campus Smart Hackathon</span>
-<span className="text-[10px] text-neutral-450 mt-0.5">24h innovation build sprint</span>
+<span className="text-[10px] text-neutral-400 mt-0.5">24h innovation build sprint</span>
 </div>
 </div>
-<div className="flex gap-3 items-start">
-<div className="p-2 bg-brand-cyan/10 rounded-lg flex flex-col items-center justify-center text-brand-cyan font-bold font-outfit w-10">
-<span className="text-[10px] uppercase font-bold leading-none">Aug</span>
+<div className="flex gap-3 items-center p-2 rounded-xl bg-white/5 border border-white/5 hover:border-brand-cyan/30 transition-all">
+<div className="p-2 bg-gradient-to-b from-brand-cyan/20 to-indigo-600/20 border border-brand-cyan/30 rounded-xl flex flex-col items-center justify-center text-brand-cyan font-bold font-outfit w-11 shadow-sm flex-shrink-0">
+<span className="text-[9px] uppercase font-bold leading-none">Aug</span>
 <span className="text-sm font-black leading-none mt-1">05</span>
 </div>
 <div className="flex flex-col">
 <span className="font-bold text-white">AI Pitch Fest 2026</span>
-<span className="text-[10px] text-neutral-450 mt-0.5">Incubator pitch day</span>
+<span className="text-[10px] text-neutral-400 mt-0.5">Incubator pitch day</span>
 </div>
 </div>
 </div>

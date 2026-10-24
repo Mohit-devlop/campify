@@ -483,17 +483,17 @@ function AuthPageContent() {
 
       {/* Global Top Navbar */}
       <header className="w-full px-6 py-5 md:px-12 md:py-6 flex justify-between items-center relative z-20">
-        <Link href="/" className="flex items-center gap-3 no-underline">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-orange to-red-500 flex items-center justify-center shadow-lg shadow-brand-orange/20">
+        <Link href="/" className="flex items-center gap-3 no-underline group">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-orange via-purple-600 to-brand-cyan flex items-center justify-center shadow-lg shadow-brand-orange/25 group-hover:scale-105 transition-transform">
             <GraduationCap className="w-6 h-6 text-white" />
           </div>
-          <span className="font-outfit font-extrabold text-2xl tracking-tight text-brand-text">
+          <span className="font-outfit font-extrabold text-2xl tracking-tight text-white">
             KILOGRAM<span className="text-brand-orange">.</span>
           </span>
         </Link>
         <div className="flex items-center gap-2">
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-neutral-400 bg-neutral-900/60 border border-neutral-800 px-3 py-1.5 rounded-full flex items-center gap-1.5">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-neutral-300 bg-neutral-900/80 border border-white/10 px-3.5 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm">
+            <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
             Verified College Security
           </span>
         </div>
@@ -501,7 +501,7 @@ function AuthPageContent() {
 
       {/* Main Container */}
       <div className="flex-1 flex items-center justify-center px-4 py-8 relative z-10">
-        <div className="w-full max-w-md bg-neutral-900/90 border border-neutral-800/80 rounded-3xl p-6 md:p-8 backdrop-blur-xl shadow-2xl relative overflow-hidden">
+        <div className="w-full max-w-md bg-[#0f1322]/90 border border-white/10 rounded-3xl p-6 md:p-8 backdrop-blur-2xl shadow-2xl shadow-black/90 relative overflow-hidden">
 
           {/* ======================================================== */}
           {/* TAB: SECURITY LOCKED NOTICE (SECTION 6 REQUIREMENT)       */}
@@ -665,7 +665,7 @@ function AuthPageContent() {
                 type="button"
                 onClick={() => handleSubmitOtp(otpValues.join(''))}
                 disabled={isLoading || otpValues.join('').length !== 6}
-                className="w-full py-4 rounded-xl bg-gradient-to-r from-brand-orange to-red-500 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-brand-orange/20 disabled:opacity-50 transition cursor-pointer"
+                className="w-full py-4 rounded-xl btn-primary-gradient text-white font-extrabold text-xs uppercase tracking-wider shadow-lg disabled:opacity-50 transition cursor-pointer"
               >
                 {isLoading ? (
                   <span className="flex items-center justify-center gap-2">
@@ -697,13 +697,13 @@ function AuthPageContent() {
             /* ======================================================== */
             <div>
               {/* Tab Selector */}
-              <div className="flex bg-neutral-800/70 p-1 rounded-2xl mb-6 border border-neutral-800">
+              <div className="flex bg-neutral-900/90 p-1 rounded-2xl mb-6 border border-white/10">
                 <button
                   type="button"
                   onClick={() => setActiveTab('login')}
                   className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition ${
                     activeTab === 'login'
-                      ? 'bg-neutral-900 text-white shadow-md'
+                      ? 'bg-gradient-to-r from-brand-orange to-purple-600 text-white shadow-md'
                       : 'text-neutral-400 hover:text-white'
                   }`}
                 >
@@ -714,7 +714,7 @@ function AuthPageContent() {
                   onClick={() => setActiveTab('register')}
                   className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition ${
                     activeTab === 'register'
-                      ? 'bg-neutral-900 text-white shadow-md'
+                      ? 'bg-gradient-to-r from-brand-orange to-purple-600 text-white shadow-md'
                       : 'text-neutral-400 hover:text-white'
                   }`}
                 >
@@ -879,7 +879,7 @@ function AuthPageContent() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full py-4 mt-2 rounded-xl bg-gradient-to-r from-brand-orange to-red-500 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-brand-orange/20 hover:opacity-95 transition cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="w-full py-4 mt-2 rounded-xl btn-primary-gradient text-white font-extrabold text-xs uppercase tracking-wider shadow-lg hover:opacity-95 transition cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   {isLoading ? (
                     <>

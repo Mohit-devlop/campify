@@ -55,7 +55,7 @@ export default function RootLayout({
   const showSidebar = isInitialized && !!user && !isAuthPage;
 
   return (
-    <html lang="en" className="light">
+    <html lang="en" className="dark">
       <head>
         <title>Campify : A Social Networking Platform for College Communities</title>
         <meta name="description" content="A state-of-the-art production-ready social media platform" />
@@ -65,7 +65,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="Campify" />
         <link rel="apple-touch-icon" href="/logo.svg" />
-        <meta name="theme-color" content="#1c6b4c" />
+        <meta name="theme-color" content="#07080e" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Inter:wght@300;400;500;600;700;800&family=Manrope:wght@200..800&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />

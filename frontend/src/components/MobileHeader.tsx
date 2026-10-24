@@ -70,15 +70,15 @@ export default function MobileHeader({
     <header className="fixed top-0 left-0 right-0 h-14 bg-brand-card/90 backdrop-blur-xl border-b border-brand-cyan/15 z-30 flex items-center justify-between px-3 sm:px-4 select-none shadow-sm">
       {/* Brand Logo & Name */}
       <Link href="/" className="flex items-center gap-2 no-underline group active-shrink">
-        <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-orange to-brand-cyan flex items-center justify-center shadow-md shadow-brand-orange/20 flex-shrink-0">
-          <Sparkles className="w-4.5 h-4.5 text-black animate-pulse" />
+        <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-orange via-purple-500 to-brand-cyan flex items-center justify-center shadow-md shadow-brand-orange/20 flex-shrink-0">
+          <Sparkles className="w-4.5 h-4.5 text-white animate-pulse" />
         </div>
         <div className="flex flex-col">
-          <span className="font-extrabold text-base tracking-wider bg-gradient-to-r from-brand-orange to-brand-cyan bg-clip-text text-transparent leading-none">
+          <span className="font-extrabold text-base tracking-wider bg-gradient-to-r from-brand-orange via-purple-400 to-brand-cyan bg-clip-text text-transparent leading-none font-outfit">
             CAMPIFY
           </span>
           <span className="text-[9px] font-semibold text-neutral-400 tracking-tight flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping inline-block" />
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping inline-block" />
             CAMPUS LIVE
           </span>
         </div>

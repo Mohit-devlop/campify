@@ -350,25 +350,21 @@ export default function LandingPage() {
         className="sticky top-0 z-50 w-full border-b border-brand-cyan/15 bg-brand-bg/85 backdrop-blur-md transition-colors duration-300"
       >
         <div className="max-w-[1200px] mx-auto px-6 h-16 flex items-center justify-between">
-          
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 no-underline">
+          <Link href="/" className="flex items-center gap-3 no-underline group">
             <motion.div 
               whileHover={{ rotate: 15, scale: 1.05 }}
-              className="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-orange to-brand-cyan flex items-center justify-center shadow-lg shadow-brand-orange/20 flex-shrink-0"
+              className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-orange via-purple-500 to-brand-cyan flex items-center justify-center shadow-lg shadow-brand-orange/25 flex-shrink-0"
             >
-              <Sparkles className="w-5 h-5 text-black animate-pulse" />
+              <Sparkles className="w-5 h-5 text-white animate-pulse" />
             </motion.div>
-            <span className="font-extrabold text-lg tracking-wider bg-gradient-to-r from-white via-brand-cyan to-brand-orange bg-clip-text text-transparent">
+            <span className="font-extrabold text-xl tracking-wider bg-gradient-to-r from-white via-cyan-200 to-brand-cyan bg-clip-text text-transparent font-outfit">
               CAMPIFY
             </span>
           </Link>
 
           {/* Links & CTA */}
           <div className="flex items-center gap-6">
-            
-
-
             {/* Login Link */}
             <Link 
               href="/auth?tab=login" 
@@ -381,7 +377,7 @@ export default function LandingPage() {
             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
               <Link 
                 href="/auth?tab=register" 
-                className="bg-brand-orange hover:bg-brand-orange/90 text-black font-extrabold text-xs px-4 py-2.5 rounded-xl transition-all no-underline block shadow-md border border-brand-orange/20"
+                className="btn-primary-gradient text-white font-black text-xs px-5 py-2.5 rounded-xl transition-all no-underline block shadow-md"
               >
                 Get Started
               </Link>
@@ -401,9 +397,9 @@ export default function LandingPage() {
         {/* Tagline Badge */}
         <motion.div 
           variants={itemVariants}
-          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-orange/10 dark:bg-brand-orange/5 border border-brand-orange/20 text-brand-orange text-[10px] font-black uppercase tracking-widest font-outfit"
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-brand-orange/15 to-brand-cyan/15 border border-brand-cyan/30 text-white text-[11px] font-black uppercase tracking-widest font-outfit shadow-sm"
         >
-          <Flame className="w-3.5 h-3.5 animate-pulse" /> Connect. Learn. Build.
+          <Flame className="w-3.5 h-3.5 text-brand-orange animate-pulse" /> Connect. Learn. Build.
         </motion.div>
 
         {/* Hero Title */}
@@ -412,7 +408,7 @@ export default function LandingPage() {
           className="text-4xl sm:text-5xl md:text-6xl font-black font-outfit tracking-tight leading-tight max-w-4xl text-white"
         >
           India&apos;s Premium Campus <br />
-          <span className="bg-gradient-to-r from-brand-orange via-yellow-500 to-brand-cyan bg-clip-text text-transparent gradient-text-animate">
+          <span className="bg-gradient-to-r from-brand-orange via-purple-400 to-brand-cyan bg-clip-text text-transparent gradient-text-animate">
             Social & Collaboration Hub
           </span>
         </motion.h1>
@@ -420,7 +416,7 @@ export default function LandingPage() {
         {/* Hero Description */}
         <motion.p 
           variants={itemVariants}
-          className="text-neutral-400 text-sm md:text-base leading-relaxed max-w-2xl"
+          className="text-neutral-400 text-sm md:text-base leading-relaxed max-w-2xl font-medium"
         >
           Campify is the ultimate sandbox for college students. Network with peers, recruit teammates for hackathons, share technical reels with quizzes, build portfolio projects, and climb the campus leaderboard.
         </motion.p>
@@ -433,16 +429,16 @@ export default function LandingPage() {
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Link 
               href="/auth?tab=register" 
-              className="btn-primary-gradient px-8 py-3.5 rounded-[16px] flex items-center gap-2 border-0 cursor-pointer shadow-lg no-underline"
+              className="btn-primary-gradient px-8 py-3.5 rounded-[16px] flex items-center gap-2 border-0 cursor-pointer shadow-lg no-underline text-white font-bold"
             >
-              Create Your Account <ArrowRight className="w-4 h-4 text-black" />
+              Create Your Account <ArrowRight className="w-4 h-4 text-white" />
             </Link>
           </motion.div>
           
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Link 
               href="/auth?tab=login" 
-              className="bg-brand-card hover:bg-brand-card/85 text-white border border-brand-cyan/20 font-bold text-sm px-8 py-3.5 rounded-[16px] transition-all shadow-sm shadow-brand-cyan/5 no-underline"
+              className="bg-brand-card hover:bg-brand-card/85 text-white border border-brand-cyan/30 font-bold text-sm px-8 py-3.5 rounded-[16px] transition-all shadow-md shadow-brand-cyan/5 no-underline flex items-center gap-2"
             >
               Sign In to Portal
             </Link>

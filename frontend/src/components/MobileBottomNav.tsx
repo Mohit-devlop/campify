@@ -65,8 +65,8 @@ export default function MobileBottomNav({ onCreateClick }: MobileBottomNavProps)
         aria-label="Create Post, Reel or Story"
         className="group relative -translate-y-4 flex flex-col items-center justify-center bg-transparent border-0 p-0 cursor-pointer active-shrink"
       >
-        <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-brand-orange via-emerald-500 to-brand-cyan p-0.5 shadow-lg shadow-brand-orange/30 group-hover:scale-105 transition-transform flex items-center justify-center border-3 border-brand-bg">
-          <div className="w-full h-full rounded-full bg-black/85 flex items-center justify-center group-hover:bg-black/70 transition-colors">
+        <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-brand-orange via-purple-500 to-brand-cyan p-0.5 shadow-lg shadow-brand-cyan/30 group-hover:scale-105 transition-transform flex items-center justify-center border-3 border-brand-bg">
+          <div className="w-full h-full rounded-full bg-black/90 flex items-center justify-center group-hover:bg-black/70 transition-colors">
             <Plus className="w-6 h-6 text-brand-cyan group-hover:rotate-90 transition-transform duration-300" />
           </div>
         </div>

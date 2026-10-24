@@ -57,8 +57,8 @@ export default function MobileDeviceFrame({ children }: MobileDeviceFrameProps) 
           onClick={() => toggleMobileMode(!isMobileMode)}
           className={`flex items-center gap-2 px-3 py-1.5 rounded-xl font-bold text-xs transition-all cursor-pointer border-0 ${
             isMobileMode
-              ? 'bg-gradient-to-r from-brand-orange to-brand-cyan text-black shadow-lg shadow-brand-orange/20'
-              : 'bg-brand-bg text-neutral-300 hover:text-white'
+              ? 'bg-gradient-to-r from-brand-orange via-purple-600 to-brand-cyan text-white font-black shadow-lg shadow-brand-cyan/25'
+              : 'bg-neutral-900/90 text-neutral-300 hover:text-white'
           }`}
         >
           <Smartphone className="w-4 h-4" />
