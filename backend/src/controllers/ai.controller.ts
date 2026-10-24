@@ -137,11 +137,101 @@ function getFallbackReelIdeas(category: string): string {
   return `1. **Exploring ${capitalizedCat}**\n*Hook:* "Everything you need to know about ${capitalizedCat}!"\n*Flow:* Beautiful transition showing 3 main key concepts of ${capitalizedCat}. Ends with an interactive question to comments.\n\n2. **Top Tips for ${capitalizedCat}**\n*Hook:* "Make your ${capitalizedCat} workflow 2x faster!"\n*Flow:* Hands-on demonstration of a quick lifehack or trick for ${capitalizedCat}. Ends with a call-to-action.\n\n3. **Why ${capitalizedCat} Matters in 2026**\n*Hook:* "This trend about ${capitalizedCat} is taking over."\n*Flow:* Dynamic graphs or slides showing the growth and impact of ${capitalizedCat} in student communities.`;
 }
 
+export const AI_XP_COST = 50;
+
+// Deduct 50 XP for every AI tool generation or block if insufficient
+async function checkAndDeductAiXp(userId: string): Promise<{ success: boolean; error?: string; remainingXp?: number; currentXp?: number }> {
+  let gamification = await prisma.userGamification.findUnique({
+    where: { userId },
+  });
+
+  if (!gamification) {
+    gamification = await prisma.userGamification.create({
+      data: {
+        userId,
+        xpPoints: 0,
+        level: 1,
+        dailyStreak: 1,
+      },
+    });
+  }
+
+  if (gamification.xpPoints < AI_XP_COST) {
+    return {
+      success: false,
+      error: `Insufficient XP! AI generation requires ${AI_XP_COST} XP points. You currently have ${gamification.xpPoints} XP. Solve quizzes in Learning Reels to earn more XP!`,
+      currentXp: gamification.xpPoints,
+    };
+  }
+
+  const updated = await prisma.userGamification.update({
+    where: { userId },
+    data: {
+      xpPoints: { decrement: AI_XP_COST },
+      lastActiveDate: new Date(),
+    },
+  });
+
+  const newLevel = Math.max(1, Math.floor(updated.xpPoints / 100) + 1);
+  if (newLevel !== updated.level) {
+    await prisma.userGamification.update({
+      where: { userId },
+      data: { level: newLevel },
+    });
+  }
+
+  return {
+    success: true,
+    remainingXp: updated.xpPoints,
+    currentXp: updated.xpPoints,
+  };
+}
+
+export async function getAiStatus(req: Request, res: Response) {
+  try {
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const gamification = await prisma.userGamification.findUnique({
+      where: { userId },
+    });
+
+    const currentXp = gamification?.xpPoints || 0;
+    return res.status(200).json({
+      costPerUse: AI_XP_COST,
+      currentXp,
+      canUse: currentXp >= AI_XP_COST,
+      generationsRemaining: Math.floor(currentXp / AI_XP_COST),
+    });
+  } catch (error) {
+    console.error('Get AI status error:', error);
+    return res.status(500).json({ error: 'Failed to fetch AI status' });
+  }
+}
+
 export async function generateCaption(req: Request, res: Response) {
   try {
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
     const { topic, tone } = req.body; // e.g. topic: "launching a tech project", tone: "witty"
     if (!topic) {
       return res.status(400).json({ error: 'Topic description is required' });
+    }
+
+    // Verify and deduct 50 XP
+    const xpResult = await checkAndDeductAiXp(userId);
+    if (!xpResult.success) {
+      return res.status(403).json({
+        error: xpResult.error,
+        insufficientXp: true,
+        requiredXp: AI_XP_COST,
+        currentXp: xpResult.currentXp,
+      });
     }
 
     const prompt = `Write a social media post caption about: "${topic}". Tone: ${tone || 'professional and engaging'}. Keep it concise, engaging, and under 150 words. Do not include hashtags.`;
@@ -149,7 +239,11 @@ export async function generateCaption(req: Request, res: Response) {
     const fallbackText = getFallbackCaption(topic, tone);
     
     const caption = await queryGemini(prompt, fallbackText);
-    return res.status(200).json({ caption });
+    return res.status(200).json({
+      caption,
+      xpDeducted: AI_XP_COST,
+      remainingXp: xpResult.remainingXp,
+    });
   } catch (error) {
     console.error('AI Caption generator error:', error);
     return res.status(500).json({ error: 'Failed to generate caption' });
@@ -158,9 +252,25 @@ export async function generateCaption(req: Request, res: Response) {
 
 export async function generateHashtags(req: Request, res: Response) {
   try {
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
     const { content } = req.body;
     if (!content) {
       return res.status(400).json({ error: 'Post content description is required to generate hashtags' });
+    }
+
+    // Verify and deduct 50 XP
+    const xpResult = await checkAndDeductAiXp(userId);
+    if (!xpResult.success) {
+      return res.status(403).json({
+        error: xpResult.error,
+        insufficientXp: true,
+        requiredXp: AI_XP_COST,
+        currentXp: xpResult.currentXp,
+      });
     }
 
     const prompt = `Generate 10 trending, high-engagement hashtags for a social post with the content: "${content}". Output only the hashtags separated by spaces, no other text.`;
@@ -168,7 +278,11 @@ export async function generateHashtags(req: Request, res: Response) {
     const fallbackText = getFallbackHashtags(content);
 
     const hashtags = await queryGemini(prompt, fallbackText);
-    return res.status(200).json({ hashtags: hashtags.split(/\s+/) });
+    return res.status(200).json({
+      hashtags: hashtags.split(/\s+/),
+      xpDeducted: AI_XP_COST,
+      remainingXp: xpResult.remainingXp,
+    });
   } catch (error) {
     console.error('AI Hashtag generator error:', error);
     return res.status(500).json({ error: 'Failed to generate hashtags' });
@@ -177,13 +291,34 @@ export async function generateHashtags(req: Request, res: Response) {
 
 export async function getReelIdeas(req: Request, res: Response) {
   try {
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
     const { category } = req.body; // e.g. Programming, AI, Design
+
+    // Verify and deduct 50 XP
+    const xpResult = await checkAndDeductAiXp(userId);
+    if (!xpResult.success) {
+      return res.status(403).json({
+        error: xpResult.error,
+        insufficientXp: true,
+        requiredXp: AI_XP_COST,
+        currentXp: xpResult.currentXp,
+      });
+    }
+
     const prompt = `Generate 3 creative vertical Reel ideas for creators in the category: "${category || 'General Tech'}". For each idea, provide a Catchy Title, Hook, and a short 2-sentence description of the visual flow.`;
 
     const fallbackText = getFallbackReelIdeas(category);
 
     const ideas = await queryGemini(prompt, fallbackText);
-    return res.status(200).json({ ideas });
+    return res.status(200).json({
+      ideas,
+      xpDeducted: AI_XP_COST,
+      remainingXp: xpResult.remainingXp,
+    });
   } catch (error) {
     console.error('AI Reels ideas generator error:', error);
     return res.status(500).json({ error: 'Failed to generate ideas' });

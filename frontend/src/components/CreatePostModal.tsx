@@ -35,6 +35,29 @@ export default function CreatePostModal({ isOpen, onClose, defaultTab }: CreateP
   const [isUploading, setIsUploading] = useState(false);
   const [isCloseFriends, setIsCloseFriends] = useState(false);
   const [error, setError] = useState('');
+  const [isAiGenerating, setIsAiGenerating] = useState(false);
+
+  const handleGenerateAiCaption = async () => {
+    setIsAiGenerating(true);
+    setError('');
+    try {
+      const topic = content.trim() || 'Exciting college campus update and student creativity';
+      const res = await apiFetch('/ai/caption', {
+        method: 'POST',
+        body: JSON.stringify({ topic, tone: 'Inspiring' })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || 'Failed to generate AI caption (Requires 50 XP)');
+        return;
+      }
+      setContent(data.caption);
+    } catch (err: any) {
+      setError('Network error while requesting AI caption');
+    } finally {
+      setIsAiGenerating(false);
+    }
+  };
 
   // Song selection states
   const [selectedSong, setSelectedSong] = useState<Track | null>(null);
@@ -263,12 +286,27 @@ export default function CreatePostModal({ isOpen, onClose, defaultTab }: CreateP
 
           {/* Content Inputs (Only for Post and Reel) */}
           {activeTab !== 'story' && (
-            <textarea
-              placeholder={activeTab === 'post' ? "Write your post caption..." : "Write your reel caption..."}
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              className="w-full min-h-[90px] outline-none border-0 bg-transparent text-sm resize-none focus:ring-0 placeholder:text-neutral-400"
-            />
+            <div className="flex flex-col gap-1.5">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] uppercase font-bold text-neutral-400">Caption</span>
+                <button
+                  type="button"
+                  onClick={handleGenerateAiCaption}
+                  disabled={isAiGenerating}
+                  className="text-[10px] font-bold text-brand-cyan hover:text-white flex items-center gap-1 bg-brand-cyan/10 hover:bg-brand-cyan/20 px-2.5 py-1 rounded-lg border border-brand-cyan/25 cursor-pointer active-shrink transition-all"
+                  title="Generate caption using AI (Costs 50 XP)"
+                >
+                  <Sparkles className="w-3 h-3 text-brand-cyan animate-pulse" />
+                  <span>{isAiGenerating ? 'Generating (-50 XP)...' : 'AI Caption (50 XP)'}</span>
+                </button>
+              </div>
+              <textarea
+                placeholder={activeTab === 'post' ? "Write your post caption..." : "Write your reel caption..."}
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                className="w-full min-h-[90px] outline-none border border-brand-cyan/15 rounded-xl p-3 bg-brand-bg/40 text-sm resize-none focus:ring-1 focus:ring-brand-cyan/40 placeholder:text-neutral-400 text-white"
+              />
+            </div>
           )}
 
           {/* File Upload Selector */}

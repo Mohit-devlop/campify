@@ -153,6 +153,7 @@ router.post('/admin/reports/:reportId/action', authenticate, authorize(['ADMIN',
 router.post('/ai/caption', authenticate, aiCtrl.generateCaption);
 router.post('/ai/hashtags', authenticate, aiCtrl.generateHashtags);
 router.post('/ai/reels-ideas', authenticate, aiCtrl.getReelIdeas);
+router.get('/ai/status', authenticate, aiCtrl.getAiStatus);
 router.post('/ai/predict-engagement', authenticate, aiCtrl.predictEngagement);
 router.get('/ai/best-time', authenticate, aiCtrl.getBestPostingTime);
 router.post('/ai/team-match', authenticate, aiCtrl.matchTeamMembers);

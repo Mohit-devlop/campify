@@ -60,31 +60,27 @@ export async function submitQuizAnswer(req: Request, res: Response) {
     }
 
     const isCorrect = answer.toUpperCase() === correctAnswer.toUpperCase();
-    const quizPoints = isCorrect ? 25 : 5; // 25 XP for correct, 5 XP for attempt
+    const QUIZ_CORRECT_XP = 25;
+    const QUIZ_WRONG_PENALTY_XP = 15;
 
-    // Retrieve existing attempt to prevent infinite XP farming
-    const existingAttempt = await prisma.quizAttempt.findUnique({
-      where: {
-        userId_reelId: { userId, reelId },
-      },
+    // Fetch existing gamification record
+    let gamification = await prisma.userGamification.findUnique({
+      where: { userId },
     });
+    const currentXp = gamification?.xpPoints || 0;
 
-    let xpToAward = quizPoints;
-    let completedIncrement = 1;
+    let xpChange = 0;
+    let actualDeducted = 0;
+    let finalXp = currentXp;
 
-    if (existingAttempt) {
-      completedIncrement = 0; // Already counted towards completed reels count
-      if (existingAttempt.answeredCorrectly) {
-        // If they already got it correct in the past, they shouldn't get more points
-        xpToAward = 0;
-      } else if (isCorrect) {
-        // If they previously got it wrong (received 5 XP) and now got it correct (25 XP)
-        // Award the difference
-        xpToAward = 20;
-      } else {
-        // Previously incorrect and still incorrect, no new points
-        xpToAward = 0;
-      }
+    if (isCorrect) {
+      xpChange = QUIZ_CORRECT_XP;
+      finalXp = currentXp + QUIZ_CORRECT_XP;
+    } else {
+      // Wrong answer penalty: minus 15 XP (prevent dropping below 0)
+      finalXp = Math.max(0, currentXp - QUIZ_WRONG_PENALTY_XP);
+      actualDeducted = currentXp - finalXp;
+      xpChange = -actualDeducted;
     }
 
     // Save attempt
@@ -96,11 +92,11 @@ export async function submitQuizAnswer(req: Request, res: Response) {
         userId,
         reelId,
         answeredCorrectly: isCorrect,
-        score: quizPoints,
+        score: isCorrect ? QUIZ_CORRECT_XP : -actualDeducted,
       },
       update: {
         answeredCorrectly: isCorrect,
-        score: quizPoints,
+        score: isCorrect ? QUIZ_CORRECT_XP : -actualDeducted,
       },
     });
 
@@ -112,7 +108,7 @@ export async function submitQuizAnswer(req: Request, res: Response) {
     }
 
     // Update Category Progress
-    if (xpToAward > 0 || completedIncrement > 0) {
+    if (isCorrect) {
       await prisma.learningProgress.upsert({
         where: {
           userId_category: { userId, category: targetCategory },
@@ -120,40 +116,48 @@ export async function submitQuizAnswer(req: Request, res: Response) {
         create: {
           userId,
           category: targetCategory,
-          score: xpToAward,
-          completedReelsCount: completedIncrement,
+          score: QUIZ_CORRECT_XP,
+          completedReelsCount: 1,
         },
         update: {
-          score: { increment: xpToAward },
-          completedReelsCount: { increment: completedIncrement },
+          score: { increment: QUIZ_CORRECT_XP },
+          completedReelsCount: { increment: 1 },
         },
       });
+    } else if (actualDeducted > 0) {
+      const prog = await prisma.learningProgress.findUnique({
+        where: { userId_category: { userId, category: targetCategory } },
+      });
+      if (prog) {
+        await prisma.learningProgress.update({
+          where: { userId_category: { userId, category: targetCategory } },
+          data: {
+            score: Math.max(0, prog.score - actualDeducted),
+          },
+        });
+      }
     }
 
-    // Update Gamification XP
-    const gamification = await prisma.userGamification.upsert({
+    // Update Gamification XP & Level
+    const newLevel = Math.max(1, Math.floor(finalXp / 100) + 1);
+    gamification = await prisma.userGamification.upsert({
       where: { userId },
       create: {
         userId,
-        xpPoints: xpToAward,
-        level: 1,
+        xpPoints: finalXp,
+        level: newLevel,
         dailyStreak: 1,
         lastActiveDate: new Date(),
       },
       update: {
-        xpPoints: { increment: xpToAward },
+        xpPoints: finalXp,
+        level: newLevel,
         lastActiveDate: new Date(),
       },
     });
 
-    // Auto level-up checking (100 XP per level)
-    const newLevel = Math.floor(gamification.xpPoints / 100) + 1;
-    if (newLevel > gamification.level) {
-      await prisma.userGamification.update({
-        where: { userId },
-        data: { level: newLevel },
-      });
-      // Award Level Badge
+    // Check for level badge if leveled up
+    if (newLevel > (gamification?.level || 1)) {
       await prisma.skillBadge.create({
         data: {
           userId,
@@ -169,9 +173,15 @@ export async function submitQuizAnswer(req: Request, res: Response) {
       correct: isCorrect,
       correctAnswer,
       explanation,
-      xpAwarded: quizPoints,
+      xpAwarded: isCorrect ? QUIZ_CORRECT_XP : -actualDeducted,
+      penalty: isCorrect ? 0 : actualDeducted,
       newTotalXp: gamification.xpPoints,
       currentLevel: newLevel,
+      message: isCorrect
+        ? `Correct Answer! +${QUIZ_CORRECT_XP} XP earned!`
+        : actualDeducted > 0
+        ? `Wrong Answer! -${actualDeducted} XP deducted.`
+        : `Wrong Answer! 0 XP deducted (XP balance cannot go below 0).`,
     });
   } catch (error) {
     console.error('Submit quiz answer error:', error);

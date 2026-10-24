@@ -307,25 +307,57 @@ export default function LearningReelsPage() {
                         })}
                       </div>
 
-                      {/* Explanation details and score status */}
+                      {/* Explanation details, score status and XP plus/minus indicator */}
                       <AnimatePresence>
                         {quizResult && (
                           <motion.div
                             initial={{ opacity: 0, y: 5 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="p-4 bg-neutral-900/60 border border-white/5 rounded-xl flex flex-col gap-2 mt-2"
+                            className={`p-4 rounded-xl flex flex-col gap-2 mt-2 border ${
+                              quizResult.correct
+                                ? 'bg-emerald-950/40 border-emerald-500/30'
+                                : 'bg-red-950/40 border-red-500/30'
+                            }`}
                           >
-                            <div className="flex items-center gap-2 text-xs">
+                            <div className="flex items-center justify-between text-xs">
                               {quizResult.correct ? (
-                                <span className="font-bold text-green-400 flex items-center gap-1"><CheckCircle2 className="w-4 h-4" /> Correct Answer!</span>
+                                <span className="font-bold text-emerald-400 flex items-center gap-1.5">
+                                  <CheckCircle2 className="w-4 h-4 text-emerald-400" /> Correct Answer!
+                                </span>
                               ) : (
-                                <span className="font-bold text-red-400">Incorrect Answer</span>
+                                <span className="font-bold text-red-400 flex items-center gap-1.5">
+                                  <X className="w-4 h-4 text-red-400" /> Wrong Answer!
+                                </span>
                               )}
-                              <span className="text-[10px] text-cyan-400 font-bold ml-auto">+{quizResult.xpAwarded} XP awarded</span>
+                              <span
+                                className={`text-xs font-black font-mono px-2 py-0.5 rounded-lg ${
+                                  quizResult.correct
+                                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                                    : 'bg-red-500/20 text-red-300 border border-red-500/30'
+                                }`}
+                              >
+                                {quizResult.xpAwarded > 0 ? `+${quizResult.xpAwarded} XP` : `${quizResult.xpAwarded} XP`}
+                              </span>
                             </div>
-                            {quizDetails.explanation && (
-                              <p className="text-[10px] text-neutral-400 leading-normal mt-0.5">{quizDetails.explanation}</p>
+
+                            {quizResult.message && (
+                              <p className={`text-[11px] font-semibold ${quizResult.correct ? 'text-emerald-300/90' : 'text-red-300/90'}`}>
+                                {quizResult.message}
+                              </p>
                             )}
+
+                            {quizDetails.explanation && (
+                              <p className="text-[10px] text-neutral-300 leading-normal mt-0.5 border-t border-white/5 pt-1.5">
+                                <span className="font-bold text-neutral-400">Explanation: </span>
+                                {quizDetails.explanation}
+                              </p>
+                            )}
+
+                            {/* Revenue Model hint */}
+                            <div className="mt-1 pt-1.5 border-t border-white/10 flex items-center justify-between text-[9px] text-neutral-400">
+                              <span>Total Balance: <strong className="text-white">{quizResult.newTotalXp ?? '...'} XP</strong></span>
+                              <span className="text-cyan-400">AI Tool Cost: 50 XP</span>
+                            </div>
                           </motion.div>
                         )}
                       </AnimatePresence>

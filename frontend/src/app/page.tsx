@@ -13,7 +13,7 @@ Heart, MessageCircle, Bookmark, Send, Sparkles, MapPin,
 ChevronLeft, ChevronRight, Loader2, PlayCircle, Plus, X, Award,
 Copy, Check, BarChart2, Hash, Flame, UserCheck, Image, Compass, Brain, Repeat,
 MoreHorizontal, Archive, Trash, Music, Volume2, VolumeX, Pause, Play, Download,
-Calendar, Users, UserPlus
+Calendar, Users, UserPlus, BookOpen
 } from 'lucide-react';
 
 export default function HomeFeed() {
@@ -249,11 +249,13 @@ const [gamification, setGamification] = useState<any>(null);
 // Active team requests
 const [activeTeams, setActiveTeams] = useState<any[]>([]);
 
-// AI assistant state
+// AI assistant state & XP Revenue Model
 const [isAiDrawerOpen, setIsAiDrawerOpen] = useState(false);
 const [aiTopic, setAiTopic] = useState('');
 const [aiTone, setAiTone] = useState('Professional');
 const [aiOutput, setAiOutput] = useState('');
+const [aiError, setAiError] = useState<string | null>(null);
+const [aiXpDeducted, setAiXpDeducted] = useState<number | null>(null);
 const [isAiLoading, setIsAiLoading] = useState(false);
 const [aiTool, setAiTool] = useState<'caption' | 'hashtags' | 'reels'>('caption');
 
@@ -550,45 +552,74 @@ setCopiedLink(true);
 setTimeout(() => setCopiedLink(false), 2000);
 };
 
-// AI Assistant Call
+// AI Assistant Call with 50 XP Token Deduction Revenue Model
 const handleAiCall = async () => {
-if (!aiTopic.trim()) return;
-setIsAiLoading(true);
-setAiOutput('');
+  if (!aiTopic.trim()) return;
+  setIsAiLoading(true);
+  setAiOutput('');
+  setAiError(null);
+  setAiXpDeducted(null);
 
-try {
-const endpoint = aiTool === 'caption'
-? '/ai/caption'
-: aiTool === 'hashtags'
-? '/ai/hashtags'
-: '/ai/reels-ideas';
+  try {
+    const endpoint = aiTool === 'caption'
+      ? '/ai/caption'
+      : aiTool === 'hashtags'
+      ? '/ai/hashtags'
+      : '/ai/reels-ideas';
 
-const payload = aiTool === 'hashtags'
-? { content: aiTopic }
-: aiTool === 'caption'
-? { topic: aiTopic, tone: aiTone }
-: { category: aiTopic };
+    const payload = aiTool === 'hashtags'
+      ? { content: aiTopic }
+      : aiTool === 'caption'
+      ? { topic: aiTopic, tone: aiTone }
+      : { category: aiTopic };
 
-const res = await apiFetch(endpoint, {
-method: 'POST',
-body: JSON.stringify(payload),
-});
+    const res = await apiFetch(endpoint, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
 
-if (res.ok) {
-const data = await res.json();
-if (aiTool === 'caption') {
-setAiOutput(data.caption);
-} else if (aiTool === 'hashtags') {
-setAiOutput(data.hashtags.join(' '));
-} else {
-setAiOutput(data.ideas);
-}
-}
-} catch (err) {
-console.error(err);
-} finally {
-setIsAiLoading(false);
-}
+    const data = await res.json();
+
+    if (!res.ok) {
+      if (res.status === 403 || data.insufficientXp) {
+        setAiError(data.error || 'Insufficient XP! You need 50 XP points to use AI tools. Earn more XP by answering quizzes in Learning Reels!');
+      } else {
+        setAiError(data.error || 'Failed to generate AI content');
+      }
+      return;
+    }
+
+    if (aiTool === 'caption') {
+      setAiOutput(data.caption);
+    } else if (aiTool === 'hashtags') {
+      setAiOutput(Array.isArray(data.hashtags) ? data.hashtags.join(' ') : data.hashtags);
+    } else {
+      setAiOutput(data.ideas);
+    }
+
+    if (data.xpDeducted) {
+      setAiXpDeducted(data.xpDeducted);
+      // Immediately deduct XP from top dashboard widget in real-time
+      setGamification((prev: any) => {
+        if (!prev) return prev;
+        const current = prev.stats?.xpPoints ?? 0;
+        const updatedXp = data.remainingXp !== undefined ? data.remainingXp : Math.max(0, current - data.xpDeducted);
+        return {
+          ...prev,
+          stats: {
+            ...prev.stats,
+            xpPoints: updatedXp,
+            level: Math.max(1, Math.floor(updatedXp / 100) + 1),
+          },
+        };
+      });
+    }
+  } catch (err: any) {
+    console.error('AI Call error:', err);
+    setAiError('Network error while connecting to AI generator');
+  } finally {
+    setIsAiLoading(false);
+  }
 };
 
 if (!isInitialized) {
@@ -1727,30 +1758,116 @@ className="w-full mt-2 bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-6
 )}
 </AnimatePresence>
 
-{/* Floating AI Social Assistant Slide-out Drawer */}
+{/* Floating AI Social Assistant Slide-out Drawer with 50 XP Revenue Model */}
 <AnimatePresence>
 {isAiDrawerOpen && (
-<div className="fixed inset-y-0 right-0 w-80 bg-neutral-900 border-l border-white/10 z-40 p-6 flex flex-col gap-5 shadow-2xl glass text-white select-none">
+<div className="fixed inset-y-0 right-0 w-84 bg-neutral-900 border-l border-white/10 z-40 p-5 flex flex-col gap-4 shadow-2xl glass text-white select-none overflow-y-auto no-scrollbar">
 
 {/* Header */}
-<div className="flex justify-between items-center">
+<div className="flex justify-between items-center pb-2 border-b border-white/10">
 <span className="font-extrabold text-sm text-cyan-400 flex items-center gap-1.5 font-outfit">
-<Brain className="w-5 h-5" /> AI Social Assistant
+<Brain className="w-5 h-5 text-cyan-400 animate-pulse" /> AI Social Assistant
 </span>
 <button
-onClick={() => setIsAiDrawerOpen(false)}
+onClick={() => { setIsAiDrawerOpen(false); setAiError(null); setAiXpDeducted(null); }}
 className="p-1 rounded-lg text-neutral-400 hover:text-white bg-transparent border-0 cursor-pointer"
 >
 <X className="w-5 h-5" />
 </button>
 </div>
 
+{/* XP Revenue Model & Token Balance Card */}
+{(() => {
+  const userXp = gamification?.stats?.xpPoints ?? 0;
+  const hasEnoughXp = userXp >= 50;
+  const usesRemaining = Math.floor(userXp / 50);
+
+  return (
+    <div className={`p-3 rounded-2xl border flex flex-col gap-2 ${
+      hasEnoughXp 
+        ? 'bg-neutral-950/80 border-cyan-500/30 shadow-inner' 
+        : 'bg-amber-950/30 border-amber-500/40'
+    }`}>
+      <div className="flex items-center justify-between text-[11px]">
+        <span className="text-neutral-400 font-medium flex items-center gap-1">
+          <Award className="w-3.5 h-3.5 text-brand-orange" />
+          Cost per Use:
+        </span>
+        <span className="font-black text-brand-cyan bg-cyan-500/10 px-2 py-0.5 rounded-md border border-cyan-500/20">
+          50 XP
+        </span>
+      </div>
+
+      <div className="flex items-center justify-between text-xs pt-1 border-t border-white/5">
+        <span className="text-neutral-300 font-bold">Your Balance:</span>
+        <span className={`font-black font-mono text-sm ${hasEnoughXp ? 'text-emerald-400' : 'text-amber-400'}`}>
+          {userXp} XP
+        </span>
+      </div>
+
+      {hasEnoughXp ? (
+        <span className="text-[10px] text-emerald-400 font-semibold flex items-center gap-1">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse inline-block" />
+          {usesRemaining} AI generation{usesRemaining > 1 ? 's' : ''} available
+        </span>
+      ) : (
+        <div className="flex flex-col gap-2 mt-1">
+          <span className="text-[10px] text-amber-300 leading-snug">
+            ⚠️ You need at least <strong>50 XP</strong> to use AI. Earn XP by watching reels & solving quizzes!
+          </span>
+          <Link
+            href="/learning"
+            onClick={() => setIsAiDrawerOpen(false)}
+            className="w-full py-1.5 bg-gradient-to-r from-brand-orange to-brand-cyan text-black font-bold text-center text-[10px] rounded-xl no-underline active-shrink flex items-center justify-center gap-1 shadow-md"
+          >
+            <BookOpen className="w-3.5 h-3.5" />
+            Earn XP in Learning Reels (+25 XP)
+          </Link>
+        </div>
+      )}
+    </div>
+  );
+})()}
+
+{/* XP Deducted Notification Banner */}
+{aiXpDeducted && (
+  <motion.div
+    initial={{ opacity: 0, scale: 0.95 }}
+    animate={{ opacity: 1, scale: 1 }}
+    className="p-2.5 rounded-xl bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 text-[11px] font-bold flex items-center justify-between"
+  >
+    <span>✨ Content Generated!</span>
+    <span className="font-mono bg-cyan-500/20 px-2 py-0.5 rounded text-white">-50 XP</span>
+  </motion.div>
+)}
+
+{/* Insufficient XP / General Error Banner */}
+{aiError && (
+  <motion.div
+    initial={{ opacity: 0, y: -5 }}
+    animate={{ opacity: 1, y: 0 }}
+    className="p-3 rounded-xl bg-red-950/60 border border-red-500/40 text-red-200 text-xs flex flex-col gap-2"
+  >
+    <div className="flex items-start gap-1.5">
+      <X className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
+      <span className="leading-snug">{aiError}</span>
+    </div>
+    <Link
+      href="/learning"
+      onClick={() => setIsAiDrawerOpen(false)}
+      className="self-start text-[10px] text-cyan-400 font-bold underline flex items-center gap-1 hover:text-cyan-300"
+    >
+      <BookOpen className="w-3 h-3" /> Go to Learning Reels now
+    </Link>
+  </motion.div>
+)}
+
 {/* Tool Selector */}
 <div className="flex gap-2 bg-neutral-950 p-1 rounded-xl">
 {(['caption', 'hashtags', 'reels'] as const).map((tool) => (
 <button
 key={tool}
-onClick={() => { setAiTool(tool); setAiOutput(''); }}
+onClick={() => { setAiTool(tool); setAiOutput(''); setAiError(null); setAiXpDeducted(null); }}
 className={`flex-1 py-1.5 text-[9px] font-bold uppercase rounded-lg border-0 cursor-pointer transition-colors ${
 aiTool === tool ? 'bg-cyan-500 text-black' : 'bg-transparent text-neutral-400 hover:text-white'
 }`}
@@ -1772,7 +1889,7 @@ aiTool === tool ? 'bg-cyan-500 text-black' : 'bg-transparent text-neutral-400 ho
 </label>
 <textarea
 placeholder={aiTool === 'caption'
-? 'e.g. launching campify platforms'
+? 'e.g. launching campify platform'
 : aiTool === 'hashtags'
 ? 'Code, collaborate, scale...'
 : 'Programming'}
@@ -1802,9 +1919,19 @@ className="bg-neutral-800 border border-transparent rounded-xl px-3 py-2 text-xs
 <button
 onClick={handleAiCall}
 disabled={isAiLoading || !aiTopic.trim()}
-className="w-full py-2 bg-cyan-500 hover:bg-cyan-600 text-black font-bold text-xs rounded-xl border-0 cursor-pointer active-shrink disabled:opacity-40"
+className="w-full py-2.5 bg-gradient-to-r from-brand-orange to-brand-cyan hover:opacity-90 text-black font-extrabold text-xs rounded-xl border-0 cursor-pointer active-shrink disabled:opacity-40 flex items-center justify-center gap-2 shadow-lg shadow-brand-orange/20"
 >
-{isAiLoading ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : 'Generate Content'}
+{isAiLoading ? (
+  <>
+    <Loader2 className="w-4 h-4 animate-spin" />
+    <span>Generating (-50 XP)...</span>
+  </>
+) : (
+  <>
+    <Sparkles className="w-4 h-4 text-black" />
+    <span>Generate Content (Costs 50 XP)</span>
+  </>
+)}
 </button>
 </div>
 

@@ -819,6 +819,16 @@ kilogram (Campify Root)/
 - 💻 Desktop Phone Simulator (ટોગલ): ડેસ્કટોપ/લેપટોપ પર પણ રિયલ iPhone 16 Pro / Android ફ્રેમમાં Dynamic Island અને સ્ટેટસ બાર સાથે એપ ચલાવી શકાય છે.
 - 🤖 Capacitor Native Android Integration: `frontend/android` ફોલ્ડર તૈયાર છે. Android Studio માં 1-ક્લિકથી સીધી `app-debug.apk` જનરેટ કરી શકાય છે અને ફોનમાં ઇન્સ્ટોલ કરી શકાય છે. વધુ વિગતો માટે [ANDROID_APK_GUIDE.md](file:///c:/Users/sadhu/.gemini/antigravity/scratch/kilogram/ANDROID_APK_GUIDE.md) જુઓ.
 
+[XP ઇકોનોમી અને રેવેન્યુ મોડેલ (XP Token Burn & Revenue Engine)]:
+Campify માં વિદ્યાર્થીઓના એન્ગેજમેન્ટ અને AI કન્ટેન્ટ જનરેશન વચ્ચે એક સંપૂર્ણ સંતુલિત ઇકોનોમી મોડેલ લાગુ કરવામાં આવ્યું છે:
+1. 💡 **Learning Reels Quiz Rewards & Penalties**:
+   - સાચો જવાબ આપવા પર: **+25 XP** મળે છે.
+   - ખોટો જવાબ આપવા પર: **-15 XP** પેનલ્ટી કટ થાય છે (XP 0 થી નીચે નથી જતું).
+2. 🤖 **AI Assistant Usage Token Cost (50 XP per prompt)**:
+   - AI Caption, Trending Hashtags, અને Reels Ideas બનાવવા માટે દર વખતે **50 XP points** ખર્ચ થાય છે.
+   - જો યુઝર પાસે 50 XP થી ઓછા પોઇન્ટ્સ હોય, તો સિસ્ટમ બ્લોક કરે છે અને વિદ્યાર્થીને વધુ ક્વિઝ સોલ્વ કરી XP કમાવવા પ્રોમ્પ્ટ કરે છે.
+   - આ મોડેલ દ્વારા વિદ્યાર્થીઓ ભણવા માટે પ્રોત્સાહિત થાય છે અને કન્ટેન્ટ ક્રિએશન માટે ગેમિફાઇડ કરન્સી વાપરે છે.
+
 [નિષ્કર્ષ (Conclusion)]:
 Campify એ માત્ર એક સામાન્ય પ્રોજેક્ટ નથી, પરંતુ કોલેજ કેમ્પસ માટે એક પૂર્ણ-કક્ષાનું (Enterprise-Grade)
 ડિજિટલ ઇકોસિસ્ટમ છે. તેમાં સોશિયલ નેટવર્કિંગ, કરિયર બિલ્ડિંગ, લર્નિંગ ગેમિફિકેશન, આર્ટિફિશિયલ ઇન્ટેલિજન્સ
