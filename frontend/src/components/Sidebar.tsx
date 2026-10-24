@@ -258,50 +258,6 @@ className="p-1.5 hover:bg-white/5 text-neutral-400 hover:text-red-500 rounded-lg
 </div>
 </div>
 </motion.aside>
-
-{/* Mobile Bottom Navigation */}
-<nav className="md:hidden fixed bottom-0 left-0 w-full h-16 border-t border-brand-cyan/15 bg-brand-card/80 backdrop-blur-xl flex items-center justify-around px-4 z-30 shadow-lg">
-{menuItems
-.filter((item) => ['Dashboard', 'Feed', 'Create', 'Messages', 'Profile'].includes(item.name))
-.map((item, index) => {
-const Icon = item.icon;
-const isActive = item.href ? pathname === item.href : false;
-const isCreate = item.name === 'Create';
-
-const content = isCreate ? (
-<div className="p-3 rounded-full bg-gradient-to-tr from-brand-orange to-brand-cyan text-black shadow-lg hover-scale active-shrink -translate-y-4 border-4 border-brand-bg relative flex items-center justify-center">
-<Icon className="w-5.5 h-5.5 text-black" />
-</div>
-) : (
-<div
-className={`p-2.5 rounded-xl transition-all active-shrink relative ${
-isActive ? 'text-brand-cyan scale-110' : 'text-neutral-400 hover:text-brand-orange'
-}`}
->
-<Icon className="w-5.5 h-5.5" />
-{item.name === 'Notifications' && unreadCount > 0 && (
-<span className="absolute top-1 right-1 bg-brand-orange text-black text-[8px] font-black w-3.5 h-3.5 rounded-full flex items-center justify-center shadow-md animate-pulse">
-{unreadCount}
-</span>
-)}
-</div>
-);
-
-if (item.href) {
-return (
-<Link key={index} href={item.href}>
-{content}
-</Link>
-);
-}
-
-return (
-<button key={index} onClick={item.onClick} className="bg-transparent border-0 p-0 cursor-pointer">
-{content}
-</button>
-);
-})}
-</nav>
 </>
 );
 }

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Campify</string>
+    <string name="title_activity_main">Campify</string>
+    <string name="package_name">com.campify.app</string>
+    <string name="custom_url_scheme">com.campify.app</string>
+</resources>
