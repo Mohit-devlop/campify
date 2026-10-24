@@ -8,19 +8,21 @@ import { useSocketStore } from '../store/socketStore';
 import { apiFetch } from '../lib/api';
 import { 
   Sparkles, Search, Heart, MessageCircle, Menu, 
-  PlusSquare, Bell, Flame
+  PlusSquare, Bell, Flame, Share2
 } from 'lucide-react';
 
 interface MobileHeaderProps {
   onSearchClick: () => void;
   onMenuClick: () => void;
   onCreateClick: () => void;
+  onShareClick: () => void;
 }
 
 export default function MobileHeader({
   onSearchClick,
   onMenuClick,
-  onCreateClick
+  onCreateClick,
+  onShareClick
 }: MobileHeaderProps) {
   const pathname = usePathname();
   const { user } = useAuthStore();
@@ -115,6 +117,16 @@ export default function MobileHeader({
         >
           <MessageCircle className={`w-5 h-5 ${pathname === '/messages' ? 'text-brand-cyan fill-brand-cyan/20' : ''}`} />
         </Link>
+
+        {/* Share App Button */}
+        <button
+          onClick={onShareClick}
+          aria-label="Share Web App"
+          title="Share Campify Web App"
+          className="p-2 rounded-xl text-neutral-400 hover:text-brand-orange hover:bg-white/5 active-shrink transition-colors bg-transparent border-0 cursor-pointer flex items-center justify-center"
+        >
+          <Share2 className="w-5 h-5" />
+        </button>
 
         {/* Drawer Hamburger Menu */}
         <button

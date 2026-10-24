@@ -11,6 +11,7 @@ import MobileBottomNav from '../components/MobileBottomNav';
 import MobileDeviceFrame from '../components/MobileDeviceFrame';
 import SearchDrawer from '../components/SearchDrawer';
 import CreatePostModal from '../components/CreatePostModal';
+import ShareAppModal from '../components/ShareAppModal';
 import PwaInstallButton from '../components/PwaInstallButton';
 import './globals.css';
 
@@ -23,6 +24,7 @@ export default function RootLayout({
   const { user, isInitialized } = useAuthStore();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [isShareOpen, setIsShareOpen] = useState(false);
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
   const [createTab, setCreateTab] = useState<'post' | 'reel' | 'story'>('post');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -37,9 +39,13 @@ export default function RootLayout({
       }
       setIsCreateOpen(true);
     };
+    const handleOpenShareModal = () => setIsShareOpen(true);
+
     window.addEventListener('open-create-modal', handleOpenCreateModal);
+    window.addEventListener('open-share-modal', handleOpenShareModal);
     return () => {
       window.removeEventListener('open-create-modal', handleOpenCreateModal);
+      window.removeEventListener('open-share-modal', handleOpenShareModal);
     };
   }, []);
 
@@ -73,6 +79,7 @@ export default function RootLayout({
                   onSearchClick={() => setIsSearchOpen(true)}
                   onMenuClick={() => setIsMobileDrawerOpen(true)}
                   onCreateClick={() => setIsCreateOpen(true)}
+                  onShareClick={() => setIsShareOpen(true)}
                 />
               )}
 
@@ -81,6 +88,7 @@ export default function RootLayout({
                 <MobileDrawer
                   isOpen={isMobileDrawerOpen}
                   onClose={() => setIsMobileDrawerOpen(false)}
+                  onShareClick={() => setIsShareOpen(true)}
                 />
               )}
 
@@ -91,6 +99,7 @@ export default function RootLayout({
                   onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
                   onSearchClick={() => setIsSearchOpen(!isSearchOpen)}
                   onCreateClick={() => setIsCreateOpen(true)}
+                  onShareClick={() => setIsShareOpen(true)}
                 />
               )}
 
@@ -106,6 +115,9 @@ export default function RootLayout({
 
               {/* Global Create Post Modal */}
               <CreatePostModal isOpen={isCreateOpen} onClose={() => setIsCreateOpen(false)} defaultTab={createTab} />
+
+              {/* Global Share Web App Modal */}
+              <ShareAppModal isOpen={isShareOpen} onClose={() => setIsShareOpen(false)} />
 
               {/* Main Workspace Frame */}
               <main

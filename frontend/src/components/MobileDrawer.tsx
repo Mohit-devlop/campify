@@ -7,15 +7,16 @@ import { useAuthStore } from '../store/authStore';
 import {
   X, Home, Compass, Film, BookOpen, Users, UserPlus,
   Calendar, Trophy, MessageCircle, Heart, Settings,
-  ShieldAlert, LogOut, ChevronRight, Sparkles, Award
+  ShieldAlert, LogOut, ChevronRight, Sparkles, Award, Share2
 } from 'lucide-react';
 
 interface MobileDrawerProps {
   isOpen: boolean;
   onClose: () => void;
+  onShareClick?: () => void;
 }
 
-export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
+export default function MobileDrawer({ isOpen, onClose, onShareClick }: MobileDrawerProps) {
   const pathname = usePathname();
   const { user, logout } = useAuthStore();
 
@@ -180,11 +181,23 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
               )}
             </div>
 
-            {/* Footer Sign Out & Version */}
+            {/* Footer Actions: Share, Sign Out & Version */}
             <div className="p-3 border-t border-brand-cyan/15 bg-brand-bg/40 flex flex-col gap-2">
               <button
+                onClick={() => {
+                  onClose();
+                  if (onShareClick) onShareClick();
+                  else window.dispatchEvent(new CustomEvent('open-share-modal'));
+                }}
+                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-brand-cyan/15 hover:bg-brand-cyan/25 text-brand-cyan font-bold text-xs border border-brand-cyan/30 transition-all cursor-pointer active-shrink"
+              >
+                <Share2 className="w-4 h-4" />
+                Share Campify App with Friends
+              </button>
+
+              <button
                 onClick={handleLogout}
-                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-500 font-semibold text-xs border border-red-500/20 transition-all cursor-pointer active-shrink"
+                className="w-full flex items-center justify-center gap-2 py-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-500 font-semibold text-xs border border-red-500/20 transition-all cursor-pointer active-shrink"
               >
                 <LogOut className="w-4 h-4" />
                 Sign Out from Campify

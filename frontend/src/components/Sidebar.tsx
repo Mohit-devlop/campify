@@ -11,7 +11,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
 Home, Search, Compass, Film, MessageCircle, Heart, PlusSquare, User,
 ShieldAlert, LogOut, Sparkles, ChevronLeft, ChevronRight,
-Users, Trophy, BookOpen, UserPlus, Settings, Calendar
+Users, Trophy, BookOpen, UserPlus, Settings, Calendar, Share2
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -19,13 +19,15 @@ isCollapsed: boolean;
 onToggleCollapse: () => void;
 onSearchClick: () => void;
 onCreateClick: () => void;
+onShareClick?: () => void;
 }
 
 export default function Sidebar({
 isCollapsed,
 onToggleCollapse,
 onSearchClick,
-onCreateClick
+onCreateClick,
+onShareClick
 }: SidebarProps) {
 const pathname = usePathname();
 const { user, logout } = useAuthStore();
@@ -87,6 +89,7 @@ const menuItems = [
 { name: 'Messages', href: '/messages', icon: MessageCircle },
 { name: 'Notifications', href: '/notifications', icon: Heart },
 { name: 'Create', onClick: onCreateClick, icon: PlusSquare },
+{ name: 'Share App', onClick: onShareClick ? onShareClick : () => window.dispatchEvent(new CustomEvent('open-share-modal')), icon: Share2 },
 { name: 'Profile', href: `/${user.username}`, icon: User },
 { name: 'Settings', href: '/settings', icon: Settings },
 ];
