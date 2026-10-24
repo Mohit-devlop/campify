@@ -228,6 +228,69 @@ function AuthPageContent() {
     }
   };
 
+  // Direct Student Sign In (Password + Face Match Verification)
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim() || !password.trim()) {
+      setError('Please enter your email or username and password');
+      return;
+    }
+
+    setIsLoading(true);
+    setError('');
+    setSuccessMsg('');
+    setStrikeWarning(null);
+
+    try {
+      const res = await apiFetch('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({
+          identifier: email.trim(),
+          password,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.status === 403 && data.securityLocked) {
+        setActiveTab('locked');
+        return;
+      }
+
+      if (!res.ok) {
+        setError(data.error || 'Invalid username/email or password');
+        return;
+      }
+
+      // Step 1: User has enrolled face -> Open Face Verification Camera!
+      if (data.requiresFaceVerification) {
+        setEmail(data.email || email);
+        setUserIdForBiometrics(data.userId);
+        setSuccessMsg('Password verified! Look at the camera to match your face with your signup profile.');
+        setActiveTab('face-verify');
+        return;
+      }
+
+      // Step 2: User doesn't have face enrolled yet -> Require face enrollment!
+      if (data.requiresFaceEnrollment) {
+        setEmail(data.email || email);
+        setUserIdForBiometrics(data.userId);
+        setIsConsentModalOpen(true);
+        return;
+      }
+
+      // Direct authentication (admin or completed)
+      setSuccessMsg('Authentication successful! Connecting dashboard...');
+      setAuth(data.user, data.accessToken, data.refreshToken);
+      router.push('/');
+    } catch (err) {
+      console.error(err);
+      setError('Network error during login. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleSubmitOtp = async (otpCode: string) => {
     setIsLoading(true);
     setError('');
@@ -302,8 +365,9 @@ function AuthPageContent() {
 
       const data = await res.json();
       if (res.ok) {
-        setSuccessMsg('Facial biometric enrolled successfully! Please sign in with your credentials.');
+        setSuccessMsg('Facial biometric enrolled and saved successfully! Please sign in with your credentials and face match.');
         setActiveTab('login');
+        setPassword('');
       } else {
         setError(data.error || 'Failed to complete facial biometric enrollment.');
       }
@@ -340,13 +404,13 @@ function AuthPageContent() {
       }
 
       if (res.ok) {
-        setSuccessMsg('Identity verified successfully! Connecting dashboard...');
+        setSuccessMsg('Face matched with your enrolled signup profile! Access Granted.');
         setAuth(data.user, data.accessToken, data.refreshToken);
         router.push('/');
       } else {
-        const warning = data.strikeCount
-          ? `Facial verification mismatch. Security Strike ${data.strikeCount}/3 recorded.`
-          : data.error || 'Verification failed. Please try again.';
+        const warning = data.error || (data.strikeCount
+          ? `Face mismatch! Scanned face does not match your enrolled face from signup. Strike ${data.strikeCount}/3 recorded.`
+          : 'Verification failed. Please try again.');
         setError(warning);
         setStrikeWarning(warning);
       }
@@ -525,8 +589,13 @@ function AuthPageContent() {
               <FaceCaptureCamera
                 mode="VERIFY"
                 onCaptureComplete={handleFaceVerifyCapture}
-                onCancel={() => setActiveTab('login')}
+                onCancel={() => {
+                  setActiveTab('login');
+                  setError('');
+                  setStrikeWarning(null);
+                }}
                 isLoading={isLoading}
+                errorMessage={error}
               />
             </motion.div>
           ) : activeTab === 'otp' ? (
@@ -655,7 +724,7 @@ function AuthPageContent() {
                 </div>
               )}
 
-              <form onSubmit={handleSendOtp} className="space-y-4">
+              <form onSubmit={activeTab === 'login' ? handleLogin : handleSendOtp} className="space-y-4">
                 {/* 1. College Enrollment ID (Required for registration) */}
                 {activeTab === 'register' && (
                   <div className="flex flex-col gap-1.5">
@@ -707,17 +776,17 @@ function AuthPageContent() {
                   </div>
                 )}
 
-                {/* Email Address */}
+                {/* Email Address / Username */}
                 <div className="flex flex-col gap-1.5">
                   <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider px-1">
-                    Institutional Email Address
+                    {activeTab === 'login' ? 'Institutional Email or Username' : 'Institutional Email Address'}
                   </label>
                   <div className="relative">
                     <Mail className="w-4.5 h-4.5 text-neutral-500 absolute left-4 top-3.5" />
                     <input
-                      type="email"
+                      type={activeTab === 'login' ? 'text' : 'email'}
                       required
-                      placeholder="student@college.edu"
+                      placeholder={activeTab === 'login' ? 'student@college.edu or handle' : 'student@college.edu'}
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className="w-full bg-neutral-800/60 border border-neutral-700 focus:border-brand-orange rounded-xl pl-11 pr-4 py-3 text-sm outline-none text-white transition"
@@ -805,14 +874,32 @@ function AuthPageContent() {
                   {isLoading ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      Sending Security Passcode...
+                      {activeTab === 'login' ? 'Authenticating Credentials...' : 'Sending Security Passcode...'}
                     </>
                   ) : activeTab === 'login' ? (
-                    'Continue with 2FA & Face Check'
+                    <>
+                      <ShieldCheck className="w-4 h-4" />
+                      Sign In with Face Verification
+                    </>
                   ) : (
-                    'Verify Enrollment & Continue'
+                    <>
+                      <GraduationCap className="w-4 h-4" />
+                      Verify Enrollment & Continue
+                    </>
                   )}
                 </button>
+
+                {activeTab === 'login' && (
+                  <div className="text-center pt-2">
+                    <button
+                      type="button"
+                      onClick={() => handleSendOtp()}
+                      className="text-[11px] text-neutral-400 hover:text-brand-orange transition underline underline-offset-4 cursor-pointer"
+                    >
+                      Prefer Email OTP? Click here to sign in with 6-digit code
+                    </button>
+                  </div>
+                )}
               </form>
             </div>
           )}

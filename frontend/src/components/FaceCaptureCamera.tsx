@@ -9,6 +9,7 @@ interface FaceCaptureCameraProps {
   onCaptureComplete: (data: FaceBiometricData) => void;
   onCancel?: () => void;
   isLoading?: boolean;
+  errorMessage?: string | null;
 }
 
 export default function FaceCaptureCamera({
@@ -16,6 +17,7 @@ export default function FaceCaptureCamera({
   onCaptureComplete,
   onCancel,
   isLoading = false,
+  errorMessage = null,
 }: FaceCaptureCameraProps) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -188,32 +190,53 @@ export default function FaceCaptureCamera({
                 }`}
               />
               <span className="font-medium text-neutral-200">
-                {mode === 'ENROLL' ? 'Face Enrollment' : 'Identity Verification'}
+                {mode === 'ENROLL' ? 'Signup Face Enrollment' : 'Login Face Verification'}
               </span>
             </div>
           </>
         )}
       </div>
 
-      {/* Guidance Message */}
-      <div className="mt-4 text-center px-4">
-        <p className="text-xs font-medium text-neutral-300">{qualityFeedback}</p>
+      {/* Guidance Message or Error Banner */}
+      <div className="mt-4 text-center px-4 w-full max-w-[340px]">
+        {errorMessage ? (
+          <div className="bg-red-500/15 border border-red-500/30 text-red-300 text-xs p-2.5 rounded-xl flex items-center justify-center gap-2">
+            <AlertTriangle className="w-4 h-4 text-red-400 shrink-0" />
+            <span className="font-medium">{errorMessage}</span>
+          </div>
+        ) : (
+          <p className="text-xs font-medium text-neutral-300">
+            {mode === 'ENROLL'
+              ? 'Keep steady inside the oval to save your face template.'
+              : qualityFeedback || 'Align face to match your enrolled signup profile.'}
+          </p>
+        )}
       </div>
 
       {/* Action Buttons */}
-      <div className="mt-6 flex gap-3 w-full max-w-[340px]">
+      <div className="mt-5 flex gap-3 w-full max-w-[340px]">
         {onCancel && (
           <button
             type="button"
             onClick={onCancel}
             disabled={isLoading || isScanning}
-            className="flex-1 py-3 px-4 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-neutral-300 text-xs font-semibold transition"
+            className="py-3 px-4 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-neutral-300 text-xs font-semibold transition"
           >
             Cancel
           </button>
         )}
 
-        {capturedData ? (
+        {capturedData && errorMessage ? (
+          <button
+            type="button"
+            onClick={handleRetake}
+            disabled={isLoading}
+            className="flex-1 py-3 px-4 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold flex items-center justify-center gap-2 shadow-lg shadow-amber-600/20 transition cursor-pointer"
+          >
+            <RefreshCw className="w-4 h-4" />
+            Try Scan Again
+          </button>
+        ) : capturedData ? (
           <button
             type="button"
             onClick={handleRetake}
@@ -233,12 +256,17 @@ export default function FaceCaptureCamera({
             {isLoading || isScanning ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                Processing Vector...
+                {mode === 'ENROLL' ? 'Saving Biometric...' : 'Verifying Face Match...'}
+              </>
+            ) : mode === 'ENROLL' ? (
+              <>
+                <Camera className="w-4 h-4" />
+                Save Face Template
               </>
             ) : (
               <>
-                <Camera className="w-4 h-4" />
-                Capture & Verify
+                <ShieldCheck className="w-4 h-4" />
+                Scan & Verify Face
               </>
             )}
           </button>

@@ -133,8 +133,10 @@ export async function verifyLoginFace(req: Request, res: Response) {
     }
 
     const lowercaseEmail = email.toLowerCase().trim();
-    const user = await prisma.user.findUnique({
-      where: { email: lowercaseEmail },
+    const user = await prisma.user.findFirst({
+      where: {
+        OR: [{ email: lowercaseEmail }, { username: lowercaseEmail }],
+      },
       include: {
         faceEnrollment: true,
         profile: true,
@@ -217,7 +219,7 @@ export async function verifyLoginFace(req: Request, res: Response) {
       }
 
       return res.status(401).json({
-        error: `Facial identity verification failed. Strike ${securityResult.strikeCount}/${SECURITY_POLICY.MAX_STRIKES} recorded.`,
+        error: `Face verification failed: Scanned face does NOT match the enrolled face registered during sign up! Security Strike ${securityResult.strikeCount}/${SECURITY_POLICY.MAX_STRIKES} recorded.`,
         strikeCount: securityResult.strikeCount,
         securityStatus: securityResult.securityStatus,
         distance: matchResult.distance,

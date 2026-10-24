@@ -247,6 +247,18 @@ export async function login(req: Request, res: Response) {
         message: 'Account credentials verified. Facial biometric verification required to complete login.',
         requiresFaceVerification: true,
         email: user.email,
+        username: user.username,
+        userId: user.id,
+      });
+    }
+
+    // If face biometric is not yet enrolled, require enrollment to secure account (mandatory for students)
+    if (user.role !== 'ADMIN') {
+      return res.status(200).json({
+        message: 'Account credentials verified. Facial biometric enrollment required to secure your account.',
+        requiresFaceEnrollment: true,
+        email: user.email,
+        username: user.username,
         userId: user.id,
       });
     }
