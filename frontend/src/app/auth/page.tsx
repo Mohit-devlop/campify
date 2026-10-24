@@ -63,9 +63,13 @@ function AuthPageContent() {
 
   // Request native OS notification permissions on page load
   useEffect(() => {
-    if (typeof window !== 'undefined' && 'Notification' in window) {
-      if (Notification.permission === 'default') {
+    if (typeof window !== 'undefined') {
+      if ('Notification' in window && Notification.permission === 'default') {
         Notification.requestPermission();
+      }
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('reason') === 'security_mismatch') {
+        setError('Security Alert: Live face mismatch detected during active session. Your session was automatically terminated to protect your private account.');
       }
     }
   }, []);
@@ -365,9 +369,15 @@ function AuthPageContent() {
 
       const data = await res.json();
       if (res.ok) {
-        setSuccessMsg('Facial biometric enrolled and saved successfully! Please sign in with your credentials and face match.');
-        setActiveTab('login');
-        setPassword('');
+        if (data.accessToken && data.user) {
+          setSuccessMsg('Face biometric registered and verified successfully! Connecting dashboard...');
+          setAuth(data.user, data.accessToken, data.refreshToken);
+          router.push('/');
+        } else {
+          setSuccessMsg('Facial biometric enrolled and saved successfully! Please sign in with your credentials and face match.');
+          setActiveTab('login');
+          setPassword('');
+        }
       } else {
         setError(data.error || 'Failed to complete facial biometric enrollment.');
       }

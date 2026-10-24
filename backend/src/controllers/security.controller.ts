@@ -110,10 +110,43 @@ export async function enrollFace(req: Request, res: Response) {
       },
     });
 
+    // Fetch full user with profile for immediate authentication
+    const userWithProfile = await prisma.user.findUnique({
+      where: { id: userId },
+      include: { profile: true },
+    });
+
+    const authUser: AuthUser = {
+      id: user.id,
+      email: user.email,
+      username: user.username,
+      role: user.role,
+      securityStatus: user.securityStatus,
+      tokenVersion: user.tokenVersion,
+      enrollmentId: user.enrollmentId,
+    };
+
+    const accessToken = generateAccessToken(authUser);
+    const refreshToken = generateRefreshToken(authUser);
+
     return res.status(200).json({
       success: true,
       message: 'Facial biometric template enrolled successfully',
       enrolledAt: enrollment.enrolledAt,
+      accessToken,
+      refreshToken,
+      user: {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        name: user.name,
+        role: user.role,
+        verified: user.verified,
+        securityStatus: user.securityStatus,
+        strikeCount: user.strikeCount,
+        enrollmentId: user.enrollmentId,
+        profile: userWithProfile?.profile,
+      },
     });
   } catch (err) {
     console.error('Face enrollment error:', err);
@@ -351,22 +384,23 @@ export async function continuousVerify(req: Request, res: Response) {
     }
 
     // Case C: Mismatch detected
-    // Check if grace period is still active (e.g. consecutive failures < 3)
-    if (consecutiveFailures < SECURITY_POLICY.CONTINUOUS_GRACE_RETRIES) {
+    // Allow 1 fast grace retry before confirmed termination (consecutiveFailures >= 1 triggers termination)
+    if (consecutiveFailures < 1) {
       return res.status(200).json({
         status: 'GRACE_RETRY',
-        consecutiveFailures: consecutiveFailures + 1,
-        message: `Verification anomaly detected. Retrying within grace period (${consecutiveFailures + 1}/${SECURITY_POLICY.CONTINUOUS_GRACE_RETRIES}).`,
+        consecutiveFailures: 1,
+        message: 'Face mismatch detected. Re-verifying identity confirmation.',
         strikeCount: user.strikeCount,
+        distance: matchResult.distance,
       });
     }
 
-    // Grace period exhausted with repeated confirmed mismatch: Count a Strike
+    // Repeated mismatch confirmed: Count a Strike and Terminate Session!
     const securityResult = await processSecurityEvent({
       userId: user.id,
       isQualifyingFailure: true,
       eventType: 'CONTINUOUS_CHECK_MISMATCH',
-      reason: `Continuous camera verification mismatch confirmed after ${SECURITY_POLICY.CONTINUOUS_GRACE_RETRIES} grace retries.`,
+      reason: `Continuous facial verification confirmed identity mismatch (Distance: ${matchResult.distance.toFixed(3)}). Unauthorized user/friend detected.`,
       incidentId,
       ipAddress: req.ip,
       userAgent: req.headers['user-agent'],
@@ -385,7 +419,7 @@ export async function continuousVerify(req: Request, res: Response) {
 
     return res.status(401).json({
       action: 'TERMINATE_SESSION',
-      message: `Continuous verification failed. Strike ${securityResult.strikeCount}/${SECURITY_POLICY.MAX_STRIKES} recorded. Current session terminated for security.`,
+      error: `Security Violation: Face mismatch confirmed. Unregistered person detected! Strike ${securityResult.strikeCount}/${SECURITY_POLICY.MAX_STRIKES} recorded. Current session terminated for security.`,
       strikeCount: securityResult.strikeCount,
       securityStatus: securityResult.securityStatus,
     });
