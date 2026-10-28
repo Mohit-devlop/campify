@@ -4,7 +4,6 @@ import jwt from 'jsonwebtoken';
 import { prisma } from '../prisma/client';
 import { sendOtpEmail, sendResetPasswordEmail } from '../services/email.service';
 import { AuthUser } from '../types';
-import { validateEnrollmentId } from '../services/security.service';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-key-change-in-production';
 const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'super-refresh-secret-key-change-in-production';
@@ -23,31 +22,24 @@ function generateOtp(): string {
 
 export async function register(req: Request, res: Response) {
   try {
-    const { email, username, password, name, enrollmentId } = req.body;
+    const { email, username, password, name } = req.body;
 
-    if (!email || !username || !password || !enrollmentId) {
-      return res.status(400).json({ error: 'Email, username, password, and College Enrollment ID are required' });
+    if (!email || !username || !password) {
+      return res.status(400).json({ error: 'Email, username, and password are required' });
     }
 
     const lowercaseEmail = email.toLowerCase().trim();
     const cleanUsername = username.toLowerCase().trim();
-    const cleanEnrollment = enrollmentId.trim().toUpperCase();
-
-    // 1. Authoritative Enrollment ID validation
-    const enrollmentCheck = await validateEnrollmentId(cleanEnrollment, lowercaseEmail);
-    if (!enrollmentCheck.valid) {
-      return res.status(400).json({ error: enrollmentCheck.reason });
-    }
 
     // Check if user already exists
     const existingUser = await prisma.user.findFirst({
       where: {
-        OR: [{ email: lowercaseEmail }, { username: cleanUsername }, { enrollmentId: cleanEnrollment }],
+        OR: [{ email: lowercaseEmail }, { username: cleanUsername }],
       },
     });
 
     if (existingUser) {
-      return res.status(409).json({ error: 'Username, email, or enrollment ID already in use' });
+      return res.status(409).json({ error: 'Username or email already in use' });
     }
 
     // Hash password
@@ -63,14 +55,13 @@ export async function register(req: Request, res: Response) {
       data: {
         email: lowercaseEmail,
         username: cleanUsername,
-        enrollmentId: cleanEnrollment,
         passwordHash,
-        name: name || enrollmentCheck.student?.studentName || null,
+        name: name || null,
         otp,
         otpExpires,
         profile: {
           create: {
-            bio: `Hello! I'm ${name || enrollmentCheck.student?.studentName || cleanUsername} on Kilogram.`,
+            bio: `Hello! I'm ${name || cleanUsername} on Campify.`,
           },
         },
       },
@@ -220,14 +211,6 @@ export async function login(req: Request, res: Response) {
       return res.status(403).json({ error: 'Access denied: This account has been banned by administrators' });
     }
 
-    if (user.securityStatus === 'SECURITY_LOCKED') {
-      return res.status(403).json({
-        error: 'ACCOUNT_SECURITY_LOCKED',
-        message: 'Your account has been temporarily locked after repeated security verification failures. Contact your college KILOGRAM administrator for identity review. Your account data has not been deleted.',
-        securityLocked: true,
-      });
-    }
-
     if (!user.emailVerified) {
       return res.status(403).json({ error: 'Account not verified. Please verify your email first.', verified: false });
     }
@@ -237,40 +220,11 @@ export async function login(req: Request, res: Response) {
       return res.status(401).json({ error: 'Invalid username/email or password' });
     }
 
-    // Check if facial biometric is enrolled for this account
-    const faceEnrollment = await prisma.faceEnrollment.findUnique({
-      where: { userId: user.id },
-    });
-
-    if (faceEnrollment) {
-      return res.status(200).json({
-        message: 'Account credentials verified. Facial biometric verification required to complete login.',
-        requiresFaceVerification: true,
-        email: user.email,
-        username: user.username,
-        userId: user.id,
-      });
-    }
-
-    // If face biometric is not yet enrolled, require enrollment to secure account (mandatory for students)
-    if (user.role !== 'ADMIN') {
-      return res.status(200).json({
-        message: 'Account credentials verified. Facial biometric enrollment required to secure your account.',
-        requiresFaceEnrollment: true,
-        email: user.email,
-        username: user.username,
-        userId: user.id,
-      });
-    }
-
     const authUser: AuthUser = {
       id: user.id,
       email: user.email,
       username: user.username,
       role: user.role,
-      securityStatus: user.securityStatus,
-      tokenVersion: user.tokenVersion,
-      enrollmentId: user.enrollmentId,
     };
 
     const accessToken = generateAccessToken(authUser);
@@ -287,9 +241,6 @@ export async function login(req: Request, res: Response) {
         name: user.name,
         role: user.role,
         verified: user.verified,
-        securityStatus: user.securityStatus,
-        strikeCount: user.strikeCount,
-        enrollmentId: user.enrollmentId,
         profile: user.profile,
       },
     });
@@ -540,7 +491,7 @@ export async function changePassword(req: Request, res: Response) {
 
 export async function sendOtp(req: Request, res: Response) {
   try {
-    const { email, password, username, name, flow, enrollmentId } = req.body;
+    const { email, password, username, name, flow } = req.body;
 
     if (!email) {
       return res.status(400).json({ error: 'Email is required' });
@@ -557,17 +508,6 @@ export async function sendOtp(req: Request, res: Response) {
     const activeFlow = flow || 'login';
 
     if (activeFlow === 'register') {
-      if (!enrollmentId) {
-        return res.status(400).json({ error: 'Valid College Enrollment ID is required for registration' });
-      }
-      const cleanEnrollment = enrollmentId.trim().toUpperCase();
-
-      // Authoritative verification against college student registry
-      const enrollmentValidation = await validateEnrollmentId(cleanEnrollment, lowercaseEmail);
-      if (!enrollmentValidation.valid) {
-        return res.status(400).json({ error: enrollmentValidation.reason });
-      }
-
       if (!username) {
         return res.status(400).json({ error: 'Username is required for registration' });
       }
@@ -583,16 +523,16 @@ export async function sendOtp(req: Request, res: Response) {
         return res.status(400).json({ error: 'Password must be at least 6 characters long' });
       }
 
-      // Check if username/email/enrollmentId is already in use
+      // Check if username/email is already in use
       const existingUser = await prisma.user.findFirst({
         where: {
-          OR: [{ email: lowercaseEmail }, { username: cleanUsername }, { enrollmentId: cleanEnrollment }],
+          OR: [{ email: lowercaseEmail }, { username: cleanUsername }],
         },
       });
 
       if (existingUser) {
         if (existingUser.emailVerified) {
-          return res.status(409).json({ error: 'Username, email, or enrollment ID already registered' });
+          return res.status(409).json({ error: 'Username or email already in use' });
         } else {
           // Clean up the unverified user registration to avoid duplicate key conflicts
           await prisma.user.delete({
@@ -601,21 +541,20 @@ export async function sendOtp(req: Request, res: Response) {
         }
       }
 
-      // Create unverified user profile with password hash and enrollmentId
+      // Create unverified user profile with password hash
       const salt = await bcrypt.genSalt(10);
       const passwordHash = await bcrypt.hash(password, salt);
       await prisma.user.create({
         data: {
           email: lowercaseEmail,
           username: cleanUsername,
-          enrollmentId: cleanEnrollment,
           passwordHash,
-          name: name || enrollmentValidation.student?.studentName || cleanUsername,
+          name: name || cleanUsername,
           emailVerified: false,
           verified: false,
           profile: {
             create: {
-              bio: `Hello! I'm ${name || enrollmentValidation.student?.studentName || cleanUsername} on Kilogram.`,
+              bio: `Hello! I'm ${name || cleanUsername} on Campify.`,
             },
           },
         },
@@ -626,22 +565,12 @@ export async function sendOtp(req: Request, res: Response) {
         return res.status(400).json({ error: 'Password is required' });
       }
 
-      const existingUser = await prisma.user.findFirst({
-        where: {
-          OR: [{ email: lowercaseEmail }, { username: lowercaseEmail }],
-        },
+      const existingUser = await prisma.user.findUnique({
+        where: { email: lowercaseEmail },
       });
 
       if (!existingUser) {
         return res.status(401).json({ error: 'Invalid email or password' });
-      }
-
-      if (existingUser.securityStatus === 'SECURITY_LOCKED') {
-        return res.status(403).json({
-          error: 'ACCOUNT_SECURITY_LOCKED',
-          message: 'Your account has been temporarily locked after repeated security verification failures. Contact your college KILOGRAM administrator for identity review. Your account data has not been deleted.',
-          securityLocked: true,
-        });
       }
 
       const isMatch = await bcrypt.compare(password, existingUser.passwordHash);
@@ -754,23 +683,11 @@ export async function verifyOtpNew(req: Request, res: Response) {
     // Find User
     let user = await prisma.user.findUnique({
       where: { email: lowercaseEmail },
-      include: {
-        profile: true,
-        faceEnrollment: true,
-      },
+      include: { profile: true },
     });
 
     if (!user) {
       return res.status(404).json({ error: 'User registration not found. Please register again.' });
-    }
-
-    // Security Gate: Check if user is locked
-    if (user.securityStatus === 'SECURITY_LOCKED') {
-      return res.status(403).json({
-        error: 'ACCOUNT_SECURITY_LOCKED',
-        message: 'Your account has been temporarily locked after repeated security verification failures. Contact your college KILOGRAM administrator for identity review. Your account data has not been deleted.',
-        securityLocked: true,
-      });
     }
 
     // Verify user account
@@ -781,15 +698,7 @@ export async function verifyOtpNew(req: Request, res: Response) {
           emailVerified: true,
           verified: true,
         },
-        include: { profile: true, faceEnrollment: true },
-      });
-    }
-
-    // Claim authoritative enrollment ID if present
-    if (user.enrollmentId) {
-      await prisma.verifiedStudentRegistry.updateMany({
-        where: { enrollmentId: user.enrollmentId },
-        data: { isClaimed: true, claimedByUserId: user.id },
+        include: { profile: true },
       });
     }
 
@@ -797,24 +706,29 @@ export async function verifyOtpNew(req: Request, res: Response) {
       return res.status(403).json({ error: 'Access denied: This account has been banned by administrators' });
     }
 
-    // Check if biometric face enrollment exists
-    if (!user.faceEnrollment) {
-      return res.status(200).json({
-        message: 'OTP verified successfully. Informed biometric consent and facial enrollment required.',
-        requiresFaceEnrollment: true,
-        userId: user.id,
-        email: user.email,
-        username: user.username,
-      });
-    }
-
-    // Face biometric is enrolled -> enforce facial verification
-    return res.status(200).json({
-      message: 'OTP verified. Biometric face verification required to authenticate session.',
-      requiresFaceVerification: true,
-      userId: user.id,
+    const authUser: AuthUser = {
+      id: user.id,
       email: user.email,
       username: user.username,
+      role: user.role,
+    };
+
+    const accessToken = generateAccessToken(authUser);
+    const refreshToken = generateRefreshToken(authUser);
+
+    return res.status(200).json({
+      message: 'Authentication successful',
+      accessToken,
+      refreshToken,
+      user: {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        name: user.name,
+        role: user.role,
+        verified: user.verified,
+        profile: user.profile,
+      },
     });
   } catch (error) {
     console.error('Verify OTP error:', error);
